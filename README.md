@@ -31,7 +31,7 @@ $ cd data/ && tar -xvzf *.tar.gz
 
 2. TMDB 
 ```console
-$ cd external && unzip movies.zip && mv "Movies Dataset" movies
+$ cd external && unzip movies.zip && mv "Movies Dataset" Movies
 ```
 
 Or simply decompress archive from file system. You can also directly use the pre-processed pickle file in `data/Processed`
