@@ -136,6 +136,6 @@ In this analysis, we will use three different datasets
 |-----------------|---------------------------------------|----------------------------|
 | F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
 | K. Tetard       | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
-| L. Vogel        | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
-| N. Dillenbourg  | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
+| L. Vogel        | `lena.vogel@epfl.ch`     | Preprocessing and README   |
+| N. Dillenbourg  | `nael.dillenbourg@epfl.ch`     | Preprocessing and README   |
 | A. Bacuet       | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
