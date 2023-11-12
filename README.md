@@ -1,9 +1,64 @@
-# Bechdel Test Analysis
+# Women's Representation Analysis in the Film Industry
 
-**Abstract**: Our project aims to scrutinize the landscape of film through the lens of female representation, utilizing the Bechdel and Mako-Mori tests as analytical tools. These tests serve as cultural barometers for assessing women's roles in cinematic narratives beyond their relationships with male characters. The Bechdel test's criteria offer a starting point for evaluating the presence and interaction of women in movies. However, to capture the nuance and depth of women's experiences on screen, we also employ the Mako-Mori test, which broadens the scope by examining whether a female character has her own narrative arc that is not about supporting a man's story. The motivation is to quantify and qualify the evolution of women's portrayals in cinema, exploring trends, progress, or the lack thereof. We aim to tell a story of transformation and aspiration within the film industry, spotlighting the significance of authentic female perspectives and the journey toward equitable representation. This analysis not only reflects the cultural zeitgeist but also drives the conversation for future storytelling paradigms.
+<div style="display: flex; justify-content: space-between; font-family: Georgia, serif;">
+  <div><b>Team</b>: Adaptateurs</div>
+  <div><b>Supervisor</b>: Sillin Gao</div>
+</div>
 
-Research Questions:
+<span style="text-align:center; font-family: Georgia, serif;">
 
+<br>
+
+**Léna Vogel,  François Dumoncel,  Aymeric Bacuet,  Kenji Tetard,  Naël Dillenbourg**
+
+*École Polytechnique Fédérale de Lausanne*
+
+</span>
+
+## How to run our Notebooks
+
+Install necessary package using 
+
+```console
+$ pip install -r requirements.txt
+```
+
+Decompress data just after cloning this repo
+1. CMU original dataset 
+```console
+$ cd data/ && tar -xvzf *.tar.gz
+```
+
+2. TMDB 
+```console
+$ cd external && unzip movies.zip && mv "Movies Dataset" movies
+```
+
+Or simply decompress archive from file system. You can also directly use the pre-processed pickle file in `data/Processed`
+
+
+
+## Table of Contents 📕
+
+
+1. [Abstract📌](#abstract-📌)
+2. [Research Questions 🔍](#research-questions-🔍)
+3. [Datasets 📊](#datasets-📊)
+4. [Methods 📝](#methods-📝)
+5. [Proposed Timeline 📆](#pro)
+6. [Team Organization ⚙️](#team-organization-⚙️)
+
+<span style="text-align:justify;">
+
+
+
+## Abstract 📌
+
+This analysis aims to discover the portrayal of women in the film industry by analyzing a rich dataset encompassing aspects from actor profiles to production details. We aim to uncover gender disparities by examining the roles and ages of actresses at the time of a movie's release, and the influence of female directors and producers on a film's success and reception. We also want to inspect how the Bechdel Test can influence the success of a movie. The impact of female directors and producers on a film's popularity and box-office performance will be examined. Additionally, we will utilize Natural Language Processing technique to assess gender stereotypes within film summaries
+
+</span>
+
+## Research Questions 🔍
 
 - How have the trends in passing the Bechdel and Mako-Mori tests changed over the past few decades?
 - Is there a correlation between a movie passing these tests and its commercial success or critical acclaim?
@@ -21,14 +76,66 @@ Research Questions:
 - Can the data from these tests be used to predict future trends in women's cinematic representation?
 - What impact, if any, do films that pass these tests have on the real-world issues of gender equality and female empowerment?
 
-Proposed additional datasets (if any): List the additional dataset(s) you want to use (if any), and some ideas on how you expect to get, manage, process, and enrich it/them. Show us that you’ve read the docs and some examples, and that you have a clear idea on what to expect. Discuss data size and format if relevant. It is your responsibility to check that what you propose is feasible.
+## Datasets 📊
 
-- 10136 annotated movies: https://bechdeltest.com/,  https://bechdeltest.com/api/v1/doc
-- Mako Mori test: TBF
+In this analysis, we will use three different datasets
 
-Methods
+1. The original and provided CMU dataset
+2. The TMDB Dataset
+   - How we got it: directly downloaded from [The Movies Dataset on Kaggle](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset) (TMDB)
+   - Contains metadata on over 45,000 movies. 26 million ratings from over 270,000 users.
+   - Will be used to define a metric for the success of a movie.
+3. The Bechdel Dataset
+    - How we got it: Obtained via bechdeltest.com API
+    - Contains the Bechdel rating score for more than 10 000 movies  
+    - See `preprocessing/loader.py/load_bechdel_dataset()`
 
-Proposed timeline
+## Methods 📝
 
-Organization within the team: A list of internal milestones up until project Milestone P3.
-Questions for TAs (optional): Add here any questions you have for us related to the proposed project.
+### Preprocessing
+
+<span style="text-align:justify;">
+
+**Original Dataset**: Initial cleaning has been conducted.
+
+**Bechdel Dataset**: The Bechdel dataset boasts the advantage of minimal missing values, which simplifies the cleaning process significantly.
+
+**TMDB Dataset**: Our focus with the TMDB dataset was to extract data on the crew members behind the scenes, particularly their gender. We mitigate the impact of missing values by employing the genderguesser package, which allows us to infer genders and reduce the volume of incomplete data.
+
+</span>
+
+### Analysis of Women's place
+
+### Bechdel Test
+
+### NLP on plot summaries
+
+## Proposed Timeline 📆
+
+
+```C
+├── Week 8  - Preprocessing
+│  
+├── Week 9  - Analysis and pipeline
+│  
+├── Week 10 - Homework II
+│  
+├── Week 11 - Data Story and fine-grained analysis
+│  
+├── Week 12 - Data Story and NLP on plot summaries 
+│    
+├── Week 13 - Start the website (Github Pages)
+│  
+├── Week 14 - Finalization
+```
+
+## Team Organization ⚙️
+
+
+| Name          | Email                                 | Task                    |
+|-----------------|---------------------------------------|----------------------------|
+| F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
+| K. Tetard       | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
+| L. Vogel        | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
+| N. Dillenbourg  | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
+| A. Bacuet       | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |

@@ -23,4 +23,4 @@ def merge_with_credits(merged_df, credits_df):
 
 
 def merge_with_metadata(merged_df, meta_df):
-    return pd.merge(merged_df, meta_df, on=["imdbid"], how="inner")
+    return pd.merge(merged_df, meta_df, on=["movie_title", "year"], how="inner")
