@@ -3,7 +3,7 @@ import requests
 import sys
 
 DATA_PATH = "./data/MovieSummaries/"
-EXTERNAL_DATA_PATH = "./data/external/Movies Dataset/"
+EXTERNAL_DATA_PATH = "./data/external/Movies/"
 
 
 def load_CMU_dataset():
