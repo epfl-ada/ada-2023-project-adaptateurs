@@ -144,8 +144,8 @@ In this analysis, we will use three different datasets
 
 | Name          | Email                                 | Task                    |
 |-----------------|---------------------------------------|----------------------------|
-| F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
-| K. Tetard       | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
-| L. Vogel        | `lena.vogel@epfl.ch`     | Preprocessing and README   |
-| N. Dillenbourg  | `nael.dillenbourg@epfl.ch`     | Preprocessing and README   |
-| A. Bacuet       | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README   |
+| F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README  |
+| K. Tetard       | `kenji.tetard@epfl.ch`                  | -   |
+| L. Vogel        | `lena.vogel@epfl.ch`                    | -   |
+| N. Dillenbourg  | `nael.dillenbourg@epfl.ch`              | -   |
+| A. Bacuet       | `aymeric.bacuet@epfl.ch`              | Exploratory and data Analysis   |
