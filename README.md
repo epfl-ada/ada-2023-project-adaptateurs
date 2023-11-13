@@ -17,6 +17,7 @@
 
 </span>
 
+
 ## How to run our Notebooks
 
 Install necessary package using 
@@ -38,6 +39,24 @@ $ cd external && unzip movies.zip && mv "Movies Dataset" Movies
 
 Or simply decompress archive from file system. You can also directly use the pre-processed pickle file in `data/Processed`
 
+## Reposository structure
+
+```
+├─── data
+│    ├─── external
+│           └─── movies 
+│    ├─── Processed
+│    ├─── MovieSummaries
+├─── analysis 
+│      └─── visualizer.py
+├─── preprocessing
+       ├─── loader.py
+       ├─── cleaner.py
+       └─── merger.py
+├─── P2.ipynb
+├─── requirements.txt
+└─── README.md
+```
 
 
 ## Table of Contents 📕
