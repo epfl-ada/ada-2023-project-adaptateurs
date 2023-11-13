@@ -1,11 +1,11 @@
 # Women's Representation Analysis in the Film Industry
 
-<div style="display: flex; justify-content: space-between; font-family: Georgia, serif;">
+<div>
   <div><b>Team</b>: Adaptateurs</div>
   <div><b>Supervisor</b>: Sillin Gao</div>
 </div>
 
-<span style="text-align:center; font-family: Georgia, serif;">
+<span align="center">
 
 <br>
 
