@@ -90,14 +90,19 @@ def clean_credit_df(credit_df, meta_df):
     credit_df.loc[credit_df["writer_gender"] == 0.0, "writer_gender"] = credit_df.loc[
         credit_df["writer_gender"] == 0.0, "writer"
     ].apply(lambda x: getgender(x.split(" ")[0]))
+    
+    
     credit_df.loc[credit_df["director_gender"] == 2.0, "director_gender"] = "M"
     credit_df.loc[credit_df["producer_gender"] == 2.0, "producer_gender"] = "M"
     credit_df.loc[credit_df["writer_gender"] == 2.0, "writer_gender"] = "M"
     credit_df.loc[credit_df["director_gender"] == 1.0, "director_gender"] = "F"
     credit_df.loc[credit_df["producer_gender"] == 1.0, "producer_gender"] = "F"
     credit_df.loc[credit_df["writer_gender"] == 1.0, "writer_gender"] = "F"
+    
+    
     credit_df.drop(["crew"], axis=1, inplace=True)
-
+    credit_df.drop(['id'], axis=1, inplace=True)
+    
     return credit_df
 
 
