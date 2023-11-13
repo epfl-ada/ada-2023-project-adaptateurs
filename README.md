@@ -40,13 +40,19 @@ Or simply decompress archive from file system. You can also directly use the pre
 
 ## Table of Contents 📕
 
-
-1. [Abstract📌](#abstract-📌)
-2. [Research Questions 🔍](#research-questions-🔍)
-3. [Datasets 📊](#datasets-📊)
-4. [Methods 📝](#methods-📝)
-5. [Proposed Timeline 📆](#pro)
-6. [Team Organization ⚙️](#team-organization-⚙️)
+<p>
+  <a href="#abstract-"> 1. Abstract</a> 
+  <br>
+  <a href="#research-questions-">2. Research Questions</a> 
+  <br>
+  <a href="#additional-datasets-">3. Additional Datasets</a> 
+  <br>
+  <a href="#methods-">4. Methods</a> 
+  <br>
+  <a href="#timeline-">5. Timeline</a> 
+  <br>
+  <a href="#team-organization-">6. Team Organization</a>
+</p>
 
 <span style="text-align:justify;">
 
