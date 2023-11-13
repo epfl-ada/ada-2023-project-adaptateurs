@@ -13,6 +13,8 @@
 
 *École Polytechnique Fédérale de Lausanne*
 
+<br> 
+
 </span>
 
 ## How to run our Notebooks
@@ -54,11 +56,13 @@ Or simply decompress archive from file system. You can also directly use the pre
   <a href="#team-organization-">6. Team Organization</a>
 </p>
 
-<span style="text-align:justify;">
+
 
 
 
 ## Abstract 📌
+
+<span align="justify">
 
 This analysis aims to discover the portrayal of women in the film industry by analyzing a rich dataset encompassing aspects from actor profiles to production details. We aim to uncover gender disparities by examining the roles and ages of actresses at the time of a movie's release, and the influence of female directors and producers on a film's success and reception. We also want to inspect how the Bechdel Test can influence the success of a movie. The impact of female directors and producers on a film's popularity and box-office performance will be examined. Additionally, we will utilize Natural Language Processing technique to assess gender stereotypes within film summaries
 
@@ -100,7 +104,7 @@ In this analysis, we will use three different datasets
 
 ### Preprocessing
 
-<span style="text-align:justify;">
+<span align="justify">
 
 **Original Dataset**: Initial cleaning has been conducted.
 
