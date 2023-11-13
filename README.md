@@ -45,11 +45,11 @@ Or simply decompress archive from file system. You can also directly use the pre
   <br>
   <a href="#research-questions-">2. Research Questions</a> 
   <br>
-  <a href="#additional-datasets-">3. Additional Datasets</a> 
+  <a href="#datasets-">3. Additional Datasets</a> 
   <br>
   <a href="#methods-">4. Methods</a> 
   <br>
-  <a href="#timeline-">5. Timeline</a> 
+  <a href="#proposed-timeline-">5. Timeline</a> 
   <br>
   <a href="#team-organization-">6. Team Organization</a>
 </p>
