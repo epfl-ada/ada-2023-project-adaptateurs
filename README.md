@@ -211,7 +211,7 @@ In conclusion, by conducting a thorough analysis of women's representation in mo
 | Name            | Email                                | Task                     |
 |-----------------|--------------------------------------|--------------------------|
 | F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Preprocessing and README |
-| K. Tetard       | `kenji.tetard@epfl.ch`               | README ...   |
-| L. Vogel        | `lena.vogel@epfl.ch`                 | -   |
+| K. Tetard       | `kenji.tetard@epfl.ch`               |  -  |
+| L. Vogel        | `lena.vogel@epfl.ch`                 | README ...  |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | -   |
 | A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory and data Analysis   |
