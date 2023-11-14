@@ -2,7 +2,7 @@
 
 <div>
   <div><b>Team</b>: Adaptateurs</div>
-  <div><b>Supervisor</b>: Sillin Gao</div>
+  <div><b>Supervisor</b>: <a href="https://people.epfl.ch/silin.gao?lang=en"> Silin Gao (PhD) </a> </div>
 </div>
 
 <span align="center">
@@ -18,7 +18,9 @@
 </span>
 
 
-## How to run our Notebooks
+## How to run our Notebooks  
+<details>
+<summary> Tutorial </summary> 
 
 Install necessary package using 
 
@@ -32,12 +34,15 @@ Decompress data just after cloning this repo
 $ cd data/ && tar -xvzf *.tar.gz
 ```
 
-2. TMDB 
+1. TMDB 
 ```console
 $ cd external && unzip movies.zip && mv "Movies Dataset" Movies
 ```
 
 Or simply decompress archive from file system. You can also directly use the pre-processed pickle file in `data/Processed`
+</details>
+
+
 
 ## Reposository structure
 
@@ -135,9 +140,17 @@ In this analysis, we will use three different datasets
 
 ### Analysis of Women's place
 
+Will be done in P3 but explain how we will do it
+
 ### Bechdel Test
 
+Will be done in P3 but explain how we will do it
+
+
 ### NLP on plot summaries
+
+Will be done in P3 but explain how we will do it
+
 
 ## Proposed Timeline 📆
 
@@ -149,7 +162,7 @@ In this analysis, we will use three different datasets
 │  
 ├── Week 10 - Homework II
 │  
-├── Week 11 - Data Story and fine-grained analysis
+├── Week 11 - Data Story and fine-grained analysis through Bechdel test and cie
 │  
 ├── Week 12 - Data Story and NLP on plot summaries 
 │    
@@ -163,8 +176,8 @@ In this analysis, we will use three different datasets
 
 | Name          | Email                                 | Task                    |
 |-----------------|---------------------------------------|----------------------------|
-| F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`     | Preprocessing and README  |
-| K. Tetard       | `kenji.tetard@epfl.ch`                  | -   |
-| L. Vogel        | `lena.vogel@epfl.ch`                    | -   |
-| N. Dillenbourg  | `nael.dillenbourg@epfl.ch`              | -   |
+| F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`   | Preprocessing and README  |
+| K. Tetard       | `kenji.tetard@epfl.ch`                | -   |
+| L. Vogel        | `lena.vogel@epfl.ch`                  | -   |
+| N. Dillenbourg  | `nael.dillenbourg@epfl.ch`            | -   |
 | A. Bacuet       | `aymeric.bacuet@epfl.ch`              | Exploratory and data Analysis   |
