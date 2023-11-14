@@ -95,7 +95,7 @@ The original aspect of our investigation revolves around the Bechdel Test and th
 </span>
 
 ## Research Questions 🔍
-Our research is structured around several key questions:
+**<u>Our research is structured around several key questions:</u>**
 
 - **Trends Over Time:** How have trends in passing the Bechdel and Mako-Mori tests evolved over the past decades?
 
