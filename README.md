@@ -97,7 +97,7 @@ The original aspect of our investigation revolves around the Bechdel Test and th
 ## Research Questions 🔍
 Our research is structured around several key questions:
 
-**Trends Over Time:** How have trends in passing the Bechdel and Mako-Mori tests evolved over the past decades?
+- **Trends Over Time:** How have trends in passing the Bechdel and Mako-Mori tests evolved over the past decades?
 
 **Commercial Success and Critical Acclaim:** Is there a notable correlation between a movie passing these tests and its commercial success or critical acclaim?
 
