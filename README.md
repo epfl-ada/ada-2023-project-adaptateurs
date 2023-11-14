@@ -88,7 +88,9 @@ Or simply decompress archive from file system. You can also directly use the pre
 
 <span align="justify">
 
-This analysis aims to discover the portrayal of women in the film industry by analyzing a rich dataset encompassing aspects from actor profiles to production details. We aim to uncover gender disparities by examining the roles and ages of actresses at the time of a movie's release, and the influence of female directors and producers on a film's success and reception. We also want to inspect how the Bechdel Test can influence the success of a movie. The impact of female directors and producers on a film's popularity and box-office performance will be examined. Additionally, we will utilize Natural Language Processing technique to assess gender stereotypes within film summaries
+In the contemporary film industry, the representation and portrayal of women have been pivotal topics, sparking widespread discussions about gender disparities. This project aims to delve into these aspects by analyzing a comprehensive dataset that encompasses a wide range of elements from actor profiles to intricate production details. The primary focus is to unearth patterns and trends related to gender disparities, particularly regarding the roles and ages of actresses at the time of a movie's release, as well as the impact of female directors and producers on a film's success and public reception.
+
+The original aspect of our investigation revolves around the Bechdel Test and the Mako-Mori test, which serve as benchmarks for evaluating the representation of women in films. We aim to explore the correlation between a movie passing these tests and its commercial success or critical acclaim. Furthermore, we plan to apply Natural Language Processing (NLP) techniques to assess gender stereotypes within film summaries, offering a nuanced view of how gender roles are depicted in cinema.
 
 </span>
 
