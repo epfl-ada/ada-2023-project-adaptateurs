@@ -124,33 +124,14 @@ In this analysis, we will use three different datasets
     - Contains the Bechdel rating score for more than 10 000 movies  
     - See `preprocessing/loader.py/load_bechdel_dataset()`
 
-## Methods 📝
+## Methodology 💡
+Our analysis will employ a multifaceted approach:
 
-### Preprocessing
-
-<span align="justify">
-
-**Original Dataset**: Initial cleaning has been conducted.
-
-**Bechdel Dataset**: The Bechdel dataset boasts the advantage of minimal missing values, which simplifies the cleaning process significantly.
-
-**TMDB Dataset**: Our focus with the TMDB dataset was to extract data on the crew members behind the scenes, particularly their gender. We mitigate the impact of missing values by employing the genderguesser package, which allows us to infer genders and reduce the volume of incomplete data.
-
-</span>
-
-### Analysis of Women's place
-
-Will be done in P3 but explain how we will do it
-
-### Bechdel Test
-
-Will be done in P3 but explain how we will do it
-
-
-### NLP on plot summaries
-
-Will be done in P3 but explain how we will do it
-
+**Statistical Analysis:** We'll conduct thorough statistical analysis to uncover trends and correlations.
+**Natural Language Processing:** NLP techniques will be applied to film summaries to detect and analyze gender stereotypes.
+**Comparative Analysis:** We'll compare genres, cultures, and production types (independent vs. major studios) in terms of gender representation.
+**Temporal Analysis:** Examining how trends have evolved over time, we'll use this data to potentially forecast future trends.
+**Impact Assessment:** We'll assess the real-world impact of films that pass the Bechdel and Mako-Mori tests, particularly in terms of influencing public discourse and contributing to gender equality movements.
 
 ## Proposed Timeline 📆
 
