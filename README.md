@@ -95,22 +95,38 @@ The original aspect of our investigation revolves around the Bechdel Test and th
 </span>
 
 ## Research Questions 🔍
+Our research is structured around several key questions:
 
-- How have the trends in passing the Bechdel and Mako-Mori tests changed over the past few decades?
-- Is there a correlation between a movie passing these tests and its commercial success or critical acclaim?
-- What genres are more likely to pass or fail these tests, and what does this suggest about genre-specific representation?
-- How does the representation of women in films from different countries or cultures fare when applied to these tests?
-- What are the common narrative roles or character archetypes for women in films that pass these tests compared to those that don't?
-- Are films that pass the Bechdel and Mako-Mori tests also likely to have more gender diversity among their writers, directors, and producers?
-- Does the presence of a leading female character or a strong supporting female cast correlate with passing these tests?
-- How do independent films compare to major studio productions in terms of passing these tests?
-- To what extent do films that pass the Bechdel and Mako-Mori tests influence public discourse on gender representation?
-- Are movies that pass these tests more likely to feature women in non-traditional roles or challenge gender stereotypes?
-- How does the age rating of a film (G, PG, PG-13, R) impact its likelihood of passing these tests?
-- What is the role of film festivals and awards in promoting films that pass the Bechdel and Mako-Mori tests?
-- How have audience perceptions and demands influenced the number of films passing these tests over time?
-- Can the data from these tests be used to predict future trends in women's cinematic representation?
-- What impact, if any, do films that pass these tests have on the real-world issues of gender equality and female empowerment?
+**Trends Over Time:** How have trends in passing the Bechdel and Mako-Mori tests evolved over the past decades?
+
+**Commercial Success and Critical Acclaim:** Is there a notable correlation between a movie passing these tests and its commercial success or critical acclaim?
+
+**Genre-Specific Representation:** What genres are more likely to pass or fail these tests, and what does this imply about the representation within specific genres?
+
+**Cultural and International Perspectives:** How does women's representation in films from different countries or cultures measure up against these tests?
+
+**Narrative Roles and Character Archetypes:** What common narrative roles or character archetypes for women are observed in films that pass these tests compared to those that don't?
+
+**Gender Diversity in Film Production:** Are films that pass the Bechdel and Mako-Mori tests also likely to exhibit more gender diversity among their writers, directors, and producers?
+
+**Influence of Female Characters:** Does the presence of leading or strong supporting female characters correlate with passing these tests?
+
+**Independent Films vs. Major Studio Productions:** How do independent films compare with major studio productions in terms of passing these tests?
+
+**Public Discourse and Influence:** To what extent do films that pass these tests influence public discourse on gender representation?
+
+**Challenging Gender Stereotypes:** Are movies that pass these tests more inclined to feature women in non-traditional roles or challenge gender stereotypes?
+
+**Impact of Film Ratings:** How does a film’s age rating affect its likelihood of passing these tests?
+
+**Role of Film Festivals and Awards:** What is the role of film festivals and awards in promoting films that pass these tests?
+
+**Audience Perceptions and Demands:** How have audience perceptions and demands influenced the number of films passing these tests over time?
+
+**Predictive Analysis:** Can data from these tests predict future trends in women's cinematic representation?
+
+**Real-world Impact:** What real-world impact do films that pass these tests have on issues of gender equality and female empowerment?
+
 
 ## Datasets 📊
 
