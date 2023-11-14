@@ -128,9 +128,13 @@ In this analysis, we will use three different datasets
 Our analysis will employ a multifaceted approach:
 
 **Statistical Analysis:** We'll conduct thorough statistical analysis to uncover trends and correlations.
+
 **Natural Language Processing:** NLP techniques will be applied to film summaries to detect and analyze gender stereotypes.
+
 **Comparative Analysis:** We'll compare genres, cultures, and production types (independent vs. major studios) in terms of gender representation.
+
 **Temporal Analysis:** Examining how trends have evolved over time, we'll use this data to potentially forecast future trends.
+
 **Impact Assessment:** We'll assess the real-world impact of films that pass the Bechdel and Mako-Mori tests, particularly in terms of influencing public discourse and contributing to gender equality movements.
 
 ## Proposed Timeline 📆
