@@ -77,6 +77,17 @@ def clean_credit_df(credit_df, meta_df):
         else:
             return np.nan
 
+    print("Before using genderguesser:")
+    print(
+        f"Percentage of movies with a director's name that could not be gendered: {round((len(credit_df[credit_df['director_gender'] == 0]) + credit_df['director_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
+    )
+    print(
+        f"Percentage of movies with a producer's name that could not be gendered: {round((len(credit_df[credit_df['producer_gender'] == 0]) + credit_df['producer_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
+    )
+    print(
+        f"Percentage of movies with a writer's name that could not be gendered:   {round((len(credit_df[credit_df['writer_gender'] == 0]) + credit_df['writer_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
+    )
+
     credit_df.loc[
         credit_df["director_gender"] == 0.0, "director_gender"
     ] = credit_df.loc[credit_df["director_gender"] == 0.0, "director"].apply(
@@ -90,19 +101,28 @@ def clean_credit_df(credit_df, meta_df):
     credit_df.loc[credit_df["writer_gender"] == 0.0, "writer_gender"] = credit_df.loc[
         credit_df["writer_gender"] == 0.0, "writer"
     ].apply(lambda x: getgender(x.split(" ")[0]))
-    
-    
+
     credit_df.loc[credit_df["director_gender"] == 2.0, "director_gender"] = "M"
     credit_df.loc[credit_df["producer_gender"] == 2.0, "producer_gender"] = "M"
     credit_df.loc[credit_df["writer_gender"] == 2.0, "writer_gender"] = "M"
     credit_df.loc[credit_df["director_gender"] == 1.0, "director_gender"] = "F"
     credit_df.loc[credit_df["producer_gender"] == 1.0, "producer_gender"] = "F"
     credit_df.loc[credit_df["writer_gender"] == 1.0, "writer_gender"] = "F"
-    
-    
+
+    print("\nAfter using genderguesser:")
+    print(
+        f"Percentage of movies with a director's name that could not be gendered: {round(credit_df['director_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
+    )
+    print(
+        f"Percentage of movies with a producer's name that could not be gendered: {round(credit_df['producer_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
+    )
+    print(
+        f"Percentage of movies with a writer's name that could not be gendered:   {round(credit_df['writer_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
+    )
+
     credit_df.drop(["crew"], axis=1, inplace=True)
-    credit_df.drop(['id'], axis=1, inplace=True)
-    
+    credit_df.drop(["id"], axis=1, inplace=True)
+
     return credit_df
 
 
@@ -121,3 +141,32 @@ def clean_metadata_df(meta_df):
     ]
     meta_df["imdbid"] = meta_df["imdbid"].str.replace("tt", "")
     return meta_df
+
+
+def clean_movies_ranges(movies):
+    movies["actor_age_at_movie_release"] = movies["actor_age_at_movie_release"].apply(
+        lambda age: np.nan if age < 0 else age
+    )
+    movies = movies.query("year >= 1912 & year <= 2012")
+    return movies
+
+
+def clean_remove_outlier(df, method="z-score", threshold=0, name=""):
+    from scipy import stats
+
+    if method == "z-score":
+        z_scores = stats.zscore(df[name])
+        z_score_threshold = threshold
+        df = df[abs(z_scores) < z_score_threshold]
+
+    elif method == "quantile":
+        Q1 = df[name].quantile(0.25)
+        Q3 = df[name].quantile(0.75)
+        IQR = Q3 - Q1
+
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+
+        df = df[(df[name] >= lower_bound) & (df[name] <= upper_bound)]
+
+    return df

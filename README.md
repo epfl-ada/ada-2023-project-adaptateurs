@@ -2,7 +2,7 @@
 
 <div>
   <div><b>Team</b>: Adaptateurs</div>
-  <div><b>Supervisor</b>: Sillin Gao</div>
+  <div><b>Supervisor</b>: <a href="https://people.epfl.ch/silin.gao?lang=en"> Silin Gao (PhD) </a> </div>
 </div>
 
 <span align="center">
@@ -18,7 +18,9 @@
 </span>
 
 
-## How to run our Notebooks
+## How to run our Notebooks  
+<details>
+<summary> Tutorial </summary> 
 
 Install necessary package using 
 
@@ -32,12 +34,15 @@ Decompress data just after cloning this repo
 $ cd data/ && tar -xvzf *.tar.gz
 ```
 
-2. TMDB 
+1. TMDB 
 ```console
 $ cd external && unzip movies.zip && mv "Movies Dataset" Movies
 ```
 
 Or simply decompress archive from file system. You can also directly use the pre-processed pickle file in `data/Processed`
+</details>
+
+
 
 ## Reposository structure
 
@@ -91,6 +96,37 @@ While it gives very basic insights on the representativity of women we want to i
 </span>
 
 ## Research Questions 🔍
+Our research is structured around several key questions:
+
+- **Trends Over Time:** How have trends in passing the Bechdel and Mako-Mori tests evolved over the past decades?
+
+- **Commercial Success and Critical Acclaim:** Is there a notable correlation between a movie passing these tests and its commercial success or critical acclaim?
+
+- **Genre-Specific Representation:** What genres are more likely to pass or fail these tests, and what does this imply about the representation within specific genres?
+
+- **Cultural and International Perspectives:** How does women's representation in films from different countries or cultures measure up against these tests?
+
+- **Narrative Roles and Character Archetypes:** What common narrative roles or character archetypes for women are observed in films that pass these tests compared to those that don't?
+
+- **Gender Diversity in Film Production:** Are films that pass the Bechdel and Mako-Mori tests also likely to exhibit more gender diversity among their writers, directors, and producers?
+
+- **Influence of Female Characters:** Does the presence of leading or strong supporting female characters correlate with passing these tests?
+
+- **Independent Films vs. Major Studio Productions:** How do independent films compare with major studio productions in terms of passing these tests?
+
+- **Public Discourse and Influence:** To what extent do films that pass these tests influence public discourse on gender representation?
+
+- **Challenging Gender Stereotypes:** Are movies that pass these tests more inclined to feature women in non-traditional roles or challenge gender stereotypes?
+
+- **Impact of Film Ratings:** How does a film’s age rating affect its likelihood of passing these tests?
+
+- **Role of Film Festivals and Awards:** What is the role of film festivals and awards in promoting films that pass these tests?
+
+- **Audience Perceptions and Demands:** How have audience perceptions and demands influenced the number of films passing these tests over time?
+
+- **Predictive Analysis:** Can data from these tests predict future trends in women's cinematic representation?
+
+- **Real-world Impact:** What real-world impact do films that pass these tests have on issues of gender equality and female empowerment?
 
 - How have the trends in passing the Bechdel and test changed over the past few decades?
 - Is there a correlation between a movie passing this test and its commercial success or critical acclaim?
@@ -116,9 +152,10 @@ In this analysis, we will use three different datasets
     - Contains the Bechdel rating score (0,1,2 or 3) for more than 10'000 movies
     - See `preprocessing/loader.py/load_bechdel_dataset()`
 
-## Methods 📝
+## Methodology 💡
+Our analysis will employ a multifaceted approach:
 
-### Preprocessing
+- **Statistical Analysis:** We'll conduct thorough statistical analysis to uncover trends and correlations.
 
 <span align="justify">
 
@@ -142,8 +179,13 @@ It is considered a basic standard of women's representation in movies and also i
 
 In conclusion, by conducting a thorough analysis of women's representation in movies using these datasets we hope to provide valuable insights into the passed and future progress in achieving gender equality in the film industry.
 
+- **Natural Language Processing:** NLP techniques will be applied to film summaries to detect and analyze gender stereotypes.
 
-### NLP on plot summaries
+- **Comparative Analysis:** We'll compare genres, cultures, and production types (independent vs. major studios) in terms of gender representation.
+
+- **Temporal Analysis:** Examining how trends have evolved over time, we'll use this data to potentially forecast future trends.
+
+- **Impact Assessment:** We'll assess the real-world impact of films that pass the Bechdel and Mako-Mori tests, particularly in terms of influencing public discourse and contributing to gender equality movements.
 
 ## Proposed Timeline 📆
 
@@ -154,7 +196,7 @@ In conclusion, by conducting a thorough analysis of women's representation in mo
 │  
 ├── Week 10 - Homework II
 │  
-├── Week 11 - Data Story and fine-grained analysis
+├── Week 11 - Data Story and fine-grained analysis through Bechdel test and cie
 │  
 ├── Week 12 - Data Story and NLP on plot summaries 
 │    
