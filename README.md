@@ -106,6 +106,8 @@ Our objectives are to delve into the representation of women in the film industr
 - How does the inclusion of women in a film, both on-screen and behind the scenes, impact its reception among viewers?
 - Is the Bechdel test a valid measure of a film's "feminine" qualities?
 - Do film summaries show any influence from the presence of women in the context of film creation and production?
+- Which movie genres feature the highest representation of women as characters?
+- What kinds of correlations could exist between the gender of the director, writers, producers and the representation of women in the movie using the Bechdel test?
 
 ## Datasets 📊
 
