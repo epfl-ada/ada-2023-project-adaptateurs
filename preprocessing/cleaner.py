@@ -170,3 +170,7 @@ def clean_remove_outlier(df, method="z-score", threshold=0, name=""):
         df = df[(df[name] >= lower_bound) & (df[name] <= upper_bound)]
 
     return df
+
+
+def clean_missing_values_by_dropping(df, to_drop=[]):
+    return df.drop(columns=to_drop, axis=1)
