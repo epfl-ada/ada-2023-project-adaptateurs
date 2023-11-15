@@ -67,6 +67,17 @@ def visualize_missing_values(movies, style="darkgrid"):
 
 
 def visualize_gender_distribution(movies, style="darkgrid"):
+    """
+    Visualize the gender distribution in different roles of a given dataset of movies.
+
+    Parameters:
+    movies (pandas.DataFrame): The dataset of movies to analyze.
+    style (str): The style of the plot. Default is "darkgrid".
+
+    Returns:
+    None
+    """
+
     roles = ["actor_gender", "director_gender", "producer_gender"]
     fig, axes = plt.subplots(1, len(roles), figsize=(8, 5))
     fig.suptitle("Gender Distribution in Different Roles", y=0.8)
@@ -83,6 +94,17 @@ def visualize_gender_distribution(movies, style="darkgrid"):
 
 
 def visualize_actors_distribution(movies, style="darkgrid"):
+    """
+    Visualize the distribution of the number of actors in movies.
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing the movies data.
+    style (str): Style of the plot (default is "darkgrid").
+
+    Returns:
+    None
+    """
+
     number_of_actors = movies.groupby("wikiID")["actor_name"].agg("count")
 
     plt.hist(number_of_actors, bins=50, log=True)
@@ -93,6 +115,17 @@ def visualize_actors_distribution(movies, style="darkgrid"):
 
 
 def visualize_gender_proportion_repartition(movies, style="darkgrid"):
+    """
+    Visualizes the proportion of male and female characters in movies.
+
+    Parameters:
+    movies (pandas.DataFrame): A DataFrame containing information about movies.
+    style (str): The style of the plot. Default is "darkgrid".
+
+    Returns:
+    pandas.DataFrame: A DataFrame containing the proportion of male and female characters in each movie.
+    """
+
     # Filtering and extract proportions of male/female characters per movie
     movies = movies.loc[movies["actor_gender"].isin(["F", "M"])].copy(deep=True)
     male_female_counts = (
@@ -157,6 +190,33 @@ def visualize_gender_proportion_repartition(movies, style="darkgrid"):
     return male_female_counts
 
 
+def visualize_regression(movies_gender_prop, style="darkgrid"):
+    """
+    Visualize the correlation between the percentage of women actors in movies and their average rating.
+
+    Args:
+        movies_gender_prop (pandas.DataFrame): A DataFrame containing the percentage of women actors and the average rating of movies.
+        style (str, optional): The style of the plot. Defaults to "darkgrid".
+    """
+
+    plt.figure(figsize=(10, 5))
+
+    sns.set_style(style)
+    sns.regplot(
+        x=movies_gender_prop["percents_of_female"],
+        y=movies_gender_prop["vote_average"],
+        scatter_kws={"s": 2},
+        line_kws={"color": "red"},
+    )
+
+    plt.ylabel("Average Rating", fontsize=14)
+    plt.xlabel("Percentage of women actors", fontsize=14)
+
+    plt.title("Correlation between Rating and proportion of Women", fontsize=20)
+
+    plt.show()
+
+
 def visualize_age_distribution_by_gender(movies, style="darkgrid"):
     """
     Visualize the distribution of actor ages by gender using a boxplot.
@@ -176,4 +236,24 @@ def visualize_age_distribution_by_gender(movies, style="darkgrid"):
     plt.title("Distribution of Actor Ages by Gender")
     plt.xlabel("Gender")
     plt.ylabel("Age")
+    plt.show()
+
+
+def visualize_feminity_score_distribution(movies, style="darkgrid"):
+    """
+    Visualize the distribution of the femininity score across movies.
+
+    Args:
+    movies (pandas.DataFrame): A DataFrame containing movie data with a 'femininity_score' column.
+
+    Returns:
+    None
+    """
+
+    plt.figure(figsize=(8, 4))
+    sns.set_style(style)
+    sns.histplot(movies.feminity_score, bins=40, color="skyblue", log=True)
+    plt.title("Distribution of Femininity Score Across Movies")
+    plt.xlabel("Femininity Score")
+    plt.ylabel("Number of Movies")
     plt.show()
