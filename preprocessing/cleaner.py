@@ -6,6 +6,14 @@ from ast import literal_eval
 
 
 def clean_movie_df(movie_df):
+    """
+    Clean the movie dataframe by converting the release date to a real datetime, dropping movies with no release date,
+    extracting the year from the release date, and converting the fbids for genres, languages, and countries to lists.
+
+    :param movie_df: pandas DataFrame containing movie information
+    :return: cleaned pandas DataFrame
+    """
+
     # Convert release date to real datetime
     movie_df["movie_release_date"] = pd.to_datetime(
         movie_df["movie_release_date"], errors="coerce"
@@ -25,6 +33,15 @@ def clean_movie_df(movie_df):
 
 
 def clean_bechdel_df(bechdel_df):
+    """
+    Cleans the given Bechdel dataset by dropping the 'id' column and renaming the 'title' and 'rating' columns.
+
+    Args:
+    - bechdel_df: pandas DataFrame containing the Bechdel dataset
+
+    Returns:
+    - pandas DataFrame: cleaned Bechdel dataset
+    """
     bechdel_df = bechdel_df.drop(columns=["id"])
     bechdel_df = bechdel_df.rename(
         columns={"title": "movie_title", "rating": "bechdel_rating"}
@@ -33,6 +50,17 @@ def clean_bechdel_df(bechdel_df):
 
 
 def clean_credit_df(credit_df, meta_df):
+    """
+    Clean the credit dataframe by extracting the director, producer and writer names and genders.
+
+    Parameters:
+    credit_df (pandas.DataFrame): The credit dataframe to clean.
+    meta_df (pandas.DataFrame): The metadata dataframe containing the imdb_id.
+
+    Returns:
+    pandas.DataFrame: The cleaned credit dataframe.
+    """
+
     credit_df["imdbid"] = meta_df["imdb_id"]
     credit_df.dropna(subset=["imdbid"], inplace=True)
     credit_df.imdbid = credit_df.imdbid.apply(lambda x: x[2:])
@@ -144,6 +172,16 @@ def clean_metadata_df(meta_df):
 
 
 def clean_movies_ranges(movies):
+    """
+    Clean the movies dataframe by removing rows with invalid actor age and keeping only movies released between 1912 and 2012.
+
+    Args:
+    movies (pandas.DataFrame): The dataframe containing the movies data.
+
+    Returns:
+    pandas.DataFrame: The cleaned dataframe.
+    """
+
     movies["actor_age_at_movie_release"] = movies["actor_age_at_movie_release"].apply(
         lambda age: np.nan if age < 0 else age
     )
@@ -152,6 +190,19 @@ def clean_movies_ranges(movies):
 
 
 def clean_remove_outlier(df, method="z-score", threshold=0, name=""):
+    """
+    Remove outliers from a pandas DataFrame column using either z-score or quantile method.
+
+    Parameters:
+    df (pandas.DataFrame): The DataFrame containing the column to clean.
+    method (str): The method to use for outlier detection. Either "z-score" or "quantile". Default is "z-score".
+    threshold (float): The threshold value to use for outlier detection. Default is 0.
+    name (str): The name of the column to clean. Default is "".
+
+    Returns:
+    pandas.DataFrame: The cleaned DataFrame.
+    """
+
     from scipy import stats
 
     if method == "z-score":
@@ -173,4 +224,14 @@ def clean_remove_outlier(df, method="z-score", threshold=0, name=""):
 
 
 def clean_missing_values_by_dropping(df, to_drop=[]):
+    """
+    This function takes a pandas dataframe and a list of columns to drop and returns a new dataframe with the specified columns dropped.
+
+    Parameters:
+    df (pandas.DataFrame): The dataframe to clean.
+    to_drop (list): A list of column names to drop from the dataframe.
+
+    Returns:
+    pandas.DataFrame: A new dataframe with the specified columns dropped.
+    """
     return df.drop(columns=to_drop, axis=1)

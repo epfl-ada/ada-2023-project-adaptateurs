@@ -58,8 +58,12 @@ Or simply decompress archive from file system. You can also directly use the pre
        ├─── loader.py
        ├─── cleaner.py
        └─── merger.py
+├─── nlp  
+       ├─── nlp_utils.py
+       └─── female_keywords.txt
 ├─── P2.ipynb
 ├─── requirements.txt
+├─── Makefile
 └─── README.md
 ```
 
@@ -96,7 +100,12 @@ While it gives very basic insights on the representativity of women we want to i
 </span>
 
 ## Research Questions 🔍
-Our research is structured around several key questions: **TODO (THIS SECTION SHOULD REMAIN SHORT)** 
+
+Our objectives are to delve into the representation of women in the film industry across different time periods and investigate the following questions:
+
+- How does the inclusion of women in a film, both on-screen and behind the scenes, impact its reception among viewers?
+- Is the Bechdel test a valid measure of a film's "feminine" qualities?
+- Do film summaries show any influence from the presence of women in the context of film creation and production?
 
 ## Datasets 📊
 
@@ -110,12 +119,11 @@ In this analysis, we will use three different datasets
 3. The Bechdel Dataset:
     - How we got it: Obtained via bechdeltest.com API
     - Contains the Bechdel rating score (0,1,2 or 3) for more than 10'000 movies
-    - See `preprocessing/loader.py/load_bechdel_dataset()`
+    - See `preprocessing/loader.py#load_bechdel_dataset`
 
 ## Methodology 💡
-Our analysis will employ a multifaceted approach:
 
-- **Statistical Analysis:** We'll conduct thorough statistical analysis to uncover trends and correlations.
+### Preprocessing on data 
 
 <span align="justify">
 
@@ -145,7 +153,7 @@ To summarize, by conducting a thorough analysis of women's representation in mov
 
 - **Temporal Analysis:** Examining how trends have evolved over time, we'll use this data to potentially forecast future trends.
 
-- **Impact Assessment:** We'll assess the real-world impact of films that pass the Bechdel and Mako-Mori tests, particularly in terms of influencing public discourse and contributing to gender equality movements.
+- **Impact Assessment:** We'll assess the real-world impact of films that pass the Bechdel, particularly in terms of influencing public discourse and contributing to gender equality movements.
 
 ## Proposed Timeline 📆
 
@@ -170,8 +178,8 @@ To summarize, by conducting a thorough analysis of women's representation in mov
 
 | Name            | Email                                | Task                     |
 |-----------------|--------------------------------------|--------------------------|
-| F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Preprocessing and README |
+| F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Preprocessing, Analysis,  README |
 | K. Tetard       | `kenji.tetard@epfl.ch`               | -   |
-| L. Vogel        | `lena.vogel@epfl.ch`                 | README ...               |
+| L. Vogel        | `lena.vogel@epfl.ch`                 | README               |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | -   |
-| A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory and data Analysis   |
+| A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory data Analysis   |
