@@ -137,7 +137,7 @@ In order to analyze how well women are represented in movies we used the Bechdel
 a) The movie has to have at least two women in it, b) who talk to each other, c) about something other than a man. This results in a score between 0 and 3, depending on the number of tests the movie passes.
 It is considered a basic standard of women's representation in movies and also includes some women's typical stereotypes present in stories such as the Smurfette principle, which designs the fact that the woman is the exception and exists only in reference to the men.
 
-In conclusion, by conducting a thorough analysis of women's representation in movies using these datasets we hope to provide valuable insights into the passed and future progress in achieving gender equality in the film industry.
+To summarize, by conducting a thorough analysis of women's representation in movies using these datasets we hope to provide valuable insights into the passed and future progress in achieving gender equality in the film industry.
 
 - **Natural Language Processing:** NLP techniques will be applied to film summaries to detect and analyze gender stereotypes.
 
@@ -171,7 +171,7 @@ In conclusion, by conducting a thorough analysis of women's representation in mo
 | Name            | Email                                | Task                     |
 |-----------------|--------------------------------------|--------------------------|
 | F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Preprocessing and README |
-| K. Tetard       | `kenji.tetard@epfl.ch`               |  -  |
-| L. Vogel        | `lena.vogel@epfl.ch`                 | README ...  |
+| K. Tetard       | `kenji.tetard@epfl.ch`               | -   |
+| L. Vogel        | `lena.vogel@epfl.ch`                 | README ...               |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | -   |
 | A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory and data Analysis   |
