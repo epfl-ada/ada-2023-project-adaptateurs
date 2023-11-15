@@ -96,7 +96,10 @@ While it gives very basic insights on the representativity of women we want to i
 </span>
 
 ## Research Questions 🔍
-Our research is structured around several key questions: **TODO (THIS SECTION SHOULD REMAIN SHORT)** 
+Our research is structured around several key questions:
+- Which movie genres feature the highest representation of women as characters?
+- What kinds of correlations could exist between the gender of the director, writers, producers and the representation of women in the movie using the Bechdel test?
+- What differences could exist between women appearance depending on the budget of the film studios?
 
 ## Datasets 📊
 
