@@ -326,6 +326,44 @@ def visualize_age_evolution(movies, style="darkgrid"):
     plt.ylabel("Age")
     plt.show()
 
+def visualize_bechdel_distribution(movies_with_bechdel, style="darkgrid"):
+    """
+    Visualize the distribution of Bechdel test scores across movies.
+    Args: movies_with_bechdel (pandas.DataFrame): A DataFrame containing movie data with a 'bechdel_rating' column.
+    Returns: None
+    """
+    df_unique_movies = movies_with_bechdel.drop_duplicates(subset=['movie_title', 'year'])
+
+    # Group by year and Bechdel grade, then count the number of movies
+    grouped_bechdel = df_unique_movies.groupby(['year', 'bechdel_rating']).size().unstack(fill_value=0)
+
+    # Determine the complete range of years
+    all_years = range(grouped_bechdel.index.min(), grouped_bechdel.index.max() + 1)
+
+    # Create a DataFrame with all years and merge
+    all_years_df = pd.DataFrame(index=all_years)
+
+    grouped = all_years_df.merge(grouped_bechdel, left_index=True, right_index=True, how='left').fillna(0)
+
+    # Define a red-to-green colormap
+    cmap = plt.get_cmap("RdYlGn")
+    colors = cmap(np.linspace(0, 1, len(grouped.columns)))
+
+    # Create a stacked bar chart
+    grouped.plot(kind='bar', stacked=True, figsize=(15, 7), color=colors)
+
+    # Filter x-axis ticks to display one year every five years
+    tick_labels = [year if year % 5 == 0 else '' for year in all_years]
+    plt.xticks(range(len(grouped)), tick_labels, rotation=0)
+
+    # Adding labels and title
+    plt.xlabel('Year')
+    plt.ylabel('Number of Movies')
+    plt.title('Number of Movies by Bechdel test score per Year')
+    plt.legend(title='Bechdel score')
+
+    # Show the plot
+    plt.show()
 
 def visualize_feminity_score_distribution(movies, style="darkgrid"):
     """
