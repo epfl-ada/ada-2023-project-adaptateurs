@@ -92,10 +92,10 @@ Or simply decompress archive from file system. You can also directly use the pre
 
 <span align="justify">
 
-This analysis aims to discover the portrayal of women in the film industry by analyzing a rich dataset encompassing aspects from actor profiles to production details. We aim to uncover gender disparities by examining the roles and ages of actresses at the time of a movie's release, and the influence of female directors and producers on a film's success and reception. In addition to that, we will use another dataset: the movies that passed the Bechdel test or not. This test analyzes whether a movie passes the 3 following conditions: 
+This data analysis aims to discover the portrayal of women in the film industry by analyzing a rich dataset encompassing aspects from actor profiles to production details. We aim to uncover gender disparities by examining the numbers, roles and ages of actresses at the time of a movie's release, and the impact of female directors and producers on a film's popularity and box-office performance. In addition to that, we will use another dataset: the movies that passed the Bechdel test or not. This test analyzes whether a movie passes the 3 following conditions: 
 a) The movie has to have at least two women in it, b) who talk to each other, c) about something other than a man.
-
-While it gives very basic insights on the representativity of women we want to inspect how the result of the Bechdel Test can influence the success of a movie. We will examine the impact of female directors and producers on a film's popularity and box-office performance. Additionally, we will utilize Natural Language Processing technique to assess gender stereotypes within film summaries.
+While this gives very basic insights on the representativity of women we want to inspect how the result of the Bechdel Test can influence the success of a movie, and where a good or a bad result could come from: the proportion of actors and actresses, the gender of the producer, ...? 
+Additionally, we will utilize Natural Language Processing technique to assess gender stereotypes within film summaries.
 
 </span>
 
@@ -127,7 +127,7 @@ In this analysis, we will use three different datasets
 
 ### Preprocessing on data 
 
-<span align="justify">
+<span align="justify"> 
 
 **Original Dataset**: Initial cleaning has been conducted.
 
@@ -138,17 +138,18 @@ In this analysis, we will use three different datasets
 </span>
 
 ### Analysis of Women's place
-Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry: in cast and crew members as well as in the movies stories.
+Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
+We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to rely on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context. 
 
 By correlating cast members genders with movie success and budgets, we can identify trends and biases in the industry. For instance, examining whether films with a higher proportion of female cast members are as likely to benefit from big or small budgets or have significant box office entries.
 
-Indeed, we consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to rely on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context. 
-In order to analyze how well women are represented in movies we used the Bechdel test. It was originally invented in 1985 in a comic strip by Alison Bechdel and tests whether a movie passes the 3 following conditions: 
+In order to analyze how well women are represented in movies we use the Bechdel test. It was originally invented in 1985 in a comic strip by Alison Bechdel and tests whether a movie passes the 3 following conditions: 
 a) The movie has to have at least two women in it, b) who talk to each other, c) about something other than a man. This results in a score between 0 and 3, depending on the number of tests the movie passes.
-It is considered a basic standard of women's representation in movies and also includes some women's typical stereotypes present in stories such as the Smurfette principle, which designs the fact that the woman is the exception and exists only in reference to the men.
+The Bechdel test is considered to be a basic standard for minimal women's representation in movies and also includes some women's theorized stereotypes such as the Smurfette principle, which designs the fact that in many stories, the woman is the exception and exists only in reference to the men.
 
 To summarize, by conducting a thorough analysis of women's representation in movies using these datasets we hope to provide valuable insights into the passed and future progress in achieving gender equality in the film industry.
 
+### Techniques
 - **Natural Language Processing:** NLP techniques will be applied to film summaries to detect and analyze gender stereotypes.
 
 - **Comparative Analysis:** We'll compare genres, cultures, and production types (independent vs. major studios) in terms of gender representation.
@@ -182,6 +183,6 @@ To summarize, by conducting a thorough analysis of women's representation in mov
 |-----------------|--------------------------------------|--------------------------|
 | F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Preprocessing, Analysis, Clean the repo, README |
 | K. Tetard       | `kenji.tetard@epfl.ch`               |  NLP |
-| L. Vogel        | `lena.vogel@epfl.ch`                 | README               |
+| L. Vogel        | `lena.vogel@epfl.ch`                 | README, cleaning, organization |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | -   |
 | A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory data Analysis   |
