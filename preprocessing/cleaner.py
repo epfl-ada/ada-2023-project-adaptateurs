@@ -67,7 +67,7 @@ def clean_credit_df(credit_df, meta_df):
     credit_df.drop(["cast"], axis=1, inplace=True)
     credit_df["crew"].fillna("[]", inplace=True)
     credit_df["crew"] = credit_df["crew"].apply(literal_eval)
-
+    
     def get_job(namedict, target_job, target):
         try:
             name = [x[target] for x in namedict if x["job"] == target_job][0]
@@ -94,6 +94,48 @@ def clean_credit_df(credit_df, meta_df):
         lambda x: get_job(x, "Writer", "gender")
     )
 
+    print("Before using wikipedia and genderguesser:")
+    print(
+        f"Percentage of movies with a director's name that could not be gendered: {round((len(credit_df[credit_df['director_gender'] == 0]) + credit_df['director_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
+    )
+    print(
+        f"Percentage of movies with a producer's name that could not be gendered: {round((len(credit_df[credit_df['producer_gender'] == 0]) + credit_df['producer_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
+    )
+    print(
+        f"Percentage of movies with a writer's name that could not be gendered:   {round((len(credit_df[credit_df['writer_gender'] == 0]) + credit_df['writer_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
+    )
+
+    credit_df.loc[
+        credit_df["director_gender"] == 0.0, "director_gender"
+    ] = credit_df.loc[credit_df["director_gender"] == 0.0, ["director","imdbid"]].apply(
+        lambda x: wiki_request.get_gender_id(wiki_request.get_gender_imdb(x["imdbid"], "director", x["director"])), axis=1)
+
+    credit_df.loc[
+        credit_df["producer_gender"] == 0.0, "producer_gender"
+    ] = credit_df.loc[credit_df["producer_gender"] == 0.0, ["producer","imdbid"]].apply(
+        lambda x: wiki_request.get_gender_id(wiki_request.get_gender_imdb(x["imdbid"], "producer", x["producer"])), axis=1)
+    credit_df.loc[credit_df["writer_gender"] == 0.0, "writer_gender"] = credit_df.loc[
+        credit_df["writer_gender"] == 0.0, ["writer","imdbid"]].apply(
+        lambda x: wiki_request.get_gender_id(wiki_request.get_gender_imdb(x["imdbid"], "writer", x["writer"])), axis=1)
+
+    credit_df.loc[credit_df["director_gender"] == 2.0, "director_gender"] = "M"
+    credit_df.loc[credit_df["producer_gender"] == 2.0, "producer_gender"] = "M"
+    credit_df.loc[credit_df["writer_gender"] == 2.0, "writer_gender"] = "M"
+    credit_df.loc[credit_df["director_gender"] == 1.0, "director_gender"] = "F"
+    credit_df.loc[credit_df["producer_gender"] == 1.0, "producer_gender"] = "F"
+    credit_df.loc[credit_df["writer_gender"] == 1.0, "writer_gender"] = "F"
+
+    print("\nAfter using wikipedia:")
+    print(
+        f"Percentage of movies with a director's name that could not be gendered: {round(credit_df['director_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
+    )
+    print(
+        f"Percentage of movies with a producer's name that could not be gendered: {round(credit_df['producer_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
+    )
+    print(
+        f"Percentage of movies with a writer's name that could not be gendered:   {round(credit_df['writer_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
+    )
+
     d = gender.Detector()
 
     def getgender(name):
@@ -104,17 +146,6 @@ def clean_credit_df(credit_df, meta_df):
             return "F"
         else:
             return np.nan
-
-    print("Before using genderguesser:")
-    print(
-        f"Percentage of movies with a director's name that could not be gendered: {round((len(credit_df[credit_df['director_gender'] == 0]) + credit_df['director_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
-    )
-    print(
-        f"Percentage of movies with a producer's name that could not be gendered: {round((len(credit_df[credit_df['producer_gender'] == 0]) + credit_df['producer_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
-    )
-    print(
-        f"Percentage of movies with a writer's name that could not be gendered:   {round((len(credit_df[credit_df['writer_gender'] == 0]) + credit_df['writer_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
-    )
 
     credit_df.loc[
         credit_df["director_gender"] == 0.0, "director_gender"
