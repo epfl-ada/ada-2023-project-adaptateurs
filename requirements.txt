@@ -4,3 +4,5 @@ pandas
 matplotlib
 wikipediaapi
 WikibaseIntegrator
+scikit-learn
+nltk
