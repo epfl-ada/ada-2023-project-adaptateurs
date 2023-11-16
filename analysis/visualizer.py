@@ -239,6 +239,34 @@ def visualize_age_distribution_by_gender(movies, style="darkgrid"):
     plt.show()
 
 
+def visualize_age_evolution(movies, style="darkgrid"):
+    """
+    Visualize the evolution of actors' age over the years.
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing information about movies and actors.
+    style (str): Style of the plot. Default is "darkgrid".
+
+    Returns:
+    None
+    """
+
+    plt.figure(figsize=(10, 6))
+    sns.set_style(style)
+    sns.lineplot(
+        data=movies,
+        x="year",
+        y="actor_age_at_movie_release",
+        hue="actor_gender",
+        errorbar=("ci", 95),
+        palette=["red", "blue"],
+    )
+    plt.title("Evolution of actors' age over the years")
+    plt.xlabel("Year")
+    plt.ylabel("Age")
+    plt.show()
+
+
 def visualize_feminity_score_distribution(movies, style="darkgrid"):
     """
     Visualize the distribution of the femininity score across movies.
