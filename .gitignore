@@ -5,3 +5,4 @@
 .ipynb_checkpoints
 .DS_Store
 !female_keywords.txt
+!male_keywords.txt

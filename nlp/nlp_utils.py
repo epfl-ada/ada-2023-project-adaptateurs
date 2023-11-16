@@ -16,6 +16,10 @@ female_keywords = []
 with open("./nlp/female_keywords.txt", "r") as file:
     female_keywords = [line.strip() for line in file]
 
+male_keywords = []
+with open("./nlp/male_keywords.txt", "r") as file:
+    male_keywords = [line.strip() for line in file]
+
 
 def clean_text(text: str):
     """
@@ -74,5 +78,26 @@ def nlp_compute_feminity_score(nlp_summaries):
     nlp_summaries = pd.concat([nlp_summaries, word_counts], axis=1)
     nlp_summaries["feminity_score"] = (
         1 / nlp_summaries["len"] * nlp_summaries[female_keywords].sum(axis=1)
+    )
+    return nlp_summaries
+
+
+def nlp_compute_masculinity_score(nlp_summaries):
+    """
+    Compute the femininity score of a given set of summaries using a pre-defined list of female keywords.
+
+    Args:
+    - nlp_summaries: a pandas DataFrame containing the summaries to analyze
+
+    Returns:
+    - nlp_summaries: the input DataFrame with an additional column 'femininity_score' containing the computed score
+    """
+
+    vect = CountVectorizer(vocabulary=male_keywords)
+    X = vect.fit_transform(nlp_summaries["summary"])
+    word_counts = pd.DataFrame(X.toarray(), columns=vect.get_feature_names_out())
+    nlp_summaries = pd.concat([nlp_summaries, word_counts], axis=1)
+    nlp_summaries["masculinity_score"] = (
+        1 / nlp_summaries["len"] * nlp_summaries[male_keywords].sum(axis=1)
     )
     return nlp_summaries
