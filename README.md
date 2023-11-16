@@ -181,7 +181,7 @@ To summarize, by conducting a thorough analysis of women's representation in mov
 | Name            | Email                                | Task                     |
 |-----------------|--------------------------------------|--------------------------|
 | F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Preprocessing, Analysis,  README |
-| K. Tetard       | `kenji.tetard@epfl.ch`               | -   |
+| K. Tetard       | `kenji.tetard@epfl.ch`               | -  NLP |
 | L. Vogel        | `lena.vogel@epfl.ch`                 | README               |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | -   |
 | A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory data Analysis   |
