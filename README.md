@@ -137,15 +137,16 @@ In this analysis, we will use three different datasets
 
 </span>
 
-### Analysis of Women's place
-Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
+### Analysis of Women's place in movies
 We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to rely on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context. 
+Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
 
-By correlating cast members genders with movie success and budgets, we can identify trends and biases in the industry. For instance, examining whether films with a higher proportion of female cast members are as likely to benefit from big or small budgets or have significant box office entries.
+By correlating cast members genders with the movie success and budget, we can identify trends and biases in the industry. For instance, examining whether films with a higher proportion of female cast members are as likely to benefit from big budgets or result in significant box office entries.
+In this analysis we will perform all kinds of tests to be able to notice the most significant correlations that could appear between the parameters of a movie and the virtual feminist score it achieves. The latter will be obtained through several tests, the main one being the Bechdel test. 
 
-In order to analyze how well women are represented in movies we use the Bechdel test. It was originally invented in 1985 in a comic strip by Alison Bechdel and tests whether a movie passes the 3 following conditions: 
+**Bechdel test:** The Bechdel test was originally invented in 1985 in a comic strip by Alison Bechdel and tests whether a movie passes the 3 following conditions: 
 a) The movie has to have at least two women in it, b) who talk to each other, c) about something other than a man. This results in a score between 0 and 3, depending on the number of tests the movie passes.
-The Bechdel test is considered to be a basic standard for minimal women's representation in movies and also includes some women's theorized stereotypes such as the Smurfette principle, which designs the fact that in many stories, the woman is the exception and exists only in reference to the men.
+It is considered to be a basic standard for minimal women's representation in movies and also includes some women's theorized stereotypes such as the Smurfette principle, which designs the fact that in many stories, the woman is the exception and exists only in reference to the men. Even though this test is very limited, it offers great insight on the role and representaion of the women in any movie.
 
 To summarize, by conducting a thorough analysis of women's representation in movies using these datasets we hope to provide valuable insights into the passed and future progress in achieving gender equality in the film industry.
 
