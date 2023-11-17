@@ -343,16 +343,10 @@ def visualize_bechdel_distribution(movies_with_bechdel, style="darkgrid"):
     Args: movies_with_bechdel (pandas.DataFrame): A DataFrame containing movie data with a 'bechdel_rating' column.
     Returns: None
     """
-    df_unique_movies = movies_with_bechdel.drop_duplicates(
-        subset=["movie_title", "year"]
-    )
+    df_unique_movies = movies_with_bechdel.drop_duplicates(subset=["movie_title", "year"])
 
     # Group by year and Bechdel grade, then count the number of movies
-    grouped_bechdel = (
-        df_unique_movies.groupby(["year", "bechdel_rating"])
-        .size()
-        .unstack(fill_value=0)
-    )
+    grouped_bechdel = (df_unique_movies.groupby(["year", "bechdel_rating"]).size().unstack(fill_value=0))
 
     # Determine the complete range of years
     all_years = range(grouped_bechdel.index.min(), grouped_bechdel.index.max() + 1)
@@ -383,7 +377,7 @@ def visualize_bechdel_distribution(movies_with_bechdel, style="darkgrid"):
 
     # Show the plot
     plt.show()
-
+    return df_unique_movies
 
 def visualize_feminity_score_distribution(movies, style="darkgrid"):
     """
