@@ -138,7 +138,7 @@ In this analysis, we will use three different datasets
 </span>
 
 ### Analysis of Women's place in movies
-We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to rely on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context. 
+We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to relate on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context. 
 Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
 
 By correlating cast members genders with the movie success and budget, we can identify trends and biases in the industry. For instance, examining whether films with a higher proportion of female cast members are as likely to benefit from big budgets or result in significant box office entries.
