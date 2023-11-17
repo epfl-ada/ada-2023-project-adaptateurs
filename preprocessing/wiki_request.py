@@ -65,7 +65,6 @@ def get_gender_imdb(imdb_id, job, provided_name):
                     return gender
         return None
     except:
-        print('error with ', provided_name)
         return None
 
 
@@ -81,7 +80,6 @@ def get_IMDB_ID(wikiID):
 
 def get_gender_id(QID):
     if QID == None:
-        print('got none')
         return 0.
     dictory = {
         'Q6581097' : 2.0, 
@@ -95,7 +93,6 @@ def get_gender_id(QID):
     }
     try:
         value = dictory[QID]
-        print('got value ', value)
         return value
     except KeyError:
-        print("No gender found from gender id.")
+        return 0.
