@@ -2,3 +2,5 @@ gender-guesser==0.4.0
 numpy
 pandas
 matplotlib
+seaborn
+scipy 
