@@ -3,7 +3,7 @@ import numpy as np
 import gender_guesser.detector as gender
 import json
 from ast import literal_eval
-
+import wiki_request
 
 def clean_movie_df(movie_df):
     """
