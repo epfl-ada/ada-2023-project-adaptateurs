@@ -2,6 +2,7 @@ import wiki_request
 import pandas as pd
 import requests
 import sys
+
 DATA_PATH = "./data/MovieSummaries/"
 EXTERNAL_DATA_PATH = "./data/external/Movies/"
 
@@ -112,14 +113,15 @@ def load_tmdb_dataset():
     meta_df = pd.read_csv(EXTERNAL_DATA_PATH + "movies_metadata.csv", low_memory=False)
     return credits_df, meta_df
 
+
 def build_wiki2imdb():
     _, movie_df = load_CMU_dataset()
     wiki2imdb = pd.DataFrame(movie_df["wikiID"])
-    wiki2imdb['imdbid'] = None
+    wiki2imdb["imdbid"] = None
     for i in range(len(wiki2imdb)):
-        print(f'processing {wiki2imdb.iloc[i, 0]}')
-        try: 
+        print(f"processing {wiki2imdb.iloc[i, 0]}")
+        try:
             wiki2imdb.iloc[i, 1] = wiki_request.get_IMDB_ID(str(wiki2imdb.iloc[i, 0]))
         except:
-            print(f'error with {wiki2imdb.iloc[i, 0]}')
+            print(f"error with {wiki2imdb.iloc[i, 0]}")
     return wiki2imdb
