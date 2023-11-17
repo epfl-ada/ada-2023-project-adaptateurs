@@ -50,7 +50,7 @@ def clean_bechdel_df(bechdel_df):
     return bechdel_df
 
 
-def clean_credit_df(credit_df, meta_df):
+def clean_credit_df(credit_df, meta_df, scraping=False):
     """
     Clean the credit dataframe by extracting the director, producer and writer names and genders.
 
@@ -106,29 +106,49 @@ def clean_credit_df(credit_df, meta_df):
         f"Percentage of movies with a writer's name that could not be gendered:   {round((len(credit_df[credit_df['writer_gender'] == 0]) + credit_df['writer_gender'].isna().sum()) / len(credit_df) * 100, 2)}%"
     )
 
-    # credit_df.loc[
-    #     credit_df["director_gender"] == 0.0, "director_gender"
-    # ] = credit_df.loc[credit_df["director_gender"] == 0.0, ["director","imdbid"]].apply(
-    #     lambda x: wiki_request.get_gender_id(wiki_request.get_gender_imdb(x["imdbid"], "director", x["director"])), axis=1)
+    if scraping:
+        credit_df.loc[
+            credit_df["director_gender"] == 0.0, "director_gender"
+        ] = credit_df.loc[
+            credit_df["director_gender"] == 0.0, ["director", "imdbid"]
+        ].apply(
+            lambda x: wiki_request.get_gender_id(
+                wiki_request.get_gender_imdb(x["imdbid"], "director", x["director"])
+            ),
+            axis=1,
+        )
 
-    # credit_df.loc[
-    #     credit_df["producer_gender"] == 0.0, "producer_gender"
-    # ] = credit_df.loc[credit_df["producer_gender"] == 0.0, ["producer","imdbid"]].apply(
-    #     lambda x: wiki_request.get_gender_id(wiki_request.get_gender_imdb(x["imdbid"], "producer", x["producer"])), axis=1)
-    # credit_df.loc[credit_df["writer_gender"] == 0.0, "writer_gender"] = credit_df.loc[
-    #     credit_df["writer_gender"] == 0.0, ["writer","imdbid"]].apply(
-    #     lambda x: wiki_request.get_gender_id(wiki_request.get_gender_imdb(x["imdbid"], "writer", x["writer"])), axis=1)
+        credit_df.loc[
+            credit_df["producer_gender"] == 0.0, "producer_gender"
+        ] = credit_df.loc[
+            credit_df["producer_gender"] == 0.0, ["producer", "imdbid"]
+        ].apply(
+            lambda x: wiki_request.get_gender_id(
+                wiki_request.get_gender_imdb(x["imdbid"], "producer", x["producer"])
+            ),
+            axis=1,
+        )
+        credit_df.loc[
+            credit_df["writer_gender"] == 0.0, "writer_gender"
+        ] = credit_df.loc[
+            credit_df["writer_gender"] == 0.0, ["writer", "imdbid"]
+        ].apply(
+            lambda x: wiki_request.get_gender_id(
+                wiki_request.get_gender_imdb(x["imdbid"], "writer", x["writer"])
+            ),
+            axis=1,
+        )
 
-    # print("\nAfter using wikipedia:")
-    # print(
-    #     f"Percentage of movies with a director's name that could not be gendered: {round(credit_df['director_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
-    # )
-    # print(
-    #     f"Percentage of movies with a producer's name that could not be gendered: {round(credit_df['producer_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
-    # )
-    # print(
-    #     f"Percentage of movies with a writer's name that could not be gendered:   {round(credit_df['writer_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
-    # )
+        print("\nAfter using wikipedia:")
+        print(
+            f"Percentage of movies with a director's name that could not be gendered: {round(credit_df['director_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
+        )
+        print(
+            f"Percentage of movies with a producer's name that could not be gendered: {round(credit_df['producer_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
+        )
+        print(
+            f"Percentage of movies with a writer's name that could not be gendered:   {round(credit_df['writer_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
+        )
 
     d = gender.Detector()
 
@@ -171,17 +191,6 @@ def clean_credit_df(credit_df, meta_df):
     )
     print(
         f"Percentage of movies with a writer's name that could not be gendered:   {round(credit_df['writer_gender'].isna().sum() / len(credit_df) * 100, 2)}%"
-    )
-
-    print("\nAfter using wikipedia:")
-    print(
-        f"Percentage of movies with a director's name that could not be gendered: {1.95}%"
-    )
-    print(
-        f"Percentage of movies with a producer's name that could not be gendered: {30.73}%"
-    )
-    print(
-        f"Percentage of movies with a writer's name that could not be gendered:   {57.7}%"
     )
 
     credit_df.drop(["crew"], axis=1, inplace=True)
