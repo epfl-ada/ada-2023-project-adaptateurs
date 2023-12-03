@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+
 
 mpl.rcParams["figure.dpi"] = 300
 
@@ -424,3 +426,30 @@ def visualize_masculinity_score_distribution(movies, style="darkgrid"):
     plt.xlabel("Masculinity Score")
     plt.ylabel("Number of Movies")
     plt.show()
+    
+def visualize_wordcloud_roles(actor_with_role):
+    role_women = actor_with_role.loc[actor_with_role['actor_gender']=='F'].copy(deep=True)
+    role_men = actor_with_role.loc[actor_with_role['actor_gender']=='M'].copy(deep=True)
+
+    women_counts = role_women['role'].value_counts().head(5)
+    men_counts = role_men['role'].value_counts().head(5)
+
+    # Create WordClouds for women and men
+    women_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Oranges').generate_from_frequencies(women_counts)
+    men_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Oranges').generate_from_frequencies(men_counts)
+
+    # Plotting the WordClouds
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    plt.imshow(women_wordcloud, interpolation='bilinear')
+    plt.title('Women Main Characters', color='black', fontsize=16)
+    plt.axis('off')
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(men_wordcloud, interpolation='bilinear')
+    plt.title('Men Main Characters', color='black', fontsize=16)
+    plt.axis('off')
+
+    plt.show()
+    return

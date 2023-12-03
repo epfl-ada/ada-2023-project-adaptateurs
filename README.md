@@ -1,4 +1,4 @@
-# Women's Representation Analysis in the Film Industry
+# Analysis of Gender Representation in Global Cinema: The Evolution of Women's Roles and Audience Perceptions
 
 <div>
   <div><b>Team</b>: Adaptateurs</div>
@@ -84,38 +84,36 @@ Or simply decompress archive from file system. You can also directly use the pre
 
 <span align="justify">
 
-This data analysis aims to discover the portrayal of women in the film industry by analyzing a rich dataset encompassing aspects from actor profiles to production details. We aim to uncover gender disparities by examining the numbers, roles and ages of actresses at the time of a movie's release, and the impact of female directors and producers on a film's popularity and box-office performance. In addition to that, we will use another dataset: the movies that passed the Bechdel test or not. This test analyzes whether a movie passes the 3 following conditions: 
-a) The movie has to have at least two women in it, b) who talk to each other, c) about something other than a man.
-While this gives very basic insights on the representativity of women we want to inspect how the result of the Bechdel Test can influence the success of a movie, and where a good or a bad result could come from: the proportion of actors and actresses, the gender of the producer, ...? 
-Additionally, we will utilize Natural Language Processing technique to assess gender stereotypes within film summaries.
+Imagine a world where the stories we watch on the big screen truly reflect the diversity and complexity of the society we live in. This data analysis project embarks on a journey to explore the evolving landscape of women's representation in cinema, an arena that mirrors cultural shifts and societal attitudes. Our objective is to dissect the film industry's portrayal of women across the world, utilizing a comprehensive dataset that spans from actor profiles to intricate production details.
+
+We want to unravel the layers of gender disparities by delving into the numbers, roles, and ages of actresses at the time of a movie's release. Furthermore, we're curious to understand the influence wielded by female directors and producers on a film's popularity and box-office success. An intriguing aspect of our study involves the Bechdel test - a litmus test for assessing female presence in movies. While seemingly simple, this test opens a window into the deeper narrative of female representativity in cinema.
+
+Our quest is not just about numbers and statistics; it's a pursuit to comprehend how these elements shape the success and acceptance of films. We're also venturing into the realm of Natural Language Processing to dissect gender stereotypes within film summaries, offering a unique perspective on the narrative portrayal of women.
+
+It's a quest to illuminate the untold stories and unseen perspectives in the world of cinema. By unraveling these patterns, we aspire to contribute valuable insights to filmmakers, viewers, and society at large, fostering a more inclusive and equitable cinematic landscape.
 
 </span>
 
 ## Research Questions 🔍
 
-Our objectives are to delve into the representation of women in the film industry across different time periods and investigate the following questions:
+Our journey through the cinematic universe is guided by the following pivotal questions:
 
-- How does the inclusion of women in a film, both on-screen and behind the scenes, impact its reception among viewers?
-- Is the Bechdel test a valid measure of a film's "feminine" qualities?
-- Do film summaries show any influence from the presence of women in the context of film creation and production?
-- Which movie genres feature the highest representation of women as characters?
-- What kinds of correlations could exist between the gender of the director, writers, producers and the representation of women in the movie using the Bechdel test?
+- How do various film industries, such as Hollywood, Bollywood, and European cinema, portray women in their films?
+- How does the representation of women, both in front of the camera and behind the scenes, shape a film's reception and resonance with its audience?
+- Can the Bechdel test serve as a meaningful barometer for evaluating a film's portrayal of women, beyond its surface-level criteria?
+- In what ways do film summaries, as condensed narratives, reflect gender biases or empowerment, influenced by the gender dynamics within the film's creation?
+- Which genres in cinema are leading the charge in representing women as complex, multi-dimensional characters?
 
 ## Datasets 📊
 
 In this analysis, we will use three different datasets
 
-1. The original and provided CMU dataset (http://www.cs.cmu.edu/~ark/personas/)
-2. The TMDB Dataset:
-    - How we got it: directly downloaded from [The Movies Dataset on Kaggle](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset) (TMDB)
-    - Contains metadata on over 45,000 movies. 26 million ratings (in %) from over 270'000 users.
-    - Will be used to define a metric for the success of a movie.
-3. The Bechdel Dataset:
-    - How we got it: Obtained via bechdeltest.com API
-    - Contains the Bechdel rating score (0,1,2 or 3) for more than 10'000 movies
-    - See `preprocessing/loader.py#load_bechdel_dataset`
+- The original and provided [CMU](http://www.cs.cmu.edu/~ark/personas/) dataset.
+- The [TMDB Dataset](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset): this dataset offers metadata for over 45,000 movies, with a particular focus on user ratings. Our primary interest lies in getting the populariy, the number of votes each movie receives and its average score rating to define a success metric. This dataset also includes valuable details about a movie's crew, such as the gender of the director and producers. These data points are crucial for conducting analyses on women's roles behind the camera.
+- The [Bechdel Dataset](https://bechdeltest.com) that contains the Bechdel rating score for more than 10'000 movies. This dataset will be used to conduct a analysis on movies that passes (or not) the Bechdel test.
+- [Maybe Oscar ?]
 
-## Methodology 💡
+## Methods 💡
 
 ### Preprocessing on **data**
 
