@@ -9,7 +9,7 @@
 
 <br>
 
-**Lena Vogel,  François Dumoncel,  Aymeric Bacuet,  Kenji Tetard,  Naël Dillenbourg**
+**Léna Vogel,  François Dumoncel,  Aymeric Bacuet,  Kenji Tetard,  Naël Dillenbourg**
 
 *École Polytechnique Fédérale de Lausanne*
 
@@ -41,7 +41,7 @@ $ cd external && unzip movies.zip && mv "Movies Dataset" Movies
 Or simply decompress archive from file system. You can also directly use the pre-processed pickle file in `data/Processed`
 </details>
 
-## Reposository structure
+## Repository structure
 
 ```
 ├─── data
