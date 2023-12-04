@@ -1,4 +1,4 @@
-# Analysis of Gender Representation in Global Cinema: The Evolution of Women's Roles and Audience Perceptions
+# Are women in movies clickbate?
 
 <div>
   <div><b>Team</b>: Adaptateurs</div>
@@ -9,7 +9,7 @@
 
 <br>
 
-**Léna Vogel,  François Dumoncel,  Aymeric Bacuet,  Kenji Tetard,  Naël Dillenbourg**
+**Lena Vogel,  François Dumoncel,  Aymeric Bacuet,  Kenji Tetard,  Naël Dillenbourg**
 
 *École Polytechnique Fédérale de Lausanne*
 
