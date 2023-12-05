@@ -59,6 +59,7 @@ Or simply decompress archive from file system. You can also directly use the pre
        ├─── nlp_utils.py
        └─── female_keywords.txt
 ├─── P2.ipynb
+├─── P3.ipynb
 ├─── requirements.txt
 ├─── Makefile
 └─── README.md
@@ -75,8 +76,6 @@ Or simply decompress archive from file system. You can also directly use the pre
   <br>
   <a href="#methods-">4. Methods</a> 
   <br>
-  <a href="#proposed-timeline-">5. Timeline</a> 
-  <br>
   <a href="#team-organization-">6. Team Organization</a>
 </p>
 
@@ -84,13 +83,6 @@ Or simply decompress archive from file system. You can also directly use the pre
 
 <span align="justify">
 
-Imagine a world where the stories we watch on the big screen truly reflect the diversity and complexity of the society we live in. This data analysis project embarks on a journey to explore the evolving landscape of women's representation in cinema, an arena that mirrors cultural shifts and societal attitudes. Our objective is to dissect the film industry's portrayal of women across the world, utilizing a comprehensive dataset that spans from actor profiles to intricate production details.
-
-We want to unravel the layers of gender disparities by delving into the numbers, roles, and ages of actresses at the time of a movie's release. Furthermore, we're curious to understand the influence wielded by female directors and producers on a film's popularity and box-office success. An intriguing aspect of our study involves the Bechdel test - a litmus test for assessing female presence in movies. While seemingly simple, this test opens a window into the deeper narrative of female representativity in cinema.
-
-Our quest is not just about numbers and statistics; it's a pursuit to comprehend how these elements shape the success and acceptance of films. We're also venturing into the realm of Natural Language Processing to dissect gender stereotypes within film summaries, offering a unique perspective on the narrative portrayal of women.
-
-It's a quest to illuminate the untold stories and unseen perspectives in the world of cinema. By unraveling these patterns, we aspire to contribute valuable insights to filmmakers, viewers, and society at large, fostering a more inclusive and equitable cinematic landscape.
 
 </span>
 
@@ -128,17 +120,7 @@ In this analysis, we will use three different datasets
 </span>
 
 ### Analysis of Women's place in movies
-We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to relate on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context. 
-Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
 
-By correlating cast members genders with the movie success and budget, we can identify trends and biases in the industry. For instance, examining whether films with a higher proportion of female cast members are as likely to benefit from big budgets or result in significant box office entries.
-In this analysis we will perform all kinds of tests to be able to notice the most significant correlations that could appear between the parameters of a movie and the virtual feminist score it achieves. The latter will be obtained through several tests, the main one being the Bechdel test. 
-
-**Bechdel test:** The Bechdel test was originally invented in 1985 in a comic strip by Alison Bechdel and tests whether a movie passes the 3 following conditions: 
-a) The movie has to have at least two women in it, b) who talk to each other, c) about something other than a man. This results in a score between 0 and 3, depending on the number of tests the movie passes.
-It is considered to be a basic standard for minimal women's representation in movies and also includes some women's theorized stereotypes such as the Smurfette principle, which designs the fact that in many stories, the woman is the exception and exists only in reference to the men. Even though this test is very limited, it offers great insight on the role and representaion of the women in any movie.
-
-To summarize, by conducting a thorough analysis of women's representation in movies using these datasets we hope to provide valuable insights into the passed and future progress in achieving gender equality in the film industry.
 
 ### Techniques
 - **Natural Language Processing:** NLP techniques will be applied to film summaries to detect and analyze gender stereotypes.
