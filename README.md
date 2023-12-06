@@ -90,6 +90,8 @@ This study aims to provide a comprehensive analysis of female representation in 
 </span>
 
 ## Research Questions 🔍
+We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to relate on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context.
+Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
 
 Our journey through the cinematic universe is guided by the following pivotal questions:
 
@@ -110,7 +112,7 @@ In this analysis, we will use three different datasets
 
 ## Methods 💡
 
-### Preprocessing on **data**
+### **Step 1**: Preprocessing on data
 
 <span align="justify"> 
 
@@ -122,11 +124,8 @@ In this analysis, we will use three different datasets
 
 </span>
 
-### Analysis of Women's place in movies
-We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to relate on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context.
-Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
+### **Step 2**: 
 
-### Methods
 
 ```
 
