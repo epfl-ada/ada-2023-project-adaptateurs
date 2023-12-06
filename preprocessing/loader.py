@@ -125,3 +125,30 @@ def build_wiki2imdb():
         except:
             print(f"error with {wiki2imdb.iloc[i, 0]}")
     return wiki2imdb
+
+
+def load_roles():
+    with open("./data/MovieSummaries/tvtropes.clusters.txt", 'r') as file:
+        lines = file.readlines()
+        new_lines = []
+        
+        for line in lines:
+            role = line.split()[0]
+            char_type_dict = {'role': role}
+
+            space_index = line.find('	')
+            char_info = ast.literal_eval(line[space_index+1:])
+            
+            new_line = {**char_type_dict, **char_info}
+            
+            new_lines.append(new_line)
+        
+    headers_names = ['role',
+                    'role_name',
+                    'movie_title',
+                    'fbid_char_actor_map',
+                    'actor_name']
+
+    roles = pd.DataFrame(new_lines)
+    roles.columns = headers_names
+    return roles
