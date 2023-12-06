@@ -84,7 +84,8 @@ Or simply decompress archive from file system. You can also directly use the pre
 <span align="justify">
 In this data analysis, we will study how women are represented in movies, why, and what the impact of their presence is. To do so, we will use the ratio of actors and actresses as the main metric. We will analyze the quality of the feminine characters in movies, such as whether they have a name. Furthermore, we will try to understand the cause of the over- or sub-representation of women characters, and the effect it has on the story.
 To do so, we will use the movies contained in the CMU Summary corpus, along with the genders of the movies' crews scrapped from Wikidata and the roles of the characters taken from TMDB.
-In order to complete our quality evalutation of the representation of women, we will use the results of the Bechdel test, which are only available for a fraction of the CMU Summary corpus.
+In order to complete our quality evalutation of the representation of women, we will use the results of the Bechdel test, which evaluates the importance of the feminine characters in a movie.
+This study aims to provide a comprehensive analysis of female representation in cinema, using a data-driven approach to evaluate how gender dynamics in movies influence both narrative quality and societal perceptions.
 
 </span>
 
