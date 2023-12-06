@@ -123,33 +123,11 @@ In this analysis, we will use three different datasets
 </span>
 
 ### Analysis of Women's place in movies
+We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to relate on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context.
+Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
 
+### Methods
 
-### Techniques
-- **Natural Language Processing:** NLP techniques will be applied to film summaries to detect and analyze gender stereotypes.
-
-- **Comparative Analysis:** We'll compare genres, cultures, and production types (independent vs. major studios) in terms of gender representation.
-
-- **Temporal Analysis:** Examining how trends have evolved over time, we'll use this data to potentially forecast future trends.
-
-- **Impact Assessment:** We'll assess the real-world impact of films that pass the Bechdel, particularly in terms of influencing public discourse and contributing to gender equality movements.
-
-## Proposed Timeline 📆
-
-```C
-├── Week 8  - Preprocessing
-│  
-├── Week 9  - Analysis and pipeline
-│  
-├── Week 10 - Homework II
-│  
-├── Week 11 - Data Story and fine-grained analysis through Bechdel test and cie
-│  
-├── Week 12 - Data Story and NLP on plot summaries 
-│    
-├── Week 13 - Start the website (Github Pages)
-│  
-├── Week 14 - Finalization
 ```
 
 ## Team Organization ⚙️
