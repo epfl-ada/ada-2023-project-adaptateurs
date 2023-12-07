@@ -2,6 +2,7 @@ import wiki_request
 import pandas as pd
 import requests
 import sys
+import ast
 
 DATA_PATH = "./data/MovieSummaries/"
 EXTERNAL_DATA_PATH = "./data/external/Movies/"
