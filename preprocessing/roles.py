@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 import spacy
 from spacy.matcher import Matcher
-
+# python -m spacy download en_core_web_sm is needed
 nlp = spacy.load("en_core_web_trf")
 
 def scrape_roles(movies, API_TOKEN):

@@ -6,3 +6,4 @@ wikipediaapi
 WikibaseIntegrator
 scikit-learn
 nltk
+spacy
