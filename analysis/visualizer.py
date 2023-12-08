@@ -4,10 +4,13 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+import plotly.express as px
+import mpld3
 
 
 mpl.rcParams["figure.dpi"] = 300
-
+color_M = 'rgb(0,0,139)'
+color_F = 'rgb(182,28,66)'
 
 def visualize_year_distribution(movies, style="darkgrid"):
     """
@@ -331,12 +334,49 @@ def visualize_age_evolution(movies, style="darkgrid"):
         y="actor_age_at_movie_release",
         hue="actor_gender",
         errorbar=("ci", 95),
-        palette=["lightpink", "skyblue"],
+        palette=["lightpink", "skyblue"]
     )
     plt.title("Evolution of actors' age over the years")
     plt.xlabel("Year")
     plt.ylabel("Age")
     plt.show()
+
+
+def visualize_age_evolution_HTML(movies, output_html='html_plots/age_evolution_plot.html'):
+    """
+    Visualize the average evolution of actors' and actresses' age over the years using Plotly and export as HTML.
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing information about movies, actors, and their ages.
+    output_html (str): The name of the output HTML file.
+
+    Returns:
+    None
+    """
+
+    # Calculate the median age of actors and actresses for each year
+    median_ages = movies.groupby(['year', 'actor_gender'])['actor_age_at_movie_release'].median().reset_index()
+
+    color_discrete_map = {'F': color_F, 'M': color_M}
+
+    # Create the plot using Plotly
+    fig = px.line(
+        median_ages,
+        x="year",
+        y="actor_age_at_movie_release",
+        color="actor_gender",
+        title="Evolution of the median age of Actors and Actresses over the Years",
+        labels={"actor_age_at_movie_release": "Median Age", "actor_gender": "Actor Gender", "year": "Year"},
+        color_discrete_map=color_discrete_map
+    )
+
+    fig.update_yaxes(range=[0, 50])
+    
+    # Display the plot
+    fig.show()
+
+    # Export the plot to an HTML file
+    fig.write_html(output_html)
 
 
 def visualize_bechdel_distribution(movies_with_bechdel, style="darkgrid"):
