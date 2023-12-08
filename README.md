@@ -1,4 +1,4 @@
-# Are women in movies clickbate?
+# Are women in movies clickbait?
 
 <div>
   <div><b>Team</b>: Adaptateurs</div>
