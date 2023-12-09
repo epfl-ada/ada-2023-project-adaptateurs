@@ -493,3 +493,89 @@ def visualize_wordcloud_roles(actor_with_role):
 
     plt.show()
     return
+
+
+    
+
+def visualize_director_gender_proportion(movies, style="darkgrid", year_range=5):
+    """
+    Visualize the average proportion of male and female directors over a specified range of years.
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing information about movies and directors.
+    style (str): Style of the plot. Default is "darkgrid".
+    year_range (int): The range of years to average over. Default is 5.
+
+    Returns:
+    None
+    """
+
+    min_year = movies['year'].min()
+    max_year = movies['year'].max()
+    year_mod = (max_year - min_year) % year_range
+    if year_mod != 0:
+        movies = movies[movies['year'] > min_year + year_mod]
+
+    # Group by year range
+    movies['year_range'] = np.floor((movies['year'] - min_year) / year_range) * year_range + min_year
+    gender_counts = movies.groupby(['year_range', 'director_gender']).size().unstack(fill_value=0)
+
+    plt.figure(figsize=(12, 6))
+    sns.set_style(style)
+
+    # Adjust the order of plotting to put female on top
+    gender_counts = gender_counts[['M', 'F']]
+
+    # Plot stacked bar plot for counts
+    gender_counts.plot(kind='bar', stacked=True, color={"F": "plum", "M": "lightblue"}, ax=plt.gca())
+
+    plt.title(f"Count of Movies with Male and Female Directors Over {year_range}-Year Periods")
+    plt.xlabel(f"Year Ranges Starting from {min_year}")
+    plt.ylabel("Count of Movies")
+    plt.legend(title='Director Gender', labels=['Male', 'Female'])
+    plt.show()
+
+
+def visualize_producer_gender_proportion(movies, style="darkgrid", year_range=5):
+    """
+    Visualize the average proportion of male and female directors over a specified range of years.
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing information about movies and directors.
+    style (str): Style of the plot. Default is "darkgrid".
+    year_range (int): The range of years to average over. Default is 5.
+
+    Returns:
+    None
+    """
+
+    # Adjust DataFrame to ensure the number of years is divisible by year_range
+    min_year = movies['year'].min()
+    max_year = movies['year'].max()
+    year_mod = (max_year - min_year) % year_range
+    if year_mod != 0:
+        movies = movies[movies['year'] > min_year + year_mod]
+
+    # Group by year range
+    movies['year_range'] = np.floor((movies['year'] - min_year) / year_range) * year_range + min_year
+    gender_counts = movies.groupby(['year_range', 'producer_gender']).size().unstack(fill_value=0)
+
+    plt.figure(figsize=(12, 6))
+    sns.set_style(style)
+
+    # Adjust the order of plotting to put female on top
+    gender_counts = gender_counts[['M', 'F']]
+
+    # Plot stacked bar plot for counts
+    gender_counts.plot(kind='bar', stacked=True, color={"F": "plum", "M": "lightblue"}, ax=plt.gca())
+
+    plt.title(f"Count of Movies with Male and Female Producer Over {year_range}-Year Periods")
+    plt.xlabel(f"Year Ranges Starting from {min_year}")
+    plt.ylabel("Count of Movies")
+    plt.legend(title='Producer Gender', labels=['Male', 'Female'])
+    plt.show()
+
+
+
+
+
