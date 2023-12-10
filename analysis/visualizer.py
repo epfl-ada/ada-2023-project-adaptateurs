@@ -534,6 +534,7 @@ def visualize_director_gender_proportion(movies, style="darkgrid", year_range=5)
     plt.ylabel("Count of Movies")
     plt.legend(title='Director Gender', labels=['Male', 'Female'])
     plt.show()
+    return
 
 
 def visualize_producer_gender_proportion(movies, style="darkgrid", year_range=5):
@@ -574,8 +575,92 @@ def visualize_producer_gender_proportion(movies, style="darkgrid", year_range=5)
     plt.ylabel("Count of Movies")
     plt.legend(title='Producer Gender', labels=['Male', 'Female'])
     plt.show()
+    return
 
 
+def visualize_type_of_role_credited(movies_import, gender='B'):
+    """
+    Visualize the distribution of the type of role credited (Credited by name, job title...) across movies.
 
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing information about movies and actors.
+    style (str): Style of the plot. Default is "darkgrid".
+    gender (str): M, F or B (both)
+    Returns:
+    None
+    """
 
+    fig, ax = plt.subplots(figsize=(9, 6))
 
+    if gender == 'B':
+        movies = movies_import.copy()
+        plt.title('Distribution of the type of role credited across movies for both gender')
+    else:
+        movies = movies_import[movies_import['actor_gender']==gender]
+        if gender == 'M':
+            plt.title('Distribution of the type of role credited across movies for actors')
+        elif gender == 'F':
+            plt.title('Distribution of the type of role credited across movies for actresses')
+    # Group by decade
+    movies['decade'] = (movies['movie_release_date'].dt.year // 10) * 10
+    df_cummu = movies.groupby(movies.decade)['role_cat'].value_counts(normalize=True).reset_index()
+
+    df = df_cummu.set_index('decade', inplace=True)
+    _ = df_cummu.pivot(columns='role_cat', values='proportion').plot.area(ax=ax)
+
+    _ = plt.legend(bbox_to_anchor=(1.04,1), loc="upper left")
+    plt.show()
+    return
+    
+
+def visualize_proportion_gender_credited(movies):
+    """
+    Visualize the distribution uncredited/credited roles by gender.
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing information about movies and actors.
+    style (str): Style of the plot. Default is "darkgrid".
+    Returns:
+    None
+    """
+
+    F_credited = movies[(movies['credited']==True) & (movies['actor_gender']=='F')]['actor_name'].count()
+    F_uncredited = movies[(movies['credited']==False) & (movies['actor_gender']=='F')]['actor_name'].count()
+    M_credited = movies[(movies['credited']==True) & (movies['actor_gender']=='M')]['actor_name'].count()
+    M_uncredited = movies[(movies['credited']==False) & (movies['actor_gender']=='M')]['actor_name'].count()
+
+    fig, ax = plt.subplots()
+    ax.pie([F_credited,F_uncredited,M_credited,M_uncredited], labels=["F_credited","F_uncredited","M_credited","M_uncredited"])
+    plt.show()
+    return
+    
+def visualize_wordcloud_job_roles(movies):
+    role_women = movies.loc[movies['actor_gender']=='F'].copy(deep=True)
+    role_women = role_women[role_women['role_cat']=='JOB']
+    role_women = role_women.drop(role_women[role_women['role']=='Self'].index)
+    role_men = movies.loc[movies['actor_gender']=='M'].copy(deep=True)
+    role_men = role_men[role_men['role_cat']=='JOB']
+    role_men = role_men.drop(role_men[role_men['role']=='Self'].index)
+
+    women_counts = role_women['role'].value_counts().head(5)
+    men_counts = role_men['role'].value_counts().head(5)
+
+    # Create WordClouds for women and men
+    women_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Oranges').generate_from_frequencies(women_counts)
+    men_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Oranges').generate_from_frequencies(men_counts)
+
+    # Plotting the WordClouds
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    plt.imshow(women_wordcloud, interpolation='bilinear')
+    plt.title('Women Main Characters', color='black', fontsize=16)
+    plt.axis('off')
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(men_wordcloud, interpolation='bilinear')
+    plt.title('Men Main Characters', color='black', fontsize=16)
+    plt.axis('off')
+
+    plt.show()
+    return
