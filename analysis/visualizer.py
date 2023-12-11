@@ -649,6 +649,7 @@ def visualize_proportion_specific_gender_credited(movies, gender = 'F'):
     X_uncredited = movies[(movies['credited']==False) & (movies['actor_gender']==gender)]['actor_name'].count()
     percentage_uncredited = round(X_uncredited/(X_credited+X_uncredited)*100,2)
     fig, ax = plt.subplots()
+    gender_job = 'actors' if gender=='M' else 'actresses'
     plt.title(f'{percentage_uncredited} of actors are uncredited'.format(percentage_uncredited=percentage_uncredited))
     ax.pie([X_credited,X_uncredited], labels=[f"{gender} credited",f"{gender} uncredited"])
     plt.show()
@@ -712,12 +713,12 @@ def visualize_wordcloud_job_roles(movies):
 
     plt.subplot(1, 2, 1)
     plt.imshow(women_wordcloud, interpolation='bilinear')
-    plt.title('Women Main Characters', color='black', fontsize=16)
+    plt.title('Women Jobs as a Characters', color='black', fontsize=16)
     plt.axis('off')
 
     plt.subplot(1, 2, 2)
     plt.imshow(men_wordcloud, interpolation='bilinear')
-    plt.title('Men Main Characters', color='black', fontsize=16)
+    plt.title('Men Jobs as a Characters', color='black', fontsize=16)
     plt.axis('off')
 
     plt.show()
@@ -749,12 +750,12 @@ def visualize_wordcloud_r2j_roles(movies):
 
     plt.subplot(1, 2, 1)
     plt.imshow(women_wordcloud, interpolation='bilinear')
-    plt.title('Women Main Characters', color='black', fontsize=16)
+    plt.title('Women Supporting Jobs as Characters', color='black', fontsize=16)
     plt.axis('off')
 
     plt.subplot(1, 2, 2)
     plt.imshow(men_wordcloud, interpolation='bilinear')
-    plt.title('Men Main Characters', color='black', fontsize=16)
+    plt.title('Men Supporting Jobs as Characters', color='black', fontsize=16)
     plt.axis('off')
 
     plt.show()
