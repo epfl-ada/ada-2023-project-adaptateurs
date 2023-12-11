@@ -9,8 +9,9 @@ import mpld3
 
 
 mpl.rcParams["figure.dpi"] = 300
-color_M = 'rgb(0,0,139)'
-color_F = 'rgb(182,28,66)'
+color_M = 'darkblue' # ~rgb(0,0,139)
+color_F = 'crimson'  # ~rgb(182,28,66)
+color_G = 'dimgrey'
 
 def visualize_year_distribution(movies, style="darkgrid"):
     """
@@ -30,7 +31,7 @@ def visualize_year_distribution(movies, style="darkgrid"):
     mean = unique_movies.groupby("year")["wikiID"].count().mean()
 
     sns.set_style(style)
-    sns.histplot(unique_movies.movie_release_date, bins=100, color="blue", kde=True)
+    sns.histplot(unique_movies.movie_release_date, bins=100, color=color_G, kde=True)
 
     plt.title("Distribution of Movies Across Years")
     plt.xlabel("Release Year")
@@ -62,7 +63,7 @@ def visualize_missing_values(movies, style="darkgrid"):
 
     sns.set_style(style)
     missing_values_df.Percentage.plot(
-        kind="barh", figsize=(8, 6), color="blue", legend=False, alpha=0.5
+        kind="barh", figsize=(8, 6), color=color_G, legend=False, alpha=0.5
     )
 
     plt.title("Percentage of Missing Values in Each Column")
@@ -94,7 +95,7 @@ def visualize_gender_distribution(movies, style="darkgrid"):
             labels=gender_counts.index,
             autopct="%1.1f%%",
             startangle=90,
-            colors=["skyblue", "lightpink"],
+            colors=[color_M, color_F],
         )
 
         axes[i].set_title(role.replace("_", " ").title(), size=10)
@@ -117,7 +118,7 @@ def visualize_actors_distribution(movies, style="darkgrid"):
 
     number_of_actors = movies.groupby("wikiID")["actor_name"].agg("count")
 
-    plt.hist(number_of_actors, bins=50, log=True, color="blue", alpha=0.5)
+    plt.hist(number_of_actors, bins=50, log=True, color=color_G, alpha=0.5)
     plt.xlabel("Number of actors")
     plt.ylabel("Number of movies")
     plt.title("Distribution of actors")
@@ -183,7 +184,7 @@ def visualize_gender_proportion_repartition(movies, style="darkgrid"):
         bins=50,
         label="M",
         alpha=0.5,
-        color="blue",
+        color=color_G,
         ax=ax[1],
         kde=True,
     )
@@ -245,7 +246,7 @@ def visualize_gender_prop(movies, style="darkgrid"):
         multiple="stack",
         bins=20,
         alpha=1,
-        palette=["lightpink", "skyblue"],
+        palette=[color_F, color_M],
         element="bars",
         legend=True,
     )
@@ -276,9 +277,9 @@ def visualize_regression(movies_gender_prop, style="darkgrid"):
     sns.regplot(
         x=movies_gender_prop["percents_of_female"],
         y=movies_gender_prop["vote_average"],
-        color="blue",
+        color=color_G,
         scatter_kws={"s": 2, "alpha": 0.3},
-        line_kws={"color": "red"},
+        line_kws={"color": color_F},
     )
 
     plt.ylabel("Average Rating", fontsize=14)
@@ -306,7 +307,7 @@ def visualize_age_distribution_by_gender(movies, style="darkgrid"):
         x="actor_gender",
         y="actor_age_at_movie_release",
         data=movies,
-        palette=["lightpink", "skyblue"],
+        palette=[color_F, color_M],
     )
     plt.title("Distribution of Actor Ages by Gender")
     plt.xlabel("Gender")
@@ -334,7 +335,7 @@ def visualize_age_evolution(movies, style="darkgrid"):
         y="actor_age_at_movie_release",
         hue="actor_gender",
         errorbar=("ci", 95),
-        palette=["lightpink", "skyblue"]
+        palette=[color_F, color_M]
     )
     plt.title("Evolution of actors' age over the years")
     plt.xlabel("Year")
@@ -441,8 +442,9 @@ def visualize_feminity_score_distribution(movies, style="darkgrid"):
 
     plt.figure(figsize=(8, 4))
     sns.set_style(style)
-    sns.histplot(movies.feminity_score, bins=30, color="blue", alpha=0.5, log=True)
+    sns.histplot(movies.feminity_score, bins=18, color=color_G, alpha=0.5, log=True)
     plt.title("Distribution of Femininity Score Across Movies")
+    plt.xlim(0,0.18)
     plt.xlabel("Femininity Score")
     plt.ylabel("Number of Movies")
     plt.show()
@@ -461,8 +463,9 @@ def visualize_masculinity_score_distribution(movies, style="darkgrid"):
 
     plt.figure(figsize=(8, 4))
     sns.set_style(style)
-    sns.histplot(movies.masculinity_score, bins=30, color="blue", alpha=0.5, log=True)
+    sns.histplot(movies.masculinity_score, bins=30, color=color_G, alpha=0.5, log=True)
     plt.title("Distribution of Masculinity Score Across Movies")
+    plt.xlim(0,0.18)
     plt.xlabel("Masculinity Score")
     plt.ylabel("Number of Movies")
     plt.show()
@@ -527,7 +530,7 @@ def visualize_director_gender_proportion(movies, style="darkgrid", year_range=5)
     gender_counts = gender_counts[['M', 'F']]
 
     # Plot stacked bar plot for counts
-    gender_counts.plot(kind='bar', stacked=True, color={"F": "plum", "M": "lightblue"}, ax=plt.gca())
+    gender_counts.plot(kind='bar', stacked=True, color={"F": color_F, "M": color_M}, ax=plt.gca())
 
     plt.title(f"Count of Movies with Male and Female Directors Over {year_range}-Year Periods")
     plt.xlabel(f"Year Ranges Starting from {min_year}")
@@ -568,7 +571,7 @@ def visualize_producer_gender_proportion(movies, style="darkgrid", year_range=5)
     gender_counts = gender_counts[['M', 'F']]
 
     # Plot stacked bar plot for counts
-    gender_counts.plot(kind='bar', stacked=True, color={"F": "plum", "M": "lightblue"}, ax=plt.gca())
+    gender_counts.plot(kind='bar', stacked=True, color={"F": color_F, "M": color_M}, ax=plt.gca())
 
     plt.title(f"Count of Movies with Male and Female Producer Over {year_range}-Year Periods")
     plt.xlabel(f"Year Ranges Starting from {min_year}")
