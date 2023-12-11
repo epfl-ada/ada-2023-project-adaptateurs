@@ -71,7 +71,6 @@ def visualize_missing_values(movies, style="darkgrid"):
     plt.xlabel("Percentage Missing")
     plt.show()
 
-
 def visualize_gender_distribution(movies, style="darkgrid"):
     """
     Visualize the gender distribution in different roles of a given dataset of movies.
@@ -124,6 +123,82 @@ def visualize_actors_distribution(movies, style="darkgrid"):
     plt.title("Distribution of actors")
     plt.show()
 
+def visualize_actors_gender_evolution_HTML(movies, output_html='html_plots/actors_gender_evolution.html'):
+    """
+    Visualize the distribution of the number of actors in movies using
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing the movies data.
+    output_html (str): The name of the output HTML file.
+
+    Returns:
+    None
+    """
+    
+    number_of_actors = movies.groupby(['year','actor_gender']).count()['actor_name'].reset_index()
+    color_discrete_map = {'F': color_F, 'M': color_M}
+
+    # Create the plot using Plotly
+    fig = px.line(
+        number_of_actors,
+        x="year",
+        y="actor_name",
+        color="actor_gender",
+        title="Distribution of the number of Actors in movies by gender",
+        labels={"actor_name": "Number of Actors", "actor_gender": "Actor gender", "year": "Year"},
+        color_discrete_map=color_discrete_map
+    )
+
+    # Display the plot
+    fig.show()
+
+    # Export the plot to an HTML file
+    fig.write_html(output_html)
+
+
+def visualize_actors_gender_proportion_HTML(movies, output_html='html_plots/actors_gender_proportion.html'):
+    """
+    Visualize the distribution of the number of actors in movies
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing the movies data.
+    output_html (str): The name of the output HTML file.
+
+    Returns:
+    None
+    """
+    
+    # Assuming 'movies' is your DataFrame with columns 'year', 'actor_gender', and 'actor_name'
+    # Count the number of actors by year and gender
+    actor_counts = movies.groupby(['year', 'actor_gender']).count()['actor_name'].reset_index()
+
+    # Calculate the total actors per year
+    total_actors_per_year = movies.groupby('year')['actor_name'].count()
+
+    # Calculate the percentage
+    actor_counts['percentage'] = actor_counts.apply(lambda row: (row['actor_name'] / total_actors_per_year[row['year']]) * 100, axis=1)
+
+    color_discrete_map = {'F': color_F, 'M': color_M}
+
+    # Create the plot using Plotly
+    fig = px.line(
+        actor_counts,
+        x="year",
+        y="percentage",
+        color="actor_gender",
+        title="Distribution of the proportion of Actors in movies by gender",
+        labels={"percentage": "Percentage of men and women actors (%)", "actor_gender": "Actor gender", "year": "Year"},
+        color_discrete_map=color_discrete_map
+    )
+    
+    fig.update_xaxes(range=[1978, 2011])
+    fig.update_yaxes(range=[0, 100])
+
+    # Display the plot
+    fig.show()
+
+    # Export the plot to an HTML file
+    fig.write_html(output_html)
 
 # not used anymore -> see visualize_gender_prop
 def visualize_gender_proportion_repartition(movies, style="darkgrid"):
