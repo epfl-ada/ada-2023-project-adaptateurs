@@ -544,7 +544,7 @@ def visualize_masculinity_score_distribution(movies, style="darkgrid"):
     plt.xlabel("Masculinity Score")
     plt.ylabel("Number of Movies")
     plt.show()
-    
+
 def visualize_wordcloud_roles(actor_with_role):
     role_women = actor_with_role.loc[actor_with_role['actor_gender']=='F'].copy(deep=True)
     role_men = actor_with_role.loc[actor_with_role['actor_gender']=='M'].copy(deep=True)
@@ -573,7 +573,7 @@ def visualize_wordcloud_roles(actor_with_role):
     return
 
 
-    
+
 
 def visualize_director_gender_proportion(movies, style="darkgrid", year_range=5):
     """
@@ -689,7 +689,7 @@ def visualize_type_of_role_credited(movies_import, gender='B'):
     _ = plt.legend(bbox_to_anchor=(1.04,1), loc="upper left")
     plt.show()
     return
-    
+
 
 def visualize_proportion_gender_credited(movies):
     """
@@ -711,7 +711,7 @@ def visualize_proportion_gender_credited(movies):
     ax.pie([F_credited,F_uncredited,M_credited,M_uncredited], labels=["F_credited","F_uncredited","M_credited","M_uncredited"])
     plt.show()
     return
-    
+
 def visualize_proportion_specific_gender_credited(movies, gender = 'F'):
     """
     Visualize the distribution uncredited/credited roles by gender.
@@ -732,7 +732,7 @@ def visualize_proportion_specific_gender_credited(movies, gender = 'F'):
     ax.pie([X_credited,X_uncredited], labels=[f"{gender} credited",f"{gender} uncredited"])
     plt.show()
     return
-    
+
 def visualize_un_credited_stacked(movies_import, gender='B'):
     """
     Visualize the distribution of the type of role credited (Credited by name, job title...) across movies.
@@ -838,3 +838,9 @@ def visualize_wordcloud_r2j_roles(movies):
 
     plt.show()
     return
+
+
+
+
+
+
