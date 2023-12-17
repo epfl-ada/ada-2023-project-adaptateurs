@@ -137,7 +137,7 @@ def visualize_gender_distribution_HTML(movies, output_html='html_plots/gender_di
             values=gender_counts.values,
             hoverinfo="label+percent",
             textinfo="percent",
-            marker=dict(colors=[color_F, color_M]),
+            marker=dict(colors=[color_M, color_F]),
         ), 1, i)
 
     # Update layout
