@@ -690,6 +690,60 @@ def visualize_type_of_role_credited(movies_import, gender='B'):
     plt.show()
     return
 
+def visualize_director_producer_actor_gender_correlation_boxplot(movies):
+    """
+    Visualize the correlation between the presence of a female director and/or a female producer and the number of female actors in movies using box plots.
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing information about movies, directors, producers, and actors.
+
+    Returns:
+    None
+    """
+
+    # Calculate the count of female actors for each movie
+    female_actor_counts = movies[movies['actor_gender'] == 'F'].groupby('wikiID').size()
+
+    # Create binary columns for the presence of a female director and a female producer
+    movies['has_female_director'] = movies['director_gender'] == 'F'
+    movies['has_female_producer'] = movies['producer_gender'] == 'F'
+    
+    # Merge the count of female actors into the movies DataFrame
+    movies = movies.merge(female_actor_counts.rename('female_actor_count'), on='wikiID', how='left')
+    
+    # Drop duplicates since there can be multiple actors per movie
+    movies.drop_duplicates(subset='wikiID', inplace=True)
+
+    # Create a categorical variable for the four groups
+    conditions = [
+        (~movies['has_female_director'] & ~movies['has_female_producer']),
+        (~movies['has_female_director'] & movies['has_female_producer']),
+        (movies['has_female_director'] & ~movies['has_female_producer']),
+        (movies['has_female_director'] & movies['has_female_producer'])
+    ]
+    choices = ['No Female Director/Producer', 'Female Producer Only', 'Female Director Only', 'Both Female Director and Producer']
+    movies['category'] = np.select(conditions, choices)
+
+    # Specify the order for the box plot
+    category_order = [
+        'No Female Director/Producer', 
+        'Female Producer Only', 
+        'Female Director Only', 
+        'Both Female Director and Producer'
+    ]
+
+    plt.figure(figsize=(14, 8))
+    sns.set_style("darkgrid")
+
+    # Create a box plot with specified order
+    sns.boxplot(data=movies, x='category', y='female_actor_count', order=category_order, palette='pastel')
+
+    plt.title("Distribution of Female Actors by Presence of Female Directors and Producers")
+    plt.xlabel("Category")
+    plt.ylabel("Number of Female Actors")
+    plt.xticks(rotation=45)  # Rotate the x labels for better readability
+    plt.show()
+
 
 def visualize_proportion_gender_credited(movies):
     """
