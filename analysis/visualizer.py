@@ -836,11 +836,8 @@ def visualize_director_producer_actor_gender_correlation_html(movies):
     fig.show()
 
 
-import plotly.graph_objects as go
-import numpy as np
-import pandas as pd
 
-def visualize_producer_gender_proportion_html(movies, range = YEAR_RANGE, output_html='html_plots/producer_gender_proportion.html'):
+def visualize_producer_gender_proportion_html(movies, YEAR_RANGE, output_html='html_plots/producer_gender_proportion.html'):
     """
     Visualize the count of movies with male and female producers over a specified range of years using Plotly, and export as HTML.
 
@@ -903,7 +900,7 @@ def visualize_producer_gender_proportion_html(movies, range = YEAR_RANGE, output
     fig.show()
 
 
-def visualize_director_gender_proportion_html(movies, range = YEAR_RANGE, output_html='html_plots/director_gender_proportion.html'):
+def visualize_director_gender_proportion_html(movies, YEAR_RANGE, output_html='html_plots/director_gender_proportion.html'):
     """
     Visualize the count of movies with male and female producers over a specified range of years using Plotly, and export as HTML.
 
