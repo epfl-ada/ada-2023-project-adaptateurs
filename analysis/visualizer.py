@@ -13,6 +13,7 @@ mpl.rcParams["figure.dpi"] = 300
 color_M = "darkblue"  # ~rgb(0,0,139)
 color_F = "crimson"  # ~rgb(182,28,66)
 color_G = "black"
+color_B = "orange"
 
 
 def visualize_year_distribution(movies, style="darkgrid"):
@@ -119,56 +120,6 @@ def visualize_missing_values(movies, style="darkgrid"):
     plt.show()
 
 
-def visualize_gender_distribution_HTML(
-    movies, output_html="html_plots/gender_distribution.html"
-):
-    """
-    Visualize the gender distribution in different roles of a given dataset of movies using Plotly.
-
-    Parameters:
-    movies (pandas.DataFrame): The dataset of movies to analyze.
-    output_html (str): The name of the output HTML file.
-
-    Returns:
-    None
-    """
-    roles = ["actor_gender", "director_gender", "producer_gender"]
-
-    # Create a subplot figure with 1 row and len(roles) columns
-    fig = make_subplots(
-        rows=1, cols=len(roles), specs=[[{"type": "domain"}] * len(roles)]
-    )
-
-    for i, role in enumerate(roles, start=1):
-        gender_counts = movies[role].value_counts()
-        fig.add_trace(
-            go.Pie(
-                labels=gender_counts.index,
-                values=gender_counts.values,
-                hoverinfo="label+percent",
-                textinfo="percent",
-                marker=dict(colors=[color_M, color_F]),
-            ),
-            1,
-            i,
-        )
-
-    # Update layout
-    fig.update_layout(
-        title_text="Gender distribution in the main roles",
-        annotations=[
-            dict(text=role.replace("_", " ").title(), x=x, y=1, showarrow=False)
-            for x, role in zip(np.linspace(0.1, 0.9, len(roles)), roles)
-        ],
-    )
-
-    # Display the plot
-    fig.show()
-
-    # Export the plot to an HTML file
-    fig.write_html(output_html)
-
-
 def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gender_distribution_bar.html'):
     """
     Visualize the gender distribution in different roles of a given dataset of movies using Plotly bar plots with percentages.
@@ -186,7 +137,7 @@ def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gende
     fig = make_subplots(rows=1, cols=len(roles), subplot_titles=[role.replace("_", " ").title() for role in roles])
     
     # Define color map for genders
-    color_map = {'M': 'lightblue', 'F': 'pink'}
+    color_map = {'M': color_M, 'F': color_F}
     
     for i, role in enumerate(roles, start=1):
         gender_counts = movies[role].value_counts().reset_index()
@@ -1292,15 +1243,64 @@ def visualize_prop_of_actor_and_bd_rating(movies_agg):
     plt.ylabel("Proportion")
     plt.legend(loc="upper right")
     plt.show()
+    
+def visualize_prop_of_actor_and_bd_rating_HTML(movies, output_html="html_plots/actors_bdrating_proportion.html"):
+    movies_agg = movies.copy()
+    movies_agg.drop(
+        ["Female_Actors_Per_Film", "Male_Actors_Per_Film", "Total_Actors_Per_Film"],
+        axis=1,
+        inplace=True,
+    )
+
+    # Set color for each gender
+    color_discrete_map = {"Female Proportion": color_F, "Male Proportion": color_M}
+
+    # Create a piled histogram using Plotly
+    fig = px.bar(
+        movies_agg,
+        x=movies_agg.index,
+        y=movies_agg.columns,
+        title="Proportion of male and female Actors for each Bechdel test rating",
+        labels={
+            "bechdel_rating": "Bechdel test rating",
+            "value": "Percentage (%)",
+            "variable": "Actor Gender",
+        },
+        color_discrete_map=color_discrete_map
+    )
+    # Update y-axis to show percentages
+    fig.update_layout(yaxis_tickformat='0%')
+    fig.show()
+    fig.write_html(output_html)
 
 
-def visualize_popularity(reception_bechdel):
-    reception_bechdel.plot.bar(rot=0, figsize=(7, 3))
-    plt.title("Popularity of Movies for Each Bechdel Test Rating")
-    plt.xlabel("Bechdel Test Rating")
-    plt.ylabel("Count")
-    plt.legend(loc="upper right")
-    plt.show()
+def visualize_popularity_HTML(reception_bechdel, output_html="html_plots/actors_bdrating_proportion.html"):
+    fig = px.bar(
+        reception_bechdel,
+        x=reception_bechdel.index,
+        y=reception_bechdel.columns,
+        barmode="group",
+        title="Popularity of Movies for each Bechdel test rating",
+        labels={
+            "index": "Bechdel Test rating",
+            "variable": "Metric",
+            "popularity": "Popularity",
+            "vote_average": "Average Rating"
+        },
+        color_discrete_map={reception_bechdel.columns[0]: color_G, reception_bechdel.columns[1]: color_B}
+    )
+
+    # Update layout
+    fig.update_layout(
+        xaxis_title="Bechdel Test Rating",
+        yaxis_title="Count",
+
+    )
+
+    fig.show()
+
+    # Save the figure as HTML
+    fig.write_html(output_html)
 
 
 def visualize_bd_rating_evolution(movies_data_csv):
