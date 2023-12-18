@@ -7,6 +7,7 @@ from wordcloud import WordCloud
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import plotly.express as px
 
 mpl.rcParams["figure.dpi"] = 300
 color_M = "darkblue"  # ~rgb(0,0,139)
@@ -160,6 +161,61 @@ def visualize_gender_distribution_HTML(
             for x, role in zip(np.linspace(0.1, 0.9, len(roles)), roles)
         ],
     )
+
+    # Display the plot
+    fig.show()
+
+    # Export the plot to an HTML file
+    fig.write_html(output_html)
+
+
+def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gender_distribution_bar.html'):
+    """
+    Visualize the gender distribution in different roles of a given dataset of movies using Plotly bar plots with percentages.
+
+    Parameters:
+    movies (pandas.DataFrame): The dataset of movies to analyze.
+    output_html (str): The name of the output HTML file.
+
+    Returns:
+    None
+    """
+    roles = ["actor_gender", "director_gender", "producer_gender"]
+    
+    # Create a subplot figure with 1 row and len(roles) columns
+    fig = make_subplots(rows=1, cols=len(roles), subplot_titles=[role.replace("_", " ").title() for role in roles])
+    
+    # Define color map for genders
+    color_map = {'M': 'lightblue', 'F': 'pink'}
+    
+    for i, role in enumerate(roles, start=1):
+        gender_counts = movies[role].value_counts().reset_index()
+        gender_counts.columns = [role, 'count']
+        total_count = gender_counts['count'].sum()
+        gender_counts['percentage'] = (gender_counts['count'] / total_count * 100).round(2).astype(str) + '%'
+        
+        fig.add_trace(go.Bar(
+            x=gender_counts[role],
+            y=gender_counts['count'],
+            text=gender_counts['percentage'],
+            textposition='inside',
+            marker_color=[color_map[gender] if gender in color_map else 'gray' for gender in gender_counts[role]],
+            name=role
+        ), 1, i)
+
+    # Update layout
+    fig.update_layout(
+        title_text="Gender Distribution in the Main Roles",
+        barmode='stack',
+        showlegend=False
+    )
+
+    # Update x-axis labels
+    for i in range(1, len(roles) + 1):
+        fig.update_xaxes(title_text=roles[i-1].replace("_gender", "").title() + " Gender", row=1, col=i)
+    
+    # Update y-axis labels
+    fig.update_yaxes(title_text='Count')
 
     # Display the plot
     fig.show()
@@ -698,101 +754,212 @@ def visualize_wordcloud_roles(actor_with_role):
     return
 
 
-def visualize_director_gender_proportion(movies, style="darkgrid", year_range=5):
+
+def visualize_director_producer_actor_gender_correlation_html(movies):
     """
-    Visualize the average proportion of male and female directors over a specified range of years.
+    Visualize the correlation between the presence of a female director and/or a female producer and the number of female actors in movies using box plots with Plotly, and export as HTML.
 
     Parameters:
-    movies (pandas.DataFrame): DataFrame containing information about movies and directors.
-    style (str): Style of the plot. Default is "darkgrid".
-    year_range (int): The range of years to average over. Default is 5.
+    movies (pandas.DataFrame): DataFrame containing information about movies, directors, producers, and actors.
 
     Returns:
     None
     """
 
-    min_year = movies["year"].min()
-    max_year = movies["year"].max()
-    year_mod = (max_year - min_year) % year_range
-    if year_mod != 0:
-        movies = movies[movies["year"] > min_year + year_mod]
+    # Calculate the count of female actors for each movie
+    female_actor_counts = movies[movies['actor_gender'] == 'F'].groupby('wikiID').size()
 
-    # Group by year range
-    movies["year_range"] = (
-        np.floor((movies["year"] - min_year) / year_range) * year_range + min_year
+    # Create binary columns for the presence of a female director and a female producer
+    movies['has_female_director'] = movies['director_gender'] == 'F'
+    movies['has_female_producer'] = movies['producer_gender'] == 'F'
+    
+    # Merge the count of female actors into the movies DataFrame
+    movies = movies.merge(female_actor_counts.rename('female_actor_count'), on='wikiID', how='left')
+    
+    # Drop duplicates since there can be multiple actors per movie
+    movies.drop_duplicates(subset='wikiID', inplace=True)
+
+    # Create a categorical variable for the four groups
+    conditions = [
+        (~movies['has_female_director'] & ~movies['has_female_producer']),
+        (~movies['has_female_director'] & movies['has_female_producer']),
+        (movies['has_female_director'] & ~movies['has_female_producer']),
+        (movies['has_female_director'] & movies['has_female_producer'])
+    ]
+    choices = ['No Female Director/Producer', 'Female Producer Only', 'Female Director Only', 'Both Female Director and Producer']
+    movies['category'] = np.select(conditions, choices)
+
+    # Calculate medians for each category
+    category_medians = movies.groupby('category')['female_actor_count'].median().sort_values()
+
+    # Sort categories by median values
+    sorted_categories = category_medians.index.tolist()
+
+    # Create a color gradient from red to green
+    color_gradient = {
+        sorted_categories[0]: 'red',    # Lowest median
+        sorted_categories[1]: 'orange',
+        sorted_categories[2]: 'lightgreen',
+        sorted_categories[3]: 'green'   # Highest median
+    }
+
+    # Create the plot with Plotly
+    fig = px.box(movies, x='category', y='female_actor_count', title="Distribution of Female Actors by Presence of Female Directors and Producers",
+                 labels={'female_actor_count': 'Number of Female Actors'},
+                 category_orders={'category': sorted_categories},
+                 color='category',
+                 color_discrete_map=color_gradient,
+                 notched=True)
+
+    # Loop through the traces and update the fillcolor, median line color, and box border color
+    for trace in fig.data:
+        trace.update(fillcolor=trace.marker.color)
+        trace.update(marker_line_color='black', marker_line_width=0.5)
+
+    # Set the median line color and box border color to black
+    fig.update_traces(line=dict(color='black', width=1))
+
+    # Remove the x-axis category labels
+    fig.update_xaxes(showticklabels=False)
+
+    # Update layout for better readability and set the figure size
+    fig.update_layout(
+        xaxis_tickangle=-45,
+        width=1000,  # Set the width of the figure
+        height=800   # Set the height of the figure
     )
-    gender_counts = (
-        movies.groupby(["year_range", "director_gender"]).size().unstack(fill_value=0)
-    )
-
-    plt.figure(figsize=(12, 6))
-    sns.set_style(style)
-
-    # Adjust the order of plotting to put female on top
-    gender_counts = gender_counts[["M", "F"]]
-
-    # Plot stacked bar plot for counts
-    gender_counts.plot(
-        kind="bar", stacked=True, color={"F": color_F, "M": color_M}, ax=plt.gca()
-    )
-
-    plt.title(
-        f"Count of Movies with Male and Female Directors Over {year_range}-Year Periods"
-    )
-    plt.xlabel(f"Year Ranges Starting from {min_year}")
-    plt.ylabel("Count of Movies")
-    plt.legend(title="Director Gender", labels=["Male", "Female"])
-    plt.show()
-    return
+    
+    # Export the plot to an HTML file
+    fig.write_html("html_plots/director_producer_actor_gender_correlation.html")
+    
+    # Optionally, display the plot in the notebook if you're using Jupyter
+    fig.show()
 
 
-def visualize_producer_gender_proportion(movies, style="darkgrid", year_range=5):
+
+def visualize_producer_gender_proportion_html(movies, YEAR_RANGE, output_html='html_plots/producer_gender_proportion.html'):
     """
-    Visualize the average proportion of male and female directors over a specified range of years.
+    Visualize the count of movies with male and female producers over a specified range of years using Plotly, and export as HTML.
 
     Parameters:
-    movies (pandas.DataFrame): DataFrame containing information about movies and directors.
-    style (str): Style of the plot. Default is "darkgrid".
+    movies (pandas.DataFrame): DataFrame containing information about movies and producers.
+    start_year (int): The start year of the range to consider.
+    end_year (int): The end year of the range to consider.
     year_range (int): The range of years to average over. Default is 5.
+    output_html (str): The name of the output HTML file.
 
     Returns:
     None
     """
+    start_year = YEAR_RANGE[0]
+    end_year = YEAR_RANGE[1]
+    # Filter the movies DataFrame to only include movies within the specified year range
+    movies = movies[(movies["year"] >= start_year) & (movies["year"] <= end_year)]
 
-    # Adjust DataFrame to ensure the number of years is divisible by year_range
-    min_year = movies["year"].min()
-    max_year = movies["year"].max()
-    year_mod = (max_year - min_year) % year_range
-    if year_mod != 0:
-        movies = movies[movies["year"] > min_year + year_mod]
-
-    # Group by year range
-    movies["year_range"] = (
-        np.floor((movies["year"] - min_year) / year_range) * year_range + min_year
-    )
+    # Group by year range and producer gender
+    
     gender_counts = (
-        movies.groupby(["year_range", "producer_gender"]).size().unstack(fill_value=0)
+        movies.groupby(["year", "producer_gender"]).size().unstack(fill_value=0)
     )
-
-    plt.figure(figsize=(12, 6))
-    sns.set_style(style)
 
     # Adjust the order of plotting to put female on top
     gender_counts = gender_counts[["M", "F"]]
 
-    # Plot stacked bar plot for counts
-    gender_counts.plot(
-        kind="bar", stacked=True, color={"F": color_F, "M": color_M}, ax=plt.gca()
+    # Create the figure with Plotly
+    fig = go.Figure()
+
+    # Add male producers as a bar trace
+    fig.add_trace(go.Bar(
+        x=gender_counts.index,
+        y=gender_counts["M"],
+        name="Male",
+        marker_color='blue'
+    ))
+
+    # Add female producers on top of the male producers bar trace
+    fig.add_trace(go.Bar(
+        x=gender_counts.index,
+        y=gender_counts["F"],
+        name="Female",
+        marker_color= 'red'
+    ))
+
+    # Update the layout to stack the bars
+    fig.update_layout(
+        barmode='stack',
+        title=f"Count of Movies with Male and Female Producers from {start_year} to {end_year}",
+        xaxis_title="Year",
+        yaxis_title="Count of Movies",
+        legend_title="Producer Gender"
     )
 
-    plt.title(
-        f"Count of Movies with Male and Female Producer Over {year_range}-Year Periods"
+    # Export the plot to an HTML file
+    fig.write_html(output_html)
+
+    # Optionally, display the plot in the notebook if you're using Jupyter
+    fig.show()
+
+
+def visualize_director_gender_proportion_html(movies, YEAR_RANGE, output_html='html_plots/director_gender_proportion.html'):
+    """
+    Visualize the count of movies with male and female producers over a specified range of years using Plotly, and export as HTML.
+
+    Parameters:
+    movies (pandas.DataFrame): DataFrame containing information about movies and producers.
+    start_year (int): The start year of the range to consider.
+    end_year (int): The end year of the range to consider.
+    year_range (int): The range of years to average over. Default is 5.
+    output_html (str): The name of the output HTML file.
+
+    Returns:
+    None
+    """
+    start_year = YEAR_RANGE[0]
+    end_year = YEAR_RANGE[1]
+    # Filter the movies DataFrame to only include movies within the specified year range
+    movies = movies[(movies["year"] >= start_year) & (movies["year"] <= end_year)]
+
+    # Group by year range and producer gender
+    
+    gender_counts = (
+        movies.groupby(["year", "director_gender"]).size().unstack(fill_value=0)
     )
-    plt.xlabel(f"Year Ranges Starting from {min_year}")
-    plt.ylabel("Count of Movies")
-    plt.legend(title="Producer Gender", labels=["Male", "Female"])
-    plt.show()
-    return
+
+    # Adjust the order of plotting to put female on top
+    gender_counts = gender_counts[["M", "F"]]
+
+    # Create the figure with Plotly
+    fig = go.Figure()
+
+    # Add male producers as a bar trace
+    fig.add_trace(go.Bar(
+        x=gender_counts.index,
+        y=gender_counts["M"],
+        name="Male",
+        marker_color='blue'
+    ))
+
+    # Add female producers on top of the male producers bar trace
+    fig.add_trace(go.Bar(
+        x=gender_counts.index,
+        y=gender_counts["F"],
+        name="Female",
+        marker_color= 'red'
+    ))
+
+    # Update the layout to stack the bars
+    fig.update_layout(
+        barmode='stack',
+        title=f"Count of Movies with Male and Female Directors from {start_year} to {end_year}",
+        xaxis_title="Year",
+        yaxis_title="Count of Movies",
+        legend_title="Director Gender"
+    )
+
+    # Export the plot to an HTML file
+    fig.write_html(output_html)
+
+    fig.show()
 
 
 def visualize_type_of_role_credited(movies_import, gender="B"):
