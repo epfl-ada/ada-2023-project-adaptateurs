@@ -120,14 +120,11 @@ def visualize_missing_values(movies, style="darkgrid"):
     plt.show()
 
 
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-
 def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gender_distribution_bar.html'):
     roles = ["actor_gender", "director_gender", "producer_gender"]
     
     # Create a subplot figure with 1 row and len(roles) columns
-    fig = make_subplots(rows=1, cols=len(roles), subplot_titles=[role.replace("_", " ").title() for role in roles])
+    fig = make_subplots(rows=1, cols=len(roles))
     
     # Define color map for genders
     color_map = {'M': color_M, 'F': color_F}
@@ -139,8 +136,7 @@ def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gende
         total_count = gender_counts['count'].sum()
         gender_counts['percentage'] = (gender_counts['count'] / total_count * 100).round(2)
 
-        # Ensure specific order, e.g., 'F' first
-        for gender in sorted(gender_counts[role], reverse=True):  # Sorts 'M' before 'F'
+        for gender in sorted(gender_counts[role], reverse=False):  # Sorts 'F' before 'M'
             show_legend = i == 1  # Show legend only for the first subplot
             fig.add_trace(go.Bar(
                 x=[role.replace("_gender", "").title()],
@@ -157,8 +153,9 @@ def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gende
         title_text="Gender distribution in the main roles",
         barmode='stack',
     )
-
     # Update x-axis and y-axis labels
+    for i in range(1, len(roles) + 1):
+        fig.update_xaxes(tickfont=dict(size=14), row=1, col=i)
     fig.update_yaxes(title_text='Count')
 
     # Display the plot
