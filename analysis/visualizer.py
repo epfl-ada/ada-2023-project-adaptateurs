@@ -13,7 +13,7 @@ mpl.rcParams["figure.dpi"] = 300
 color_M = "darkblue"  # ~rgb(0,0,139)
 color_F = "crimson"  # ~rgb(182,28,66)
 color_G = "black"
-color_B = "orange"
+color_B = "darkorange"
 
 
 def visualize_year_distribution(movies, style="darkgrid"):
@@ -120,57 +120,44 @@ def visualize_missing_values(movies, style="darkgrid"):
     plt.show()
 
 
-def visualize_gender_distribution_HTML_bar(
-    movies, output_html="html_plots/gender_distribution_bar.html"
-):
+def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gender_distribution_bar.html'):
     roles = ["actor_gender", "director_gender", "producer_gender"]
-
+    
     # Create a subplot figure with 1 row and len(roles) columns
     fig = make_subplots(rows=1, cols=len(roles))
-
+    
     # Define color map for genders
-    color_map = {"M": color_M, "F": color_F}
+    color_map = {'M': color_M, 'F': color_F}
 
     # Add traces for each gender
     for i, role in enumerate(roles, start=1):
         gender_counts = movies[role].value_counts().reset_index()
-        gender_counts.columns = [role, "count"]
-        total_count = gender_counts["count"].sum()
-        gender_counts["percentage"] = (
-            gender_counts["count"] / total_count * 100
-        ).round(2)
+        gender_counts.columns = [role, 'count']
+        total_count = gender_counts['count'].sum()
+        gender_counts['percentage'] = (gender_counts['count'] / total_count * 100).round(2)
 
-        for gender in sorted(
-            gender_counts[role], reverse=False
-        ):  # Sorts 'F' before 'M'
+        for gender in sorted(gender_counts[role], reverse=False):  # Sorts 'F' before 'M'
             show_legend = i == 1  # Show legend only for the first subplot
-            fig.add_trace(
-                go.Bar(
-                    x=[role.replace("_gender", "").title()],
-                    y=[
-                        gender_counts.loc[
-                            gender_counts[role] == gender, "count"
-                        ].values[0]
-                    ],
-                    text=f"{gender_counts.loc[gender_counts[role] == gender, 'percentage'].values[0]}%",
-                    textposition="inside",
-                    marker_color=color_map[gender] if gender in color_map else "gray",
-                    name=gender,
-                    showlegend=show_legend,
-                ),
-                1,
-                i,
-            )
+            fig.add_trace(go.Bar(
+                x=[role.replace("_gender", "").title()],
+                y=[gender_counts.loc[gender_counts[role] == gender, 'count'].values[0]],
+                text=f"{gender_counts.loc[gender_counts[role] == gender, 'percentage'].values[0]}%",
+                textposition='inside',
+                marker_color=color_map[gender] if gender in color_map else 'gray',
+                name=gender,
+                showlegend=show_legend,
+                opacity=0.9
+            ), 1, i)
 
     # Update layout
     fig.update_layout(
         title_text="Gender distribution in the main roles",
-        barmode="stack",
+        barmode='stack',
     )
     # Update x-axis and y-axis labels
     for i in range(1, len(roles) + 1):
         fig.update_xaxes(tickfont=dict(size=14), row=1, col=i)
-    fig.update_yaxes(title_text="Count")
+    fig.update_yaxes(title_text='Count')
 
     # Display the plot
     fig.show()
@@ -200,44 +187,6 @@ def visualize_actors_distribution(movies, style="darkgrid"):
     plt.show()
 
 
-def visualize_actors_gender_evolution_HTML(
-    movies, output_html="html_plots/actors_gender_evolution.html"
-):
-    """
-    Visualize the distribution of the number of actors in movies using
-
-    Parameters:
-    movies (pandas.DataFrame): DataFrame containing the movies data.
-    output_html (str): The name of the output HTML file.
-
-    Returns:
-    None
-    """
-    number_of_actors = (
-        movies.groupby(["year", "actor_gender"]).count()["actor_name"].reset_index()
-    )
-
-    # Create the plot using Plotly
-    fig = px.line(
-        number_of_actors,
-        x="year",
-        y="actor_name",
-        color="actor_gender",
-        title="Distribution of the number of Actors in movies by gender",
-        labels={
-            "actor_name": "Number of Actors",
-            "actor_gender": "Actor gender",
-            "year": "Year",
-        },
-        color_discrete_map={"F": color_F, "M": color_M},
-    )
-
-    # Display the plot
-    fig.show()
-
-    # Export the plot to an HTML file
-    fig.write_html(output_html)
-
 
 def visualize_actors_gender_proportion_HTML(
     movies, year_range=[], output_html="html_plots/actors_gender_proportion.html"
@@ -263,7 +212,7 @@ def visualize_actors_gender_proportion_HTML(
 
     # Calculate the percentage
     actor_counts["percentage"] = actor_counts.apply(
-        lambda row: (row["actor_name"] / total_actors_per_year[row["year"]]) * 100,
+        lambda row: (row["actor_name"] / total_actors_per_year[row["year"]]),
         axis=1,
     )
 
@@ -283,14 +232,15 @@ def visualize_actors_gender_proportion_HTML(
             "year": "Year",
         },
         color_discrete_map=color_discrete_map,
+        opacity=0.9,
     )
 
-    fig.update_layout(bargap=0)
+    fig.update_layout(bargap=0, yaxis_tickformat='0%')
 
     fig.update_xaxes(range=year_range)
 
     # Set y-axis to range from 0 to 100%
-    fig.update_yaxes(range=[0, 100])
+    fig.update_yaxes(range=[0, 1], showgrid=True, gridwidth=1, gridcolor=color_G)
 
     # Display the plot
     fig.show()
@@ -709,7 +659,7 @@ def visualize_wordcloud_roles(actor_with_role):
     return
 
 
-def visualize_director_producer_actor_gender_correlation_html(movies):
+def visualize_director_producer_actor_gender_correlation_HTML(movies):
     """
     Visualize the correlation between the presence of a female director and/or a female producer and the number of female actors in movies using box plots with Plotly, and export as HTML.
 
@@ -721,71 +671,57 @@ def visualize_director_producer_actor_gender_correlation_html(movies):
     """
 
     # Calculate the count of female actors for each movie
-    female_actor_counts = movies[movies["actor_gender"] == "F"].groupby("wikiID").size()
+    female_actor_counts = movies[movies['actor_gender'] == 'F'].groupby('wikiID').size()
 
     # Create binary columns for the presence of a female director and a female producer
-    movies["has_female_director"] = movies["director_gender"] == "F"
-    movies["has_female_producer"] = movies["producer_gender"] == "F"
-
+    movies['has_female_director'] = movies['director_gender'] == 'F'
+    movies['has_female_producer'] = movies['producer_gender'] == 'F'
+    
     # Merge the count of female actors into the movies DataFrame
-    movies = movies.merge(
-        female_actor_counts.rename("female_actor_count"), on="wikiID", how="left"
-    )
-
+    movies = movies.merge(female_actor_counts.rename('female_actor_count'), on='wikiID', how='left')
+    
     # Drop duplicates since there can be multiple actors per movie
-    movies.drop_duplicates(subset="wikiID", inplace=True)
+    movies.drop_duplicates(subset='wikiID', inplace=True)
 
     # Create a categorical variable for the four groups
     conditions = [
-        (~movies["has_female_director"] & ~movies["has_female_producer"]),
-        (~movies["has_female_director"] & movies["has_female_producer"]),
-        (movies["has_female_director"] & ~movies["has_female_producer"]),
-        (movies["has_female_director"] & movies["has_female_producer"]),
+        (~movies['has_female_director'] & ~movies['has_female_producer']),
+        (~movies['has_female_director'] & movies['has_female_producer']),
+        (movies['has_female_director'] & ~movies['has_female_producer']),
+        (movies['has_female_director'] & movies['has_female_producer'])
     ]
-    choices = [
-        "No Female Director/Producer",
-        "Female Producer Only",
-        "Female Director Only",
-        "Both Female Director and Producer",
-    ]
-    movies["category"] = np.select(conditions, choices)
+    choices = ['No Female Director/Producer', 'Female Producer Only', 'Female Director Only', 'Both Female Director and Producer']
+    movies['category'] = np.select(conditions, choices)
 
     # Calculate medians for each category
-    category_medians = (
-        movies.groupby("category")["female_actor_count"].median().sort_values()
-    )
+    category_medians = movies.groupby('category')['female_actor_count'].median().sort_values()
 
     # Sort categories by median values
     sorted_categories = category_medians.index.tolist()
 
     # Create a color gradient from red to green
     color_gradient = {
-        sorted_categories[0]: "red",  # Lowest median
-        sorted_categories[1]: "orange",
-        sorted_categories[2]: "lightgreen",
-        sorted_categories[3]: "green",  # Highest median
+        sorted_categories[0]: 'red',    # Lowest median
+        sorted_categories[1]: 'orange',
+        sorted_categories[2]: 'lightgreen',
+        sorted_categories[3]: 'green'   # Highest median
     }
 
     # Create the plot with Plotly
-    fig = px.box(
-        movies,
-        x="category",
-        y="female_actor_count",
-        title="Distribution of Female Actors by Presence of Female Directors and Producers",
-        labels={"female_actor_count": "Number of Female Actors"},
-        category_orders={"category": sorted_categories},
-        color="category",
-        color_discrete_map=color_gradient,
-        notched=True,
-    )
+    fig = px.box(movies, x='category', y='female_actor_count', title="Distribution of Female Actors by Presence of Female Directors and Producers",
+                 labels={'female_actor_count': 'Number of Female Actors'},
+                 category_orders={'category': sorted_categories},
+                 color='category',
+                 color_discrete_map=color_gradient,
+                 notched=True)
 
     # Loop through the traces and update the fillcolor, median line color, and box border color
     for trace in fig.data:
         trace.update(fillcolor=trace.marker.color)
-        trace.update(marker_line_color="black", marker_line_width=0.5)
+        trace.update(marker_line_color='black', marker_line_width=0.5)
 
     # Set the median line color and box border color to black
-    fig.update_traces(line=dict(color="black", width=1))
+    fig.update_traces(line=dict(color='black', width=1))
 
     # Remove the x-axis category labels
     fig.update_xaxes(showticklabels=False)
@@ -794,19 +730,18 @@ def visualize_director_producer_actor_gender_correlation_html(movies):
     fig.update_layout(
         xaxis_tickangle=-45,
         width=1000,  # Set the width of the figure
-        height=800,  # Set the height of the figure
+        height=800   # Set the height of the figure
     )
-
+    
     # Export the plot to an HTML file
     fig.write_html("html_plots/director_producer_actor_gender_correlation.html")
-
+    
     # Optionally, display the plot in the notebook if you're using Jupyter
     fig.show()
 
 
-def visualize_producer_gender_proportion_HTML(
-    movies, YEAR_RANGE, output_html="html_plots/producer_gender_proportion.html"
-):
+
+def visualize_producer_gender_proportion_HTML(movies, year_range=[], output_html='html_plots/producer_gender_proportion.html'):
     """
     Visualize the count of movies with male and female producers over a specified range of years using Plotly, and export as HTML.
 
@@ -820,50 +755,52 @@ def visualize_producer_gender_proportion_HTML(
     Returns:
     None
     """
-    start_year = YEAR_RANGE[0]
-    end_year = YEAR_RANGE[1]
+    start_year = year_range[0]
+    end_year = year_range[1]
     # Filter the movies DataFrame to only include movies within the specified year range
     movies = movies[(movies["year"] >= start_year) & (movies["year"] <= end_year)]
 
     # Group by year range and producer gender
-
+    
     gender_counts = (
         movies.groupby(["year", "producer_gender"]).size().unstack(fill_value=0)
     )
 
-    # Adjust the order of plotting to put female on top
-    gender_counts = gender_counts[["M", "F"]]
+    gender_counts["Female proportion"] = gender_counts["F"] / (gender_counts["F"] + gender_counts["M"])
+    gender_counts["Male proportion"] = gender_counts["M"] / (gender_counts["F"] + gender_counts["M"])
 
     # Create the figure with Plotly
     fig = go.Figure()
 
     # Add female producers on top of the male producers bar trace
-    fig.add_trace(
-        go.Bar(
-            x=gender_counts.index,
-            y=gender_counts["F"],
-            name="Female",
-            marker_color=color_F,
-        )
-    )
+    fig.add_trace(go.Bar(
+        x=gender_counts.index,
+        y=gender_counts["Female proportion"],
+        name="Female",
+        marker_color=color_F,
+        opacity=0.9,
+    ))
     # Add male producers as a bar trace
-    fig.add_trace(
-        go.Bar(
-            x=gender_counts.index,
-            y=gender_counts["M"],
-            name="Male",
-            marker_color=color_M,
-        )
-    )
+    fig.add_trace(go.Bar(
+        x=gender_counts.index,
+        y=gender_counts["Male proportion"],
+        name="Male",
+        marker_color=color_M,
+        opacity=0.9
+    ))
 
     # Update the layout to stack the bars
     fig.update_layout(
-        barmode="stack",
-        title=f"Count of Movies with Male and Female Producers from {start_year} to {end_year}",
+        barmode='stack',
+        title=f"Proportion of Movies with male and female Producers from {start_year} to {end_year}",
         xaxis_title="Year",
         yaxis_title="Count of Movies",
         legend_title="Producer Gender",
+        yaxis_tickformat='0%', 
+        bargap=0
     )
+    
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor=color_G)
 
     # Export the plot to an HTML file
     fig.write_html(output_html)
@@ -872,9 +809,7 @@ def visualize_producer_gender_proportion_HTML(
     fig.show()
 
 
-def visualize_director_gender_proportion_HTML(
-    movies, YEAR_RANGE, output_html="html_plots/director_gender_proportion.html"
-):
+def visualize_director_gender_proportion_HTML(movies, year_range=[], output_html='html_plots/director_gender_proportion.html'):
     """
     Visualize the count of movies with male and female producers over a specified range of years using Plotly, and export as HTML.
 
@@ -888,51 +823,53 @@ def visualize_director_gender_proportion_HTML(
     Returns:
     None
     """
-    start_year = YEAR_RANGE[0]
-    end_year = YEAR_RANGE[1]
+    start_year = year_range[0]
+    end_year = year_range[1]
     # Filter the movies DataFrame to only include movies within the specified year range
     movies = movies[(movies["year"] >= start_year) & (movies["year"] <= end_year)]
 
     # Group by year range and producer gender
-
+    
     gender_counts = (
         movies.groupby(["year", "director_gender"]).size().unstack(fill_value=0)
     )
 
-    # Adjust the order of plotting to put female on top
-    gender_counts = gender_counts[["M", "F"]]
+    gender_counts["Female proportion"] = gender_counts["F"] / (gender_counts["F"] + gender_counts["M"])
+    gender_counts["Male proportion"] = gender_counts["M"] / (gender_counts["F"] + gender_counts["M"])
 
     # Create the figure with Plotly
     fig = go.Figure()
 
     # Add female directors on top of the male producers bar trace
-    fig.add_trace(
-        go.Bar(
-            x=gender_counts.index,
-            y=gender_counts["F"],
-            name="Female",
-            marker_color=color_F,
-        )
-    )
+    fig.add_trace(go.Bar(
+        x=gender_counts.index,
+        y=gender_counts["Female proportion"],
+        name="Female",
+        marker_color= color_F,
+        opacity=0.9
+    ))
 
     # Add male directors as a bar trace
-    fig.add_trace(
-        go.Bar(
-            x=gender_counts.index,
-            y=gender_counts["M"],
-            name="Male",
-            marker_color=color_M,
-        )
-    )
+    fig.add_trace(go.Bar(
+        x=gender_counts.index,
+        y=gender_counts["Male proportion"],
+        name="Male",
+        marker_color=color_M,
+        opacity=0.9
+    ))
 
     # Update the layout to stack the bars
     fig.update_layout(
-        barmode="stack",
-        title=f"Count of movies with male and female Directors from {start_year} to {end_year}",
+        barmode='stack',
+        title=f"Proportion of Movies with male and female Directors from {start_year} to {end_year}",
         xaxis_title="Year",
         yaxis_title="Count of Movies",
         legend_title="Director Gender",
+        yaxis_tickformat='0%', 
+        bargap=0
     )
+
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor=color_G)
 
     # Export the plot to an HTML file
     fig.write_html(output_html)
@@ -1270,11 +1207,8 @@ def visualize_prop_of_actor_and_bd_rating(movies_agg):
     plt.ylabel("Proportion")
     plt.legend(loc="upper right")
     plt.show()
-
-
-def visualize_prop_of_actor_and_bd_rating_HTML(
-    movies, output_html="html_plots/actors_bdrating_proportion.html"
-):
+    
+def visualize_prop_of_actor_and_bd_rating_HTML(movies, output_html="html_plots/actors_bdrating_proportion.html"):
     movies_agg = movies.copy()
     movies_agg.drop(
         ["Female_Actors_Per_Film", "Male_Actors_Per_Film", "Total_Actors_Per_Film"],
@@ -1297,19 +1231,18 @@ def visualize_prop_of_actor_and_bd_rating_HTML(
             "variable": "Actor Gender",
         },
         color_discrete_map=color_discrete_map,
+        opacity=0.9
     )
     # Update x-axis to treat as category
-    fig.update_xaxes(type="category")
-
+    fig.update_xaxes(type='category')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor=color_G)
     # Update y-axis to show percentages
-    fig.update_layout(yaxis_tickformat="0%")
+    fig.update_layout(yaxis_tickformat='0%', bargap=0)
     fig.show()
     fig.write_html(output_html)
 
 
-def visualize_popularity_HTML(
-    reception_bechdel, output_html="html_plots/popularity.html"
-):
+def visualize_popularity_HTML(reception_bechdel, output_html="html_plots/popularity.html"):
     fig = px.bar(
         reception_bechdel,
         x=reception_bechdel.index,
@@ -1320,12 +1253,10 @@ def visualize_popularity_HTML(
             "index": "Bechdel Test rating",
             "variable": "Metric",
             "popularity": "Popularity",
-            "vote_average": "Average Rating",
+            "vote_average": "Average Rating"
         },
-        color_discrete_map={
-            reception_bechdel.columns[0]: color_G,
-            reception_bechdel.columns[1]: color_B,
-        },
+        color_discrete_map={reception_bechdel.columns[0]: color_G, reception_bechdel.columns[1]: color_B},
+        opacity=0.8
     )
 
     # Update layout
@@ -1340,27 +1271,7 @@ def visualize_popularity_HTML(
     fig.write_html(output_html)
 
 
-def visualize_bd_rating_evolution(movies_data_csv):
-    movies_data_csv["movie_release_date"] = pd.to_datetime(
-        movies_data_csv["movie_release_date"], errors="coerce"
-    )
-    movies_data_csv["release_year"] = movies_data_csv["movie_release_date"].dt.year
-
-    filtered_data = movies_data_csv.dropna(subset=["release_year", "bechdel_rating"])
-
-    yearly_bechdel = (
-        filtered_data.groupby(["release_year", "bechdel_rating"])
-        .size()
-        .unstack(fill_value=0)
-    )
-
-    yearly_bechdel["total_movies"] = yearly_bechdel.sum(axis=1)
-
-    yearly_bechdel = yearly_bechdel[yearly_bechdel["total_movies"] > 15]
-    yearly_bechdel["proportion_passing"] = (
-        yearly_bechdel[3] / yearly_bechdel["total_movies"]
-    )
-
+def visualize_bd_rating_evolution(yearly_bechdel):
     plt.figure(figsize=(15, 8))
     sns.lineplot(data=yearly_bechdel, x="release_year", y="proportion_passing")
     plt.title("Proportion of Movies Passing the Bechdel Test Over Time")
@@ -1368,7 +1279,18 @@ def visualize_bd_rating_evolution(movies_data_csv):
     plt.ylabel("Proportion Passing")
     plt.grid(True)
     plt.show()
-    return yearly_bechdel
+
+def visualize_bd_rating_evolution_HTML(yearly_bechdel, year_range=[], output_html="html_plots/bd_rating_evolution.html"):
+    fig = px.line(yearly_bechdel,
+                  y='proportion_passing', 
+                  title='Proportion of movies passing the Bechdel test over time',
+                  labels={'release_year': 'Year', 'proportion_passing': 'Proportion passing the Bechdel test'}
+                  )
+    fig.update_layout(xaxis_title='Year', yaxis_title='Proportion passing the Bechdel test', yaxis_tickformat='0%', template='plotly_white')
+    fig.update_xaxes(range=year_range)
+    fig.update_yaxes(range=[0, 1])
+    fig.show()
+    fig.write_html(output_html)
 
 
 def visualize_number_of_movies(yearly_bechdel):
@@ -1426,8 +1348,8 @@ def visualize_genres_dist_on_bd_HTML(grouped_data):
         orientation="h",
         barmode="overlay",
         color_discrete_map={
-            "Proportion_Male": "blue",
-            "Proportion_Female": "red",
+            "Proportion_Male": color_M,
+            "Proportion_Female": color_F,
         },
         labels={"main_genre": "Genres", "Proportion": "Proportion", "Gender": ""},
         title="Proportion of Male and Female Actors in Top 15 Movie Genres",
@@ -1435,3 +1357,17 @@ def visualize_genres_dist_on_bd_HTML(grouped_data):
 
     fig.write_html("bd_genre_ds.html")
     return
+
+def visualize_number_of_movies_HTML(yearly_bechdel, year_range=[], output_html="html_plots/number_of_movies_bechdel.html"):
+    fig = px.line(yearly_bechdel,
+                y='total_movies',
+                title='Number of movies produced per year which are in the Bechdel dataset',
+                labels={'release_year': 'Year', 'total_movies': 'Movies produced per year'})
+                
+    fig.update_layout(xaxis_title='Year', 
+                      yaxis_title='Total Movies Produced',
+                      showlegend=False, 
+                      template='plotly_white')
+    fig.update_xaxes(range=year_range)
+    fig.show()
+    fig.write_html(output_html)
