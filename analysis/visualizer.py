@@ -1327,6 +1327,61 @@ def visualize_number_of_movies(yearly_bechdel):
     plt.show()
 
 
+def visualize_genres_dist_on_bd(grouped_data):
+    sns.set_style("darkgrid")
+    plt.figure(figsize=(15, 10))
+    bar_plot = sns.barplot(
+        x="Proportion_Male",
+        y="main_genre",
+        data=grouped_data.head(15),
+        color="lightblue",
+        label="Male",
+    )
+
+    bar_plot = sns.barplot(
+        x="Proportion_Female",
+        y="main_genre",
+        data=grouped_data.head(15),
+        color="pink",
+        label="Female",
+    )
+
+    plt.legend()
+    plt.title("Proportion of Male and Female Actors in Top 10 Movie Genres")
+    plt.xlabel("Proportion")
+    plt.ylabel("Genres")
+    plt.show()
+    return
+
+
+def visualize_genres_dist_on_bd_HTML(grouped_data):
+    top_genres = grouped_data.head(15)
+
+    melted_data = top_genres.melt(
+        id_vars="main_genre",
+        value_vars=["Proportion_Male", "Proportion_Female"],
+        var_name="Gender",
+        value_name="Proportion",
+    )
+
+    fig = px.bar(
+        melted_data,
+        x="Proportion",
+        y="main_genre",
+        color="Gender",
+        orientation="h",
+        barmode="overlay",
+        color_discrete_map={
+            "Proportion_Male": color_M,
+            "Proportion_Female": color_F,
+        },
+        labels={"main_genre": "Genres", "Proportion": "Proportion", "Gender": ""},
+        title="Proportion of Male and Female Actors in Top 15 Movie Genres",
+    )
+
+    fig.write_html("bd_genre_ds.html")
+    return
+
 def visualize_number_of_movies_HTML(yearly_bechdel, year_range=[], output_html="html_plots/number_of_movies_bechdel.html"):
     fig = px.line(yearly_bechdel,
                 y='total_movies',
