@@ -661,7 +661,7 @@ def visualize_wordcloud_roles(actor_with_role):
 
 def visualize_director_producer_actor_gender_correlation_HTML(movies):
     """
-    Visualize the correlation between the presence of a female director and/or a female producer and the number of female actors in movies using box plots with Plotly, and export as HTML.
+    Visualize the correlation between the presence of a female director and/or a female producer and the proportion of female actors in movies using box plots with Plotly, and export as HTML.
 
     Parameters:
     movies (pandas.DataFrame): DataFrame containing information about movies, directors, producers, and actors.
@@ -670,15 +670,19 @@ def visualize_director_producer_actor_gender_correlation_HTML(movies):
     None
     """
 
-    # Calculate the count of female actors for each movie
+    # Calculate the count of actors for each movie
+    actor_counts = movies.groupby('wikiID').size()
     female_actor_counts = movies[movies['actor_gender'] == 'F'].groupby('wikiID').size()
+
+    # Calculate the proportion of female actors
+    female_actor_proportion = (female_actor_counts / actor_counts).rename('female_actor_proportion')
 
     # Create binary columns for the presence of a female director and a female producer
     movies['has_female_director'] = movies['director_gender'] == 'F'
     movies['has_female_producer'] = movies['producer_gender'] == 'F'
     
-    # Merge the count of female actors into the movies DataFrame
-    movies = movies.merge(female_actor_counts.rename('female_actor_count'), on='wikiID', how='left')
+    # Merge the proportion of female actors into the movies DataFrame
+    movies = movies.merge(female_actor_proportion, on='wikiID', how='left')
     
     # Drop duplicates since there can be multiple actors per movie
     movies.drop_duplicates(subset='wikiID', inplace=True)
@@ -693,10 +697,8 @@ def visualize_director_producer_actor_gender_correlation_HTML(movies):
     choices = ['No Female Director/Producer', 'Female Producer Only', 'Female Director Only', 'Both Female Director and Producer']
     movies['category'] = np.select(conditions, choices)
 
-    # Calculate medians for each category
-    category_medians = movies.groupby('category')['female_actor_count'].median().sort_values()
-
-    # Sort categories by median values
+    # Sort categories based on the median proportion of female actors
+    category_medians = movies.groupby('category')['female_actor_proportion'].median().sort_values()
     sorted_categories = category_medians.index.tolist()
 
     # Create a color gradient from red to green
@@ -708,8 +710,8 @@ def visualize_director_producer_actor_gender_correlation_HTML(movies):
     }
 
     # Create the plot with Plotly
-    fig = px.box(movies, x='category', y='female_actor_count', title="Distribution of Female Actors by Presence of Female Directors and Producers",
-                 labels={'female_actor_count': 'Number of Female Actors'},
+    fig = px.box(movies, x='category', y='female_actor_proportion', title="Proportion of Female Actors by Presence of Female Directors and Producers",
+                 labels={'female_actor_proportion': 'Proportion of Female Actors'},
                  category_orders={'category': sorted_categories},
                  color='category',
                  color_discrete_map=color_gradient,
@@ -718,8 +720,7 @@ def visualize_director_producer_actor_gender_correlation_HTML(movies):
     # Loop through the traces and update the fillcolor, median line color, and box border color
     for trace in fig.data:
         trace.update(fillcolor=trace.marker.color)
-        trace.update(marker_line_color='black', marker_line_width=0.5)
-
+        
     # Set the median line color and box border color to black
     fig.update_traces(line=dict(color='black', width=1))
 
@@ -729,15 +730,15 @@ def visualize_director_producer_actor_gender_correlation_HTML(movies):
     # Update layout for better readability and set the figure size
     fig.update_layout(
         xaxis_tickangle=-45,
-        width=1000,  # Set the width of the figure
-        height=800   # Set the height of the figure
+        width=800,  # Set the width of the figure
+        height=500   # Set the height of the figure
     )
     
     # Export the plot to an HTML file
-    fig.write_html("html_plots/director_producer_actor_gender_correlation.html")
+    fig.write_html("html_plots/director_producer_actor_gender_correlation_proportion.html")
     
-    # Optionally, display the plot in the notebook if you're using Jupyter
     fig.show()
+
 
 
 
