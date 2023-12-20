@@ -1307,20 +1307,22 @@ def visualize_number_of_movies(yearly_bechdel):
 def visualize_genres_dist_on_bd(grouped_data):
     sns.set_style("darkgrid")
     plt.figure(figsize=(15, 10))
-    bar_plot = sns.barplot(
+    sns.barplot(
         x="Proportion_Male",
         y="main_genre",
         data=grouped_data.head(15),
-        color="lightblue",
+        color=color_M,
         label="Male",
+        alpha=0.8,
     )
 
-    bar_plot = sns.barplot(
+    sns.barplot(
         x="Proportion_Female",
         y="main_genre",
         data=grouped_data.head(15),
-        color="pink",
+        color=color_F,
         label="Female",
+        alpha=0.8,
     )
 
     plt.legend()
@@ -1331,7 +1333,7 @@ def visualize_genres_dist_on_bd(grouped_data):
     return
 
 
-def visualize_genres_dist_on_bd_HTML(grouped_data):
+def visualize_genres_dist_on_bd_HTML(grouped_data, output_html="html_plots/bd_genre_ds.html"):
     top_genres = grouped_data.head(15)
 
     melted_data = top_genres.melt(
@@ -1340,6 +1342,7 @@ def visualize_genres_dist_on_bd_HTML(grouped_data):
         var_name="Gender",
         value_name="Proportion",
     )
+    melted_data = melted_data.sort_values(by='Proportion', ascending=False)
 
     fig = px.bar(
         melted_data,
@@ -1347,17 +1350,20 @@ def visualize_genres_dist_on_bd_HTML(grouped_data):
         y="main_genre",
         color="Gender",
         orientation="h",
-        barmode="overlay",
+        barmode="stack",
         color_discrete_map={
             "Proportion_Male": color_M,
             "Proportion_Female": color_F,
         },
-        labels={"main_genre": "Genres", "Proportion": "Proportion", "Gender": ""},
+        labels={"main_genre": "Genres"},
         title="Proportion of Male and Female Actors in Top 15 Movie Genres",
+        opacity=0.8
     )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor=color_G)
 
-    fig.write_html("bd_genre_ds.html")
-    return
+    fig.update_layout(bargap=0, xaxis_tickformat='0%')
+    fig.show()
+    fig.write_html(output_html)
 
 def visualize_number_of_movies_HTML(yearly_bechdel, year_range=[], output_html="html_plots/number_of_movies_bechdel.html"):
     fig = px.line(yearly_bechdel,
