@@ -1295,27 +1295,7 @@ def visualize_popularity_HTML(reception_bechdel, output_html="html_plots/popular
     fig.write_html(output_html)
 
 
-def visualize_bd_rating_evolution(movies_data_csv):
-    movies_data_csv["movie_release_date"] = pd.to_datetime(
-        movies_data_csv["movie_release_date"], errors="coerce"
-    )
-    movies_data_csv["release_year"] = movies_data_csv["movie_release_date"].dt.year
-
-    filtered_data = movies_data_csv.dropna(subset=["release_year", "bechdel_rating"])
-
-    yearly_bechdel = (
-        filtered_data.groupby(["release_year", "bechdel_rating"])
-        .size()
-        .unstack(fill_value=0)
-    )
-
-    yearly_bechdel["total_movies"] = yearly_bechdel.sum(axis=1)
-
-    yearly_bechdel = yearly_bechdel[yearly_bechdel["total_movies"] > 15]
-    yearly_bechdel["proportion_passing"] = (
-        yearly_bechdel[3] / yearly_bechdel["total_movies"]
-    )
-
+def visualize_bd_rating_evolution(yearly_bechdel):
     plt.figure(figsize=(15, 8))
     sns.lineplot(data=yearly_bechdel, x="release_year", y="proportion_passing")
     plt.title("Proportion of Movies Passing the Bechdel Test Over Time")
@@ -1323,7 +1303,18 @@ def visualize_bd_rating_evolution(movies_data_csv):
     plt.ylabel("Proportion Passing")
     plt.grid(True)
     plt.show()
-    return yearly_bechdel
+
+def visualize_bd_rating_evolution_HTML(yearly_bechdel, year_range=[], output_html="html_plots/bd_rating_evolution.html"):
+    fig = px.line(yearly_bechdel,
+                  y='proportion_passing', 
+                  title='Proportion of movies passing the Bechdel test over time',
+                  labels={'release_year': 'Year', 'proportion_passing': 'Proportion passing the Bechdel test'}
+                  )
+    fig.update_layout(xaxis_title='Year', yaxis_title='Proportion passing the Bechdel test', yaxis_tickformat='0%', template='plotly_white')
+    fig.update_xaxes(range=year_range)
+    fig.update_yaxes(range=[0, 1])
+    fig.show()
+    fig.write_html(output_html)
 
 
 def visualize_number_of_movies(yearly_bechdel):
@@ -1334,3 +1325,18 @@ def visualize_number_of_movies(yearly_bechdel):
     plt.ylabel("Total Movies Produced")
     plt.grid(True)
     plt.show()
+
+
+def visualize_number_of_movies_HTML(yearly_bechdel, year_range=[], output_html="html_plots/number_of_movies_bechdel.html"):
+    fig = px.line(yearly_bechdel,
+                y='total_movies',
+                title='Number of movies produced per year which are in the Bechdel dataset',
+                labels={'release_year': 'Year', 'total_movies': 'Movies produced per year'})
+                
+    fig.update_layout(xaxis_title='Year', 
+                      yaxis_title='Total Movies Produced',
+                      showlegend=False, 
+                      template='plotly_white')
+    fig.update_xaxes(range=year_range)
+    fig.show()
+    fig.write_html(output_html)
