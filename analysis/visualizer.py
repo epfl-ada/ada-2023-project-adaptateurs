@@ -1430,7 +1430,7 @@ def visualize_genres_dist_on_bd_HTML(grouped_data):
             "Proportion_Female": "red",
         },
         labels={"main_genre": "Genres", "Proportion": "Proportion", "Gender": ""},
-        title="Proportion of Male and Female Actors in Top 10 Movie Genres",
+        title="Proportion of Male and Female Actors in Top 15 Movie Genres",
     )
 
     fig.write_html("bd_genre_ds.html")
