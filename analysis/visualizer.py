@@ -1426,8 +1426,8 @@ def visualize_genres_dist_on_bd_HTML(grouped_data):
         orientation="h",
         barmode="overlay",
         color_discrete_map={
-            "Proportion_Male": "blue",
-            "Proportion_Female": "red",
+            "Proportion_Male": color_M,
+            "Proportion_Female": color_F,
         },
         labels={"main_genre": "Genres", "Proportion": "Proportion", "Gender": ""},
         title="Proportion of Male and Female Actors in Top 15 Movie Genres",
