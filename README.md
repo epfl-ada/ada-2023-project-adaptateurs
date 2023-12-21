@@ -94,15 +94,13 @@ This study aims to provide a comprehensive analysis of female representation in 
 
 ## Research Questions 🔍
 We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to relate on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context.
-Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
+Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
 
 Our journey through the cinematic universe is guided by the following pivotal questions:
 
-- How do various film industries, such as Hollywood, Bollywood, and European cinema, portray women in their films?
+- How does women in important positions in movies influence the proportion of actresses in a movie, as well as the representation of women through the Bechdel test.
 - How does the representation of women, both in front of the camera and behind the scenes, shape a film's reception and resonance with its audience?
-- Can the Bechdel test serve as a meaningful barometer for evaluating a film's portrayal of women, beyond its surface-level criteria?
-- In what ways do film summaries, as condensed narratives, reflect gender biases or empowerment, influenced by the gender dynamics within the film's creation?
-- Which genres in cinema are leading the charge in representing women as complex, multi-dimensional characters?
+- Which genres in cinema represent more women?
 
 ## Datasets 📊
 
