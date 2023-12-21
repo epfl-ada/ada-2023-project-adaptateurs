@@ -129,8 +129,11 @@ In this analysis, we will use three different datasets
 ### **Step 2**: 
 
 <span align="justify"> 
-**Exploring the data**: We looked at the evolution of the main roles in the movies: actor, director and producer, and look for correlations.
   
+**Exploring the data**: We looked at the evolution of the main roles in the movies: actor, director and producer, and look for correlations.
+
+### **Step 3**: 
+
 **Quality assesment**: We analyzed whether there is an evolution in the quality of the representation of women through different angles:
 - Actors age: To see whether the age of an actor playsing in a movie depends on their gender.
 - Characters roles: To see whether there is a predominance of roles for women and men.
