@@ -1191,7 +1191,56 @@ def visualize_barplot_r2n_roles(movies):
     plt.title(f'Top {compare_Len} Men\'s Roles in a relationship to a named character')
     plt.tight_layout()
     plt.show()
-    return
+
+def visualize_barplot_r2n_roles_HTML(movies, output_html='html_plots/r2n_roles_bar.html'):
+    compare_Len = 10
+    # Filtering and processing roles for women
+    role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
+    role_women = role_women[role_women["role_cat"] == "ROLE_TO_NAME"]
+    role_women = drop_roles(role_women)
+
+    # Filtering and processing roles for men
+    role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
+    role_men = role_men[role_men["role_cat"] == "ROLE_TO_NAME"]
+    role_men = drop_roles(role_men)
+
+    # Counting top roles
+    women_counts = role_women["role_str"].value_counts().head(compare_Len)
+    men_counts = role_men["role_str"].value_counts().head(compare_Len)
+
+    # Creating figure with subplots
+    fig = make_subplots(rows=1, cols=2, subplot_titles=(f'Top {compare_Len} Women\'s Roles', f'Top {compare_Len} Men\'s Roles'))
+
+    # Women's roles plot
+    fig.add_trace(go.Bar(
+        x=women_counts.values[::-1],
+        y=women_counts.index[::-1],
+        orientation='h',
+        marker_color=color_F,  # Example color, replace with desired color
+        name='Women'
+    ), row=1, col=1)
+
+    # Men's roles plot
+    fig.add_trace(go.Bar(
+        x=men_counts.values[::-1],
+        y=men_counts.index[::-1],
+        orientation='h',
+        marker_color=color_M,  # Example color, replace with desired color
+        name='Men'
+    ), row=1, col=2)
+
+    # Update layout
+    fig.update_layout(
+        title_text='Top Roles in Relationship to a Named Character',
+        height=600, width=1200,
+        yaxis=dict(title='Role'),
+        yaxis2=dict(title='Role'),
+        xaxis=dict(title='Count'),
+        xaxis2=dict(title='Count')
+    )
+
+    fig.show()
+    fig.write_html(output_html)
 
 def drop_roles(movies):
     movies = movies.drop(
@@ -1259,6 +1308,64 @@ def visualize_bar_job_roles_bar(movies, YEAR_RANGE=[1980, 2010], compare_Len = 1
     plt.tight_layout()
     plt.show()
 
+def visualize_bar_job_roles_bar_HTML(movies, YEAR_RANGE=[1980, 2010], compare_Len=10, output_html='html_plots/job_roles_bar.html'):
+    """
+    Visualizes the top job roles in movies for men and women within a specified year range using Plotly.
+
+    Parameters:
+    movies (DataFrame): The dataset containing movie information.
+    YEAR_RANGE (list): The range of years to consider.
+    compare_Len (int): The number of top roles to compare.
+    """
+
+    # Filtering movies by year range
+    movies = movies[(movies["year"] >= YEAR_RANGE[0]) & (movies["year"] <= YEAR_RANGE[1])].copy(deep=True)
+
+    # Filtering and processing roles for women
+    role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
+    role_women = role_women[role_women["role_cat"] == "JOB"]
+    role_women = drop_roles(role_women)
+
+    # Filtering and processing roles for men
+    role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
+    role_men = role_men[role_men["role_cat"] == "JOB"]
+    role_men = drop_roles(role_men)
+
+    # Getting top roles
+    women_counts = role_women["role_str"].value_counts().head(compare_Len)
+    men_counts = role_men["role_str"].value_counts().head(compare_Len)
+
+    # Creating subplots
+    fig = make_subplots(rows=1, cols=2, subplot_titles=(f'Top {compare_Len} Women Job Roles', f'Top {compare_Len} Men Job Roles'))
+
+    # Plot for Women
+    fig.add_trace(
+        go.Bar(
+            x=women_counts.values,
+            y=women_counts.index,
+            orientation='h',
+            name='Women'
+        ),
+        row=1, col=1
+    )
+    fig.update_traces(marker_color=[color_F]*compare_Len)
+    # Plot for Men
+    fig.add_trace(
+        go.Bar(
+            x=men_counts.values,
+            y=men_counts.index,
+            orientation='h',
+            name='Men'
+        ),
+        row=1, col=2
+    )
+    fig.update_traces(selector=({'name':'Men'}), marker_color=[color_M]*compare_Len)
+    fig.update_traces(selector=({'name':'Women'}), marker_color=[color_F]*compare_Len)
+    
+    # Update layout
+    fig.update_layout(height=600, width=1200, title_text="Top Job Roles in Movies")
+    fig.show()
+    fig.write_html(output_html)
 
 def visualize_prop_of_actor_and_bd_rating(movies):
     sns.set_style("darkgrid")
@@ -1570,6 +1677,34 @@ def visualize_bar_plot_role_cat(movies, YEAR_RANGE=[1980, 2010]):
     # Show the plot
     plt.show()
 
+def visualize_bar_plot_role_cat_HTML(movies, YEAR_RANGE=[1980, 2010], output_html="html_plots/bar_plt_role_cat.html"):
+    movies_filtered = movies[(movies['year'] >= YEAR_RANGE[0]) & (movies['year'] <= YEAR_RANGE[1])]
+
+    # Create subplots
+    fig = make_subplots(rows=1, cols=5, subplot_titles=('All roles', 'Named roles', 'Job roles', 
+                                                         'Relation to named role', 'Relation to job role'))
+
+    # Categories for the plots
+    categories = ['All', 'NAME', 'JOB', 'ROLE_TO_NAME', 'ROLE_TO_JOB']
+
+    for i, cat in enumerate(categories, start=1):
+        if cat == 'All':
+            df_filtered = movies_filtered
+        else:
+            df_filtered = movies_filtered[movies_filtered['role_cat'] == cat]
+
+        count_M = df_filtered[df_filtered['actor_gender'] == 'M']['actor_name'].count()
+        count_F = df_filtered[df_filtered['actor_gender'] == 'F']['actor_name'].count()
+
+        fig.add_trace(go.Bar(name='Actors', x=['Actors'], y=[count_M], marker_color=color_M), row=1, col=i)
+        fig.add_trace(go.Bar(name='Actresses', x=['Actresses'], y=[count_F], marker_color=color_F), row=1, col=i)
+
+    # Update layout
+    fig.update_layout(height=400, width=1200, showlegend=False, title_text="Number of Roles by Category and Gender")
+    fig.show()
+    fig.write_html(output_html)
+
+
 def role_job_barplot_history(movies, job, YEAR_RANGE=[1980, 2010]):
     movies = movies[(movies['year']>=YEAR_RANGE[0]) & (movies['year']<=YEAR_RANGE[1])].copy(deep=True)
     if type(job) is list:
@@ -1591,6 +1726,50 @@ def role_job_barplot_history(movies, job, YEAR_RANGE=[1980, 2010]):
         plt.title(f'Gender distribution of actors credited as {job}, by decade')
     plt.show()
 
+def role_job_barplot_history_HTML(movies, job, YEAR_RANGE=[1980, 2010]):
+    output_html=f"html_plots/role_job_barplot_history_{job}.html"
+    movies = movies[(movies['year'] >= YEAR_RANGE[0]) & (movies['year'] <= YEAR_RANGE[1])].copy(deep=True)
+
+    # Grouping and counting based on job roles and gender
+    if isinstance(job, list):
+        subset = pd.DataFrame(movies[(movies['role_cat'] == "JOB") & ((movies['role_str'] == job[0]) | (movies['role_str'] == job[1]))].groupby([movies['year'] // 10 * 10, 'actor_gender']).count().iloc[:, 0]).reset_index()
+    else:
+        subset = pd.DataFrame(movies[(movies['role_cat'] == "JOB") & (movies['role_str'] == job)].groupby([movies['year'] // 10 * 10, 'actor_gender']).count().iloc[:, 0]).reset_index()
+
+    # Pivot the data to get counts by year and gender
+    pivot_df = subset.pivot_table(index='year', columns='actor_gender', values='actor_name', fill_value=0)
+
+    # Normalize the data to get proportions
+    pivot_df = pivot_df.div(pivot_df.sum(axis=1), axis=0)
+
+    # Creating the bar plot
+    fig = go.Figure()
+    for gender in pivot_df.columns:
+        fig.add_trace(go.Bar(
+            x=pivot_df.index,
+            y=pivot_df[gender],
+            name=gender,
+            text=pivot_df[gender],
+            textposition='auto',
+        ))
+
+    fig.update_traces(selector={'name': 'M'}, marker_color=color_M)
+    fig.update_traces(selector={'name': 'F'}, marker_color=color_F)
+
+    # Update layout for stacked bar plot
+    fig.update_layout(
+        barmode='stack',
+        title=f'Gender Distribution of Actors Credited as {job}, by Decade',
+        xaxis_title='Decade',
+        yaxis_title='Percentage',
+        yaxis=dict(tickformat=".0%")
+    )
+
+    fig.show()
+    fig.write_html(output_html)
+
+
+
 def visualize_box_plot_role_avg_pay(movies, YEAR_RANGE):
     movies = movies[(movies['year']>=YEAR_RANGE[0]) & (movies['year']<=YEAR_RANGE[1])].copy(deep=True)
     plt.figure(figsize=(10, 6))
@@ -1598,3 +1777,41 @@ def visualize_box_plot_role_avg_pay(movies, YEAR_RANGE):
     sns.boxplot(data=[movies[(movies['actor_gender']=="M") & (movies['avg_pay'].notna())]['avg_pay']/12, movies[(movies['actor_gender']=="F") & (movies['avg_pay'].notna())]['avg_pay']/12], palette=[color_M, color_F])
     plt.xticks([0, 1], ['Actor Role', 'Actress Role']) 
     plt.ylabel('Average monthly pay')
+
+def visualize_box_plot_role_avg_pay_HTML(movies, YEAR_RANGE, output_html="html_plots/box_plot_role_avg_pay.html"):
+    # Filtering movies by year range
+    movies = movies[(movies['year'] >= YEAR_RANGE[0]) & (movies['year'] <= YEAR_RANGE[1])].copy(deep=True)
+
+    # Extracting average pay data for actors and actresses
+    actor_pay = movies[(movies['actor_gender'] == "M") & (movies['avg_pay'].notna())]['avg_pay'] / 12
+    actress_pay = movies[(movies['actor_gender'] == "F") & (movies['avg_pay'].notna())]['avg_pay'] / 12
+
+    # Creating box plots
+    fig = go.Figure()
+
+    fig.add_trace(go.Box(
+        y=actor_pay,
+        name='Actor Role',
+        marker_color=color_M  # Example color, replace with desired color
+    ))
+
+    fig.add_trace(go.Box(
+        y=actress_pay,
+        name='Actress Role',
+        marker_color=color_F  # Example color, replace with desired color
+    ))
+
+    # Update layout
+    fig.update_layout(
+        title='Average Pay for the Job Played by Actors and Actresses',
+        yaxis_title='Average Monthly Pay',
+        xaxis=dict(
+            title='Role',
+            tickmode='array',
+            tickvals=[0, 1],
+            ticktext=['Actor Role', 'Actress Role']
+        )
+    )
+
+    fig.show()
+    fig.write_html(output_html)
