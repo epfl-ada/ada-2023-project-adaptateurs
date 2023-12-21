@@ -126,21 +126,21 @@ In this analysis, we will use three different datasets
 
 </span>
 
-### **Step 2**: 
+### **Step 2**: Exploring the data
 
 <span align="justify"> 
   
-**Exploring the data**: We looked at the evolution of the main roles in the movies: actor, director and producer, and look for correlations.
+**Actors, directors and producers**: We looked at the evolution of the main roles in the movies: actor, director and producer, and look for correlations.
+**Genres**: We looked at the proportions of actors ans actresses in different genres of movies.
 
-### **Step 3**: 
+### **Step 3**: Quality evaluation of the representation of women
 
-**Quality assesment**: We analyzed whether there is an evolution in the quality of the representation of women through different angles:
+We analyzed whether there is an evolution in the quality of the representation of women through different angles:
 - Actors age: To see whether the age of an actor playsing in a movie depends on their gender.
 - Characters roles: To see whether there is a predominance of roles for women and men.
 - The Bechdel Test: Tool to qualify the movies through their representation of women.
 - Popularity, box-office revenue and rating of movies: Metrics used to evaluate the success of a movie
 
-**Genres**: We looked at the proportions of actors ans actresses in different genres of movies.
 
 </span>
 
