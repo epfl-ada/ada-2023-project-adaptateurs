@@ -1338,8 +1338,8 @@ def visualize_bar_job_roles_bar_HTML(movies, YEAR_RANGE=[1980, 2010], compare_Le
     # Plot for Women
     fig.add_trace(
         go.Bar(
-            x=women_counts.values,
-            y=women_counts.index,
+            x=women_counts.values[::-1],
+            y=women_counts.index[::-1],
             orientation='h',
             name='Women'
         ),
@@ -1349,8 +1349,8 @@ def visualize_bar_job_roles_bar_HTML(movies, YEAR_RANGE=[1980, 2010], compare_Le
     # Plot for Men
     fig.add_trace(
         go.Bar(
-            x=men_counts.values,
-            y=men_counts.index,
+            x=men_counts.values[::-1],
+            y=men_counts.index[::-1],
             orientation='h',
             name='Men'
         ),
