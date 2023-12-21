@@ -34,7 +34,7 @@ def visualize_year_distribution(movies, style="darkgrid"):
     mean = unique_movies.groupby("year")["wikiID"].count().mean()
 
     sns.set_style(style)
-    sns.histplot(unique_movies.movie_release_date, bins=100, color=color_M, kde=True)
+    sns.histplot(unique_movies.movie_release_date, bins=100, color=color_M)
 
     plt.title("Distribution of Movies Across Years")
     plt.xlabel("Release Year")
@@ -120,7 +120,44 @@ def visualize_missing_values(movies, style="darkgrid"):
     plt.show()
 
 
-def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gender_distribution_bar.html'):
+def visualize_gender_distribution(movies):
+    roles = ["actor_gender", "director_gender", "producer_gender"]
+    
+    # Define color map for genders
+    color_map = {'M': color_M, 'F': color_F}  # Ensure these are defined, e.g., color_M = 'blue', color_F = 'red'
+
+    # Create figure for the stacked bar chart
+    fig, ax = plt.subplots(figsize=(6, 3))
+
+    # Variables to hold the bottom values for the stacked bars
+    bar_bottoms = np.zeros(len(roles))
+
+    # Loop through each gender and plot
+    for gender in ['F', 'M']:  # Ensuring consistent order
+        gender_percentages = []
+        for role in roles:
+            gender_count = movies[role].value_counts().get(gender, 0)
+            total_count = movies[role].count()
+            percentage = (gender_count / total_count * 100) if total_count > 0 else 0
+            gender_percentages.append(percentage)
+
+        ax.bar(
+            roles,
+            gender_percentages,
+            bottom=bar_bottoms,
+            color=color_map.get(gender, 'gray'),
+            label=f"{gender}"
+        )
+        bar_bottoms += np.array(gender_percentages)
+
+    ax.set_ylabel("Percentage (%)")
+    ax.legend()
+
+    plt.suptitle("Gender Distribution in Main Roles (Percentage)")
+    plt.show()
+
+
+def visualize_gender_distribution_HTML(movies, output_html='html_plots/gender_distribution_bar.html'):
     roles = ["actor_gender", "director_gender", "producer_gender"]
     
     # Create a subplot figure with 1 row and len(roles) columns
@@ -166,26 +203,46 @@ def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gende
     fig.write_html(output_html)
 
 
-def visualize_actors_distribution(movies, style="darkgrid"):
+def visualize_actors_gender_proportion(movies):
     """
-    Visualize the distribution of the number of actors in movies.
+    Visualize the distribution of the number of actors in movies as a stacked bar chart using Matplotlib.
 
     Parameters:
     movies (pandas.DataFrame): DataFrame containing the movies data.
-    style (str): Style of the plot (default is "darkgrid").
 
     Returns:
     None
     """
+    # Count the number of actors by year and gender
+    actor_counts = (
+        movies.groupby(["year", "actor_gender"]).count()["actor_name"].reset_index()
+    )
 
-    number_of_actors = movies.groupby("wikiID")["actor_name"].agg("count")
+    # Calculate the total actors per year
+    total_actors_per_year = movies.groupby("year")["actor_name"].count()
 
-    plt.hist(number_of_actors, bins=50, log=True, color=color_G, alpha=0.5)
-    plt.xlabel("Number of actors")
-    plt.ylabel("Number of movies")
-    plt.title("Distribution of actors")
-    plt.show()
+    # Calculate the percentage
+    actor_counts["percentage"] = actor_counts.apply(
+        lambda row: (row["actor_name"] / total_actors_per_year[row["year"]]) * 100,
+        axis=1,
+    )
 
+    # Pivot for stacked bar plot
+    pivot_df = actor_counts.pivot(index='year', columns='actor_gender', values='percentage')
+
+    # Plotting
+    plt.figure(figsize=(6, 3))
+    pivot_df.plot(kind='bar', stacked=True, color=[color_F, color_M], ax=plt.gca())
+
+    plt.title("Mean Proportion of Actors and Actresses in Movies by Year")
+    plt.xlabel("Year")
+    plt.ylabel("Percentage of Actors (%)")
+
+    # Show 1 year every 5 years
+    plt.xticks(np.arange(0, len(pivot_df.index), 5), pivot_df.index[::5], rotation=90)
+    plt.ylim(0, 100)  # Set y-axis to range from 0 to 100%
+    plt.legend(title="Actor Gender")
+    plt.grid(True, which='major', linestyle='-', linewidth='0.5', color=color_G)  # Assuming color_G is defined
 
 
 def visualize_actors_gender_proportion_HTML(
@@ -249,83 +306,7 @@ def visualize_actors_gender_proportion_HTML(
     fig.write_html(output_html)
 
 
-# not used anymore -> see visualize_gender_prop
-def visualize_gender_proportion_repartition(movies, style="darkgrid"):
-    """
-    Visualizes the proportion of male and female characters in movies.
-
-    Parameters:
-    movies (pandas.DataFrame): A DataFrame containing information about movies.
-    style (str): The style of the plot. Default is "darkgrid".
-
-    Returns:
-    pandas.DataFrame: A DataFrame containing the proportion of male and female characters in each movie.
-    """
-
-    # Filtering and extract proportions of male/female characters per movie
-    movies = movies.loc[movies["actor_gender"].isin(["F", "M"])].copy(deep=True)
-    male_female_counts = (
-        movies.groupby(["wikiID", "actor_gender"])["character_name"]
-        .nunique()
-        .unstack(fill_value=0)
-    )
-    male_female_counts = male_female_counts.join(
-        movies.groupby("wikiID")["character_name"].nunique().rename("total_char")
-    ).assign(
-        percents_of_female=lambda x: x["F"] / x["total_char"] * 100,
-        percents_of_male=lambda x: x["M"] / x["total_char"] * 100,
-    )
-
-    male_female_counts.rename(
-        columns={"F": "female_char", "M": "male_char"}, inplace=True
-    )
-    male_female_counts = male_female_counts.merge(
-        movies[["year", "wikiID"]].drop_duplicates(), on="wikiID", how="left"
-    )
-
-    male_female_counts.dropna(
-        inplace=True, subset=["percents_of_female", "percents_of_male"]
-    )
-
-    # Plot results into two distinct plot
-    fig, ax = plt.subplots(1, 2, figsize=(16, 8), sharey=True)
-
-    sns.set_style(style)
-
-    sns.histplot(
-        male_female_counts["percents_of_female"],
-        bins=50,
-        label="F",
-        alpha=1,
-        color="pink",
-        ax=ax[0],
-        kde=True,
-    )
-    ax[0].legend(loc="upper right", fontsize=14)
-
-    sns.histplot(
-        male_female_counts["percents_of_male"],
-        bins=50,
-        label="M",
-        alpha=0.5,
-        color=color_G,
-        ax=ax[1],
-        kde=True,
-    )
-    ax[1].legend(loc="upper right", fontsize=14)
-
-    fig.supxlabel("Percentage of characters per movie", fontsize=16)
-    fig.suptitle(
-        "Histograms of the percentage of Female and Male characters per movie",
-        fontsize=20,
-    )
-
-    plt.tight_layout()
-    plt.show()
-
-    return male_female_counts
-
-
+# Not used in P3
 def visualize_gender_prop(movies, style="darkgrid"):
     movies = movies.loc[movies["actor_gender"].isin(["F", "M"])].copy(deep=True)
     male_female_counts = (
@@ -1191,8 +1172,9 @@ def visualize_wordcloud_r2j_roles(movies):
     return
 
 
-def visualize_prop_of_actor_and_bd_rating(movies_agg):
+def visualize_prop_of_actor_and_bd_rating(movies):
     sns.set_style("darkgrid")
+    movies_agg = movies.copy()
 
     movies_agg.drop(
         ["Female_Actors_Per_Film", "Male_Actors_Per_Film", "Total_Actors_Per_Film"],
@@ -1200,13 +1182,47 @@ def visualize_prop_of_actor_and_bd_rating(movies_agg):
         inplace=True,
     )
 
-    movies_agg.plot.bar(rot=0, color=[color_F, color_M], figsize=(10, 6))
+    movies_agg.plot.bar(rot=0, color=[color_F, color_M], figsize=(6, 3), stacked=True)
 
     plt.title("Proportion of Male and Female Actors for Each Bechdel Test Rating")
     plt.xlabel("Bechdel Test Rating")
     plt.ylabel("Proportion")
     plt.legend(loc="upper right")
     plt.show()
+
+
+def visualize_prop_of_actor_and_bd_rating_HTML(movies, output_html="html_plots/actors_bdrating_proportion.html"):
+    movies_agg = movies.copy()
+    movies_agg.drop(
+        ["Female_Actors_Per_Film", "Male_Actors_Per_Film", "Total_Actors_Per_Film"],
+        axis=1,
+        inplace=True,
+    )
+
+    # Set color for each gender
+    color_discrete_map = {"Female Proportion": color_F, "Male Proportion": color_M}
+
+    # Create a piled histogram using Plotly
+    fig = px.bar(
+        movies_agg,
+        x=movies_agg.index,
+        y=movies_agg.columns,
+        title="Proportion of male and female Actors for each Bechdel test rating",
+        labels={
+            "bechdel_rating": "Bechdel test rating",
+            "value": "Percentage (%)",
+            "variable": "Actor Gender",
+        },
+        color_discrete_map=color_discrete_map,
+        opacity=0.8
+    )
+    # Update x-axis to treat as category
+    fig.update_xaxes(type='category')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor=color_G)
+    # Update y-axis to show percentages
+    fig.update_layout(yaxis_tickformat='0%', bargap=0)
+    fig.show()
+    fig.write_html(output_html)
 
 
 def visualize_regression_HTML(movies, output_html="html_plots/regression_actresses_rating.html"):
@@ -1245,39 +1261,41 @@ def visualize_regression_HTML(movies, output_html="html_plots/regression_actress
     fig.show()
     fig.write_html(output_html)
 
-    
-def visualize_prop_of_actor_and_bd_rating_HTML(movies, output_html="html_plots/actors_bdrating_proportion.html"):
-    movies_agg = movies.copy()
-    movies_agg.drop(
-        ["Female_Actors_Per_Film", "Male_Actors_Per_Film", "Total_Actors_Per_Film"],
-        axis=1,
-        inplace=True,
-    )
 
-    # Set color for each gender
-    color_discrete_map = {"Female Proportion": color_F, "Male Proportion": color_M}
 
-    # Create a piled histogram using Plotly
-    fig = px.bar(
-        movies_agg,
-        x=movies_agg.index,
-        y=movies_agg.columns,
-        title="Proportion of male and female Actors for each Bechdel test rating",
-        labels={
-            "bechdel_rating": "Bechdel test rating",
-            "value": "Percentage (%)",
-            "variable": "Actor Gender",
-        },
-        color_discrete_map=color_discrete_map,
-        opacity=0.8
-    )
-    # Update x-axis to treat as category
-    fig.update_xaxes(type='category')
-    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor=color_G)
-    # Update y-axis to show percentages
-    fig.update_layout(yaxis_tickformat='0%', bargap=0)
-    fig.show()
-    fig.write_html(output_html)
+def visualize_popularity(reception_bechdel):
+    colors = [color_G, color_B]  # Assuming these are defined, e.g., color_G = 'green', color_B = 'blue'
+
+    # The x locations for the groups
+    ind = range(len(reception_bechdel))
+
+    # The width of the bars
+    width = 0.35
+
+    fig, ax = plt.subplots(figsize=(6, 3))
+
+    for i, col in enumerate(reception_bechdel.columns):
+        # Calculate offset for each bar
+        offset = (i - 1) * width + width / 2
+        ax.bar(
+            [x + offset for x in ind],
+            reception_bechdel[col],
+            width,
+            label=col,
+            color=colors[i]
+        )
+
+    # Add labels
+    ax.set_ylabel('Count')
+    ax.set_title('Popularity of Movies for each Bechdel test rating')
+    ax.set_xticks([x + width/2 for x in ind])
+    ax.set_xticklabels(reception_bechdel.index)
+    ax.set_xlabel('Bechdel Test Rating')
+    ax.legend()
+    plt.show()
+
+# Remember to define color_G and color_B before calling this function.
+
 
 
 def visualize_popularity_HTML(reception_bechdel, output_html="html_plots/popularity.html"):
