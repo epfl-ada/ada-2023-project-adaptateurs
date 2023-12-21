@@ -703,9 +703,7 @@ def visualize_director_producer_actor_gender_correlation_HTML(movies):
 
     # Update layout for better readability and set the figure size
     fig.update_layout(
-        xaxis_tickangle=-45,
-        width=800,  # Set the width of the figure
-        height=500   # Set the height of the figure
+        xaxis_tickangle=-45
     )
     
     # Export the plot to an HTML file
@@ -1232,7 +1230,6 @@ def visualize_barplot_r2n_roles_HTML(movies, output_html='html_plots/r2n_roles_b
     # Update layout
     fig.update_layout(
         title_text='Top Roles in Relationship to a Named Character',
-        height=600, width=1200,
         yaxis=dict(title='Role'),
         yaxis2=dict(title='Role'),
         xaxis=dict(title='Count'),
@@ -1363,7 +1360,7 @@ def visualize_bar_job_roles_bar_HTML(movies, YEAR_RANGE=[1980, 2010], compare_Le
     fig.update_traces(selector=({'name':'Women'}), marker_color=[color_F]*compare_Len)
     
     # Update layout
-    fig.update_layout(height=600, width=1200, title_text="Top Job Roles in Movies")
+    fig.update_layout(title_text="Top Job Roles in Movies")
     fig.show()
     fig.write_html(output_html)
 
@@ -1700,7 +1697,7 @@ def visualize_bar_plot_role_cat_HTML(movies, YEAR_RANGE=[1980, 2010], output_htm
         fig.add_trace(go.Bar(name='Actresses', x=['Actresses'], y=[count_F], marker_color=color_F), row=1, col=i)
 
     # Update layout
-    fig.update_layout(height=400, width=1200, showlegend=False, title_text="Number of Roles by Category and Gender")
+    fig.update_layout(showlegend=False, title_text="Number of Roles by Category and Gender")
     fig.show()
     fig.write_html(output_html)
 
