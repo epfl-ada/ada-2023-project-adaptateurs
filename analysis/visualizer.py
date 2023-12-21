@@ -242,7 +242,7 @@ def visualize_actors_gender_proportion(movies):
     plt.xticks(np.arange(0, len(pivot_df.index), 5), pivot_df.index[::5], rotation=90)
     plt.ylim(0, 100)  # Set y-axis to range from 0 to 100%
     plt.legend(title="Actor Gender")
-    plt.grid(True, which='major', linestyle='-', linewidth='0.5', color=color_G)  # Assuming color_G is defined
+    plt.grid(True, which='major', linestyle='-', linewidth='0.5', color=color_G)
 
 
 def visualize_actors_gender_proportion_HTML(
@@ -254,11 +254,7 @@ def visualize_actors_gender_proportion_HTML(
     Parameters:
     movies (pandas.DataFrame): DataFrame containing the movies data.
     output_html (str): The name of the output HTML file.
-
-    Returns:
-    None
     """
-    # Assuming 'movies' is your DataFrame with columns 'year', 'actor_gender', and 'actor_name'
     # Count the number of actors by year and gender
     actor_counts = (
         movies.groupby(["year", "actor_gender"]).count()["actor_name"].reset_index()
@@ -293,9 +289,7 @@ def visualize_actors_gender_proportion_HTML(
     )
 
     fig.update_layout(bargap=0, yaxis_tickformat='0%')
-
     fig.update_xaxes(range=year_range)
-
     # Set y-axis to range from 0 to 100%
     fig.update_yaxes(range=[0, 1], showgrid=True, gridwidth=1, gridcolor=color_G)
 
@@ -1407,7 +1401,7 @@ def visualize_regression_HTML(movies, output_html="html_plots/regression_actress
 
 
 def visualize_popularity(reception_bechdel):
-    colors = [color_G, color_B]  # Assuming these are defined, e.g., color_G = 'green', color_B = 'blue'
+    colors = [color_G, color_B]
 
     # The x locations for the groups
     ind = range(len(reception_bechdel))
@@ -1592,7 +1586,7 @@ def visualize_number_of_movies_HTML(yearly_bechdel, year_range=[], output_html="
 def visualize_bar_plot_role_cat(movies, YEAR_RANGE=[1980, 2010]):
     fig, axs = plt.subplots(1, 5, figsize=(12, 2))
     movies = movies[(movies['year']>=YEAR_RANGE[0]) & (movies['year']<=YEAR_RANGE[1])].copy(deep=True)
-    # Plot your data in each subplot
+    # Plot data in each subplot
     # All actors
     axs[0].bar('Actors', movies.groupby('actor_gender')['actor_name'].count()['M'])
     axs[0].bar('Actress', movies.groupby('actor_gender')['actor_name'].count()['F'])
