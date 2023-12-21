@@ -34,7 +34,7 @@ def visualize_year_distribution(movies, style="darkgrid"):
     mean = unique_movies.groupby("year")["wikiID"].count().mean()
 
     sns.set_style(style)
-    sns.histplot(unique_movies.movie_release_date, bins=100, color=color_M, kde=True)
+    sns.histplot(unique_movies.movie_release_date, bins=100, color=color_M)
 
     plt.title("Distribution of Movies Across Years")
     plt.xlabel("Release Year")
@@ -120,7 +120,44 @@ def visualize_missing_values(movies, style="darkgrid"):
     plt.show()
 
 
-def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gender_distribution_bar.html'):
+def visualize_gender_distribution(movies):
+    roles = ["actor_gender", "director_gender", "producer_gender"]
+    
+    # Define color map for genders
+    color_map = {'M': color_M, 'F': color_F}  # Ensure these are defined, e.g., color_M = 'blue', color_F = 'red'
+
+    # Create figure for the stacked bar chart
+    fig, ax = plt.subplots(figsize=(6, 3))
+
+    # Variables to hold the bottom values for the stacked bars
+    bar_bottoms = np.zeros(len(roles))
+
+    # Loop through each gender and plot
+    for gender in ['F', 'M']:  # Ensuring consistent order
+        gender_percentages = []
+        for role in roles:
+            gender_count = movies[role].value_counts().get(gender, 0)
+            total_count = movies[role].count()
+            percentage = (gender_count / total_count * 100) if total_count > 0 else 0
+            gender_percentages.append(percentage)
+
+        ax.bar(
+            roles,
+            gender_percentages,
+            bottom=bar_bottoms,
+            color=color_map.get(gender, 'gray'),
+            label=f"{gender}"
+        )
+        bar_bottoms += np.array(gender_percentages)
+
+    ax.set_ylabel("Percentage (%)")
+    ax.legend()
+
+    plt.suptitle("Gender Distribution in Main Roles (Percentage)")
+    plt.show()
+
+
+def visualize_gender_distribution_HTML(movies, output_html='html_plots/gender_distribution_bar.html'):
     roles = ["actor_gender", "director_gender", "producer_gender"]
     
     # Create a subplot figure with 1 row and len(roles) columns
@@ -166,26 +203,46 @@ def visualize_gender_distribution_HTML_bar(movies, output_html='html_plots/gende
     fig.write_html(output_html)
 
 
-def visualize_actors_distribution(movies, style="darkgrid"):
+def visualize_actors_gender_proportion(movies):
     """
-    Visualize the distribution of the number of actors in movies.
+    Visualize the distribution of the number of actors in movies as a stacked bar chart using Matplotlib.
 
     Parameters:
     movies (pandas.DataFrame): DataFrame containing the movies data.
-    style (str): Style of the plot (default is "darkgrid").
 
     Returns:
     None
     """
+    # Count the number of actors by year and gender
+    actor_counts = (
+        movies.groupby(["year", "actor_gender"]).count()["actor_name"].reset_index()
+    )
 
-    number_of_actors = movies.groupby("wikiID")["actor_name"].agg("count")
+    # Calculate the total actors per year
+    total_actors_per_year = movies.groupby("year")["actor_name"].count()
 
-    plt.hist(number_of_actors, bins=50, log=True, color=color_G, alpha=0.5)
-    plt.xlabel("Number of actors")
-    plt.ylabel("Number of movies")
-    plt.title("Distribution of actors")
-    plt.show()
+    # Calculate the percentage
+    actor_counts["percentage"] = actor_counts.apply(
+        lambda row: (row["actor_name"] / total_actors_per_year[row["year"]]) * 100,
+        axis=1,
+    )
 
+    # Pivot for stacked bar plot
+    pivot_df = actor_counts.pivot(index='year', columns='actor_gender', values='percentage')
+
+    # Plotting
+    plt.figure(figsize=(6, 3))
+    pivot_df.plot(kind='bar', stacked=True, color=[color_F, color_M], ax=plt.gca())
+
+    plt.title("Mean Proportion of Actors and Actresses in Movies by Year")
+    plt.xlabel("Year")
+    plt.ylabel("Percentage of Actors (%)")
+
+    # Show 1 year every 5 years
+    plt.xticks(np.arange(0, len(pivot_df.index), 5), pivot_df.index[::5], rotation=90)
+    plt.ylim(0, 100)  # Set y-axis to range from 0 to 100%
+    plt.legend(title="Actor Gender")
+    plt.grid(True, which='major', linestyle='-', linewidth='0.5', color=color_G)  # Assuming color_G is defined
 
 
 def visualize_actors_gender_proportion_HTML(
@@ -249,83 +306,7 @@ def visualize_actors_gender_proportion_HTML(
     fig.write_html(output_html)
 
 
-# not used anymore -> see visualize_gender_prop
-def visualize_gender_proportion_repartition(movies, style="darkgrid"):
-    """
-    Visualizes the proportion of male and female characters in movies.
-
-    Parameters:
-    movies (pandas.DataFrame): A DataFrame containing information about movies.
-    style (str): The style of the plot. Default is "darkgrid".
-
-    Returns:
-    pandas.DataFrame: A DataFrame containing the proportion of male and female characters in each movie.
-    """
-
-    # Filtering and extract proportions of male/female characters per movie
-    movies = movies.loc[movies["actor_gender"].isin(["F", "M"])].copy(deep=True)
-    male_female_counts = (
-        movies.groupby(["wikiID", "actor_gender"])["character_name"]
-        .nunique()
-        .unstack(fill_value=0)
-    )
-    male_female_counts = male_female_counts.join(
-        movies.groupby("wikiID")["character_name"].nunique().rename("total_char")
-    ).assign(
-        percents_of_female=lambda x: x["F"] / x["total_char"] * 100,
-        percents_of_male=lambda x: x["M"] / x["total_char"] * 100,
-    )
-
-    male_female_counts.rename(
-        columns={"F": "female_char", "M": "male_char"}, inplace=True
-    )
-    male_female_counts = male_female_counts.merge(
-        movies[["year", "wikiID"]].drop_duplicates(), on="wikiID", how="left"
-    )
-
-    male_female_counts.dropna(
-        inplace=True, subset=["percents_of_female", "percents_of_male"]
-    )
-
-    # Plot results into two distinct plot
-    fig, ax = plt.subplots(1, 2, figsize=(16, 8), sharey=True)
-
-    sns.set_style(style)
-
-    sns.histplot(
-        male_female_counts["percents_of_female"],
-        bins=50,
-        label="F",
-        alpha=1,
-        color="pink",
-        ax=ax[0],
-        kde=True,
-    )
-    ax[0].legend(loc="upper right", fontsize=14)
-
-    sns.histplot(
-        male_female_counts["percents_of_male"],
-        bins=50,
-        label="M",
-        alpha=0.5,
-        color=color_G,
-        ax=ax[1],
-        kde=True,
-    )
-    ax[1].legend(loc="upper right", fontsize=14)
-
-    fig.supxlabel("Percentage of characters per movie", fontsize=16)
-    fig.suptitle(
-        "Histograms of the percentage of Female and Male characters per movie",
-        fontsize=20,
-    )
-
-    plt.tight_layout()
-    plt.show()
-
-    return male_female_counts
-
-
+# Not used in P3
 def visualize_gender_prop(movies, style="darkgrid"):
     movies = movies.loc[movies["actor_gender"].isin(["F", "M"])].copy(deep=True)
     male_female_counts = (
@@ -1103,22 +1084,25 @@ def visualize_wordcloud_job_roles(movies):
     role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
     role_women = role_women[role_women["role_cat"] == "JOB"]
     role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("Self")].index
+        role_women[role_women["role_str"].str.contains("self")].index
     )
     role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("Narrator")].index
+        role_women[role_women["role_str"].str.contains("narrator")].index
     )
     role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("voice")].index
+        role_women[role_women["role_str"].str.contains("voice")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("#")].index
     )
     role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
     role_men = role_men[role_men["role_cat"] == "JOB"]
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("Self")].index)
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("Narrator")].index)
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("voice")].index)
-
-    women_counts = role_women["role"].value_counts().head(10)
-    men_counts = role_men["role"].value_counts().head(10)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("self")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("narrator")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("voice")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("#")].index)
+    women_counts = role_women["role_str"].value_counts().head(10)
+    men_counts = role_men["role_str"].value_counts().head(10)
     # Create WordClouds for women and men
     women_wordcloud = WordCloud(
         width=800, height=400, background_color="white", colormap="Oranges"
@@ -1143,29 +1127,64 @@ def visualize_wordcloud_job_roles(movies):
     plt.show()
     return
 
-
-def visualize_wordcloud_r2j_roles(movies):
+def visualize_bar_r2j_roles_root(movies, YEAR_RANGE=[1980, 2010]):
+    movies = movies[(movies["year"] >= YEAR_RANGE[0]) & (movies["year"] <= YEAR_RANGE[1])]
+    compare_Len = 5
     role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
     role_women = role_women[role_women["role_cat"] == "ROLE_TO_JOB"]
-    role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("Self")].index
-    )
-    role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("Narrator")].index
-    )
-    role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("voice")].index
-    )
-    role_women["role"] = role_women["role"].apply(lambda x: x.split("'s")[-1])
+    role_women= role_women['role_str'].apply(lambda x: x.get('root') if isinstance(x, dict) else None)
     role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
     role_men = role_men[role_men["role_cat"] == "ROLE_TO_JOB"]
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("Self")].index)
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("Narrator")].index)
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("voice")].index)
-    role_men["role"] = role_men["role"].apply(lambda x: x.split("'s")[-1])
+    role_men= role_men['role_str'].apply(lambda x: x.get('root') if isinstance(x, dict) else None)
 
-    women_counts = role_women["role"].value_counts().head(10)
-    men_counts = role_men["role"].value_counts().head(10)
+    women_counts = role_women.value_counts().head(10)
+    men_counts = role_men.value_counts().head(10)
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    job_roles = list(women_counts.index)
+    counts = list(women_counts.values)
+    plt.bar(job_roles, counts, color='skyblue')
+    plt.xlabel('Job Role')
+    plt.ylabel('Count')
+    plt.title(f'Top {compare_Len} Women Supporting Role to Job characters')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+
+    plt.subplot(1, 2, 2)
+    job_roles = list(men_counts.index)
+    counts = list(men_counts.values)
+    plt.bar(job_roles, counts, color='skyblue')
+    plt.xlabel('Job Role')
+    plt.ylabel('Count')
+    plt.title(f'Top {compare_Len} Men Supporting Role to Job characters')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+    plt.show()
+
+def visualize_wordcloud_r2n_roles(movies):
+    role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
+    role_women = role_women[role_women["role_cat"] == "ROLE_TO_NAME"]
+    role_women = role_women.drop(
+        role_women[role_women["role_to_name"].str.contains("Self")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_to_name"].str.contains("Narrator")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_to_name"].str.contains("voice")].index
+    )
+    #role_women["role_to_name"] = role_women["role_to_name"].apply(lambda x: x.split("'s")[-1])
+    role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
+    role_men = role_men[role_men["role_cat"] == "ROLE_TO_NAME"]
+    role_men = role_men.drop(role_men[role_men["role_to_name"].str.contains("Self")].index)
+    role_men = role_men.drop(role_men[role_men["role_to_name"].str.contains("Narrator")].index)
+    role_men = role_men.drop(role_men[role_men["role_to_name"].str.contains("voice")].index)
+    #role_men["role"] = role_men["role"].apply(lambda x: x.split("'s")[-1])
+
+    women_counts = role_women["role_to_name"].value_counts().head(10)
+    men_counts = role_men["role_to_name"].value_counts().head(10)
+    print(women_counts)
     # Create WordClouds for women and men
     women_wordcloud = WordCloud(
         width=800, height=400, background_color="white", colormap="Oranges"
@@ -1179,20 +1198,126 @@ def visualize_wordcloud_r2j_roles(movies):
 
     plt.subplot(1, 2, 1)
     plt.imshow(women_wordcloud, interpolation="bilinear")
-    plt.title("Women Supporting Jobs as Characters", color="black", fontsize=16)
+    plt.title("Women Supporting Role as Characters", color="black", fontsize=16)
     plt.axis("off")
 
     plt.subplot(1, 2, 2)
     plt.imshow(men_wordcloud, interpolation="bilinear")
-    plt.title("Men Supporting Jobs as Characters", color="black", fontsize=16)
+    plt.title("Men Supporting Role as Characters", color="black", fontsize=16)
     plt.axis("off")
 
     plt.show()
     return
 
+def visualize_barplot_r2n_roles(movies):
+    compare_Len = 10
+    role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
+    role_women = role_women[role_women["role_cat"] == "ROLE_TO_NAME"]
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("self")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("narrator")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("voice")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"]==""].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("#")].index
+    )
+    role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
+    role_men = role_men[role_men["role_cat"] == "ROLE_TO_NAME"]
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("self")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("narrator")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("voice")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"]==""].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("#")].index)
 
-def visualize_prop_of_actor_and_bd_rating(movies_agg):
+    women_counts = role_women["role_str"].value_counts().head(10)
+    men_counts = role_men["role_str"].value_counts().head(10)
+
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    roles = list(women_counts.index)[::-1]
+    counts = list(women_counts.values)[::-1]
+    plt.barh(roles, counts, color='skyblue')
+    plt.ylabel('Count')
+    plt.ylabel('Role')
+    plt.title(f'Top {compare_Len} Women\'s Roles in a relationship to a named character')
+    plt.tight_layout()
+
+    plt.subplot(1, 2, 2)
+    roles = list(men_counts.index)[::-1]
+    counts = list(men_counts.values)[::-1]
+    plt.barh(roles, counts, color='skyblue')
+    plt.xlabel('Count')
+    plt.ylabel('Role')
+    plt.title(f'Top {compare_Len} Men\'s Roles in a relationship to a named character')
+    plt.tight_layout()
+    plt.show()
+    return
+
+
+
+def visualize_bar_job_roles_bar(movies, YEAR_RANGE=[1980, 2010]):
+    compare_Len = 10
+    movies = movies[(movies["year"] >= YEAR_RANGE[0]) & (movies["year"] <= YEAR_RANGE[1])].copy(deep=True)
+    role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
+    role_women = role_women[role_women["role_cat"] == "JOB"]
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("self")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("narrator")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("voice")].index 
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("#")].index
+    )
+
+    role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
+    role_men = role_men[role_men["role_cat"] == "JOB"]
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("self")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("narrator")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("voice")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("#")].index)
+
+    women_counts = role_women["role_str"].value_counts().head(compare_Len)
+    men_counts = role_men["role_str"].value_counts().head(compare_Len)
+
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    job_roles = list(women_counts.index)[::-1]
+    counts = list(women_counts.values)[::-1]
+    plt.barh(job_roles, counts, color='skyblue')
+    plt.xlabel('Count')
+    plt.ylabel('Job Role')
+    plt.title(f'Top {compare_Len} Women Job Roles')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+
+    plt.subplot(1, 2, 2)
+    job_roles = list(men_counts.index)[::-1]
+    counts = list(men_counts.values)[::-1]
+    plt.barh(job_roles, counts, color='skyblue')
+    plt.xlabel('Count')
+    plt.ylabel('Job Role')
+    plt.title(f'Top {compare_Len} Men Job Roles')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+    plt.show()
+
+
+def visualize_prop_of_actor_and_bd_rating(movies):
     sns.set_style("darkgrid")
+    movies_agg = movies.copy()
 
     movies_agg.drop(
         ["Female_Actors_Per_Film", "Male_Actors_Per_Film", "Total_Actors_Per_Film"],
@@ -1200,13 +1325,47 @@ def visualize_prop_of_actor_and_bd_rating(movies_agg):
         inplace=True,
     )
 
-    movies_agg.plot.bar(rot=0, color=[color_F, color_M], figsize=(10, 6))
+    movies_agg.plot.bar(rot=0, color=[color_F, color_M], figsize=(6, 3), stacked=True)
 
     plt.title("Proportion of Male and Female Actors for Each Bechdel Test Rating")
     plt.xlabel("Bechdel Test Rating")
     plt.ylabel("Proportion")
     plt.legend(loc="upper right")
     plt.show()
+
+
+def visualize_prop_of_actor_and_bd_rating_HTML(movies, output_html="html_plots/actors_bdrating_proportion.html"):
+    movies_agg = movies.copy()
+    movies_agg.drop(
+        ["Female_Actors_Per_Film", "Male_Actors_Per_Film", "Total_Actors_Per_Film"],
+        axis=1,
+        inplace=True,
+    )
+
+    # Set color for each gender
+    color_discrete_map = {"Female Proportion": color_F, "Male Proportion": color_M}
+
+    # Create a piled histogram using Plotly
+    fig = px.bar(
+        movies_agg,
+        x=movies_agg.index,
+        y=movies_agg.columns,
+        title="Proportion of male and female Actors for each Bechdel test rating",
+        labels={
+            "bechdel_rating": "Bechdel test rating",
+            "value": "Percentage (%)",
+            "variable": "Actor Gender",
+        },
+        color_discrete_map=color_discrete_map,
+        opacity=0.8
+    )
+    # Update x-axis to treat as category
+    fig.update_xaxes(type='category')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor=color_G)
+    # Update y-axis to show percentages
+    fig.update_layout(yaxis_tickformat='0%', bargap=0)
+    fig.show()
+    fig.write_html(output_html)
 
 
 def visualize_regression_HTML(movies, output_html="html_plots/regression_actresses_rating.html"):
@@ -1245,39 +1404,41 @@ def visualize_regression_HTML(movies, output_html="html_plots/regression_actress
     fig.show()
     fig.write_html(output_html)
 
-    
-def visualize_prop_of_actor_and_bd_rating_HTML(movies, output_html="html_plots/actors_bdrating_proportion.html"):
-    movies_agg = movies.copy()
-    movies_agg.drop(
-        ["Female_Actors_Per_Film", "Male_Actors_Per_Film", "Total_Actors_Per_Film"],
-        axis=1,
-        inplace=True,
-    )
 
-    # Set color for each gender
-    color_discrete_map = {"Female Proportion": color_F, "Male Proportion": color_M}
 
-    # Create a piled histogram using Plotly
-    fig = px.bar(
-        movies_agg,
-        x=movies_agg.index,
-        y=movies_agg.columns,
-        title="Proportion of male and female Actors for each Bechdel test rating",
-        labels={
-            "bechdel_rating": "Bechdel test rating",
-            "value": "Percentage (%)",
-            "variable": "Actor Gender",
-        },
-        color_discrete_map=color_discrete_map,
-        opacity=0.8
-    )
-    # Update x-axis to treat as category
-    fig.update_xaxes(type='category')
-    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor=color_G)
-    # Update y-axis to show percentages
-    fig.update_layout(yaxis_tickformat='0%', bargap=0)
-    fig.show()
-    fig.write_html(output_html)
+def visualize_popularity(reception_bechdel):
+    colors = [color_G, color_B]  # Assuming these are defined, e.g., color_G = 'green', color_B = 'blue'
+
+    # The x locations for the groups
+    ind = range(len(reception_bechdel))
+
+    # The width of the bars
+    width = 0.35
+
+    fig, ax = plt.subplots(figsize=(6, 3))
+
+    for i, col in enumerate(reception_bechdel.columns):
+        # Calculate offset for each bar
+        offset = (i - 1) * width + width / 2
+        ax.bar(
+            [x + offset for x in ind],
+            reception_bechdel[col],
+            width,
+            label=col,
+            color=colors[i]
+        )
+
+    # Add labels
+    ax.set_ylabel('Count')
+    ax.set_title('Popularity of Movies for each Bechdel test rating')
+    ax.set_xticks([x + width/2 for x in ind])
+    ax.set_xticklabels(reception_bechdel.index)
+    ax.set_xlabel('Bechdel Test Rating')
+    ax.legend()
+    plt.show()
+
+# Remember to define color_G and color_B before calling this function.
+
 
 
 def visualize_popularity_HTML(reception_bechdel, output_html="html_plots/popularity.html"):
@@ -1427,3 +1588,68 @@ def visualize_number_of_movies_HTML(yearly_bechdel, year_range=[], output_html="
     fig.update_xaxes(range=year_range)
     fig.show()
     fig.write_html(output_html)
+
+def visualize_bar_plot_role_cat(movies, YEAR_RANGE=[1980, 2010]):
+    fig, axs = plt.subplots(1, 5, figsize=(12, 2))
+    movies = movies[(movies['year']>=YEAR_RANGE[0]) & (movies['year']<=YEAR_RANGE[1])].copy(deep=True)
+    # Plot your data in each subplot
+    # All actors
+    axs[0].bar('Actors', movies.groupby('actor_gender')['actor_name'].count()['M'])
+    axs[0].bar('Actress', movies.groupby('actor_gender')['actor_name'].count()['F'])
+    axs[0].set_ylabel('Number of roles')
+    axs[0].set_title('All roles')
+    # Named characters
+    axs[1].bar('Actors', movies[movies['role_cat']=='NAME'].groupby('actor_gender')['actor_name'].count()['M'])
+    axs[1].bar('Actress', movies[movies['role_cat']=='NAME'].groupby('actor_gender')['actor_name'].count()['F'])
+    axs[1].set_ylabel('Number of roles')
+    axs[1].set_title('Named roles')
+    # Characters with jobs
+    axs[2].bar('Actors', movies[movies['role_cat']=='JOB'].groupby('actor_gender')['actor_name'].count()['M'])
+    axs[2].bar('Actress', movies[movies['role_cat']=='JOB'].groupby('actor_gender')['actor_name'].count()['F'])
+    axs[2].set_ylabel('Number of roles')
+    axs[2].set_title('Job roles')
+    # Characters in relation with a named character
+    axs[3].bar('Actors', movies[movies['role_cat']=='ROLE_TO_NAME'].groupby('actor_gender')['actor_name'].count()['M'])
+    axs[3].bar('Actress', movies[movies['role_cat']=='ROLE_TO_NAME'].groupby('actor_gender')['actor_name'].count()['F'])
+    axs[3].set_ylabel('Number of roles')
+    axs[3].set_title('Relation to named role')
+    # Characters in relation with a named character
+    axs[4].bar('Actors', movies[movies['role_cat']=='ROLE_TO_JOB'].groupby('actor_gender')['actor_name'].count()['M'])
+    axs[4].bar('Actress', movies[movies['role_cat']=='ROLE_TO_JOB'].groupby('actor_gender')['actor_name'].count()['F'])
+    axs[4].set_ylabel('Number of roles')
+    axs[4].set_title('Relation to job role')
+
+    # Adjust the spacing between subplots
+    plt.subplots_adjust(wspace=1)
+
+    # Show the plot
+    plt.show()
+
+def role_job_barplot_history(movies, job, YEAR_RANGE=[1980, 2010]):
+    movies = movies[(movies['year']>=YEAR_RANGE[0]) & (movies['year']<=YEAR_RANGE[1])].copy(deep=True)
+    if type(job) is list:
+        subset = pd.DataFrame(movies[(movies['role_cat']=="JOB") & ((movies['role_str']==job[0]) | (movies['role_str']==job[1]))].groupby([movies['year'] // 10 * 10, 'actor_gender']).count().iloc[:,0]).reset_index()
+    else:
+        subset = pd.DataFrame(movies[(movies['role_cat']=="JOB") & (movies['role_str']==job)].groupby([movies['year'] // 10 * 10, 'actor_gender']).count().iloc[:,0]).reset_index()
+    # Pivot the data to get counts by year and gender
+    pivot_df = subset.pivot_table(index='year', columns='actor_gender', values='actor_name', fill_value=0)
+    # Normalize the data to get proportions
+    pivot_df = pivot_df.div(pivot_df.sum(axis=1), axis=0)
+
+    # Create a stacked bar plot
+    pivot_df.plot(kind='bar', stacked=True, figsize=(10, 2))
+    plt.xlabel('Decade')
+    plt.ylabel('Percentage')
+    if type(job) is list:
+        plt.title(f'Gender distribution of actors credited as {job[0]}-{job[1]}, by decade')
+    else:
+        plt.title(f'Gender distribution of actors credited as {job}, by decade')
+    plt.show()
+
+def visualize_box_plot_role_avg_pay(movies, YEAR_RANGE):
+    movies = movies[(movies['year']>=YEAR_RANGE[0]) & (movies['year']<=YEAR_RANGE[1])].copy(deep=True)
+    plt.figure(figsize=(10, 6))
+    plt.title('Average pay for the job played by actors and actresses')
+    sns.boxplot(data=[movies[(movies['actor_gender']=="M") & (movies['avg_pay'].notna())]['avg_pay']/12, movies[(movies['actor_gender']=="F") & (movies['avg_pay'].notna())]['avg_pay']/12])
+    plt.xticks([0, 1], ['Actor Role', 'Actress Role']) 
+    plt.ylabel('Average monthly pay')
