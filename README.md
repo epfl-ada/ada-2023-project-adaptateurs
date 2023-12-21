@@ -109,7 +109,7 @@ In this analysis, we will use three different datasets
 - The original and provided [CMU](http://www.cs.cmu.edu/~ark/personas/) dataset.
 - The [TMDB Dataset](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset): this dataset offers metadata for over 45,000 movies, with a particular focus on user ratings. Our primary interest lies in getting the populariy, the number of votes each movie receives and its average score rating to define a success metric. This dataset also includes valuable details about a movie's crew, such as the gender of the director and producers. These data points are crucial for conducting analyses on women's roles behind the camera.
 - The [Bechdel Dataset](https://bechdeltest.com) that contains the Bechdel rating score for more than 10'000 movies. This dataset will be used to conduct a analysis on movies that passes (or not) the Bechdel test.
-
+- The [May 2022 National Occupational Employment and Wage Estimates](https://www.bls.gov/oes/current/oes_nat.htm). This dataset is used in the analysis of the social status of roles played by actors.
 ## Methods 💡
 
 ### **Step 1**: Preprocessing on data
