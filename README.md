@@ -17,8 +17,8 @@
 
 </span>
 
-## Website link: https://lena-vogel.github.io/ 
-
+## Datastory: 
+Discover our analysis of the representation of women in movies [here](https://lena-vogel.github.io/)
 
 ## How to run our Notebooks  
 <details>
@@ -94,15 +94,13 @@ This study aims to provide a comprehensive analysis of female representation in 
 
 ## Research Questions 🔍
 We consider that women's representation in media such as movies is crutial for advances in feminist struggles, because being able to relate on fictional characters is essential because it allows us to explore and understand complex human experiences and emotions in a safe and imaginative context.
-Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, budget, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
+Analyzing the representation of women in movies through various datasets, including cast members genders, movie success, and Bechdel test results, provides a comprehensive understanding of gender representation in the film industry; in cast and crew members as well as in the movies stories.
 
 Our journey through the cinematic universe is guided by the following pivotal questions:
 
-- How do various film industries, such as Hollywood, Bollywood, and European cinema, portray women in their films?
+- How does women in important positions in movies influence the proportion of actresses in a movie, as well as the representation of women through the Bechdel test.
 - How does the representation of women, both in front of the camera and behind the scenes, shape a film's reception and resonance with its audience?
-- Can the Bechdel test serve as a meaningful barometer for evaluating a film's portrayal of women, beyond its surface-level criteria?
-- In what ways do film summaries, as condensed narratives, reflect gender biases or empowerment, influenced by the gender dynamics within the film's creation?
-- Which genres in cinema are leading the charge in representing women as complex, multi-dimensional characters?
+- Which genres in cinema represent more women?
 
 ## Datasets 📊
 
@@ -111,7 +109,6 @@ In this analysis, we will use three different datasets
 - The original and provided [CMU](http://www.cs.cmu.edu/~ark/personas/) dataset.
 - The [TMDB Dataset](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset): this dataset offers metadata for over 45,000 movies, with a particular focus on user ratings. Our primary interest lies in getting the populariy, the number of votes each movie receives and its average score rating to define a success metric. This dataset also includes valuable details about a movie's crew, such as the gender of the director and producers. These data points are crucial for conducting analyses on women's roles behind the camera.
 - The [Bechdel Dataset](https://bechdeltest.com) that contains the Bechdel rating score for more than 10'000 movies. This dataset will be used to conduct a analysis on movies that passes (or not) the Bechdel test.
-- [Maybe Oscar ?]
 
 ## Methods 💡
 
@@ -127,10 +124,23 @@ In this analysis, we will use three different datasets
 
 </span>
 
-### **Step 2**: 
+### **Step 2**: Exploring the data
+
+<span align="justify"> 
+  
+**Actors, directors and producers**: We looked at the evolution of the main roles in the movies: actor, director and producer, and look for correlations.
+**Genres**: We looked at the proportions of actors ans actresses in different genres of movies.
+
+### **Step 3**: Quality evaluation of the representation of women
+
+We analyzed whether there is an evolution in the quality of the representation of women through different angles:
+- Actors age: To see whether the age of an actor playsing in a movie depends on their gender.
+- Characters roles: To see whether there is a predominance of roles for women and men.
+- The Bechdel Test: Tool to qualify the movies through their representation of women.
+- Popularity, box-office revenue and rating of movies: Metrics used to evaluate the success of a movie
 
 
-```
+</span>
 
 ## Team Organization ⚙️
 
@@ -139,6 +149,7 @@ In this analysis, we will use three different datasets
 |-----------------|--------------------------------------|--------------------------|
 | F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Preprocessing, Analysis, Clean the repo, README |
 | K. Tetard       | `kenji.tetard@epfl.ch`               |  NLP |
-| L. Vogel        | `lena.vogel@epfl.ch`                 | README, cleaning, team organization, Bechdel test |
+| L. Vogel        | `lena.vogel@epfl.ch`                 | README, website, HTML plots |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | Preprocessing, Wikidata scraping   |
 | A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory data Analysis   |
+```
