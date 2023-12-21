@@ -17,8 +17,8 @@
 
 </span>
 
-## Website link: https://lena-vogel.github.io/ 
-
+## Datastory: 
+Discover our analysis of the representation of women in movies [here](https://lena-vogel.github.io/)
 
 ## How to run our Notebooks  
 <details>
