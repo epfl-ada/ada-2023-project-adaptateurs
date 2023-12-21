@@ -111,7 +111,6 @@ In this analysis, we will use three different datasets
 - The original and provided [CMU](http://www.cs.cmu.edu/~ark/personas/) dataset.
 - The [TMDB Dataset](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset): this dataset offers metadata for over 45,000 movies, with a particular focus on user ratings. Our primary interest lies in getting the populariy, the number of votes each movie receives and its average score rating to define a success metric. This dataset also includes valuable details about a movie's crew, such as the gender of the director and producers. These data points are crucial for conducting analyses on women's roles behind the camera.
 - The [Bechdel Dataset](https://bechdeltest.com) that contains the Bechdel rating score for more than 10'000 movies. This dataset will be used to conduct a analysis on movies that passes (or not) the Bechdel test.
-- [Maybe Oscar ?]
 
 ## Methods 💡
 
@@ -129,8 +128,18 @@ In this analysis, we will use three different datasets
 
 ### **Step 2**: 
 
+<span align="justify"> 
+**Exploring the data**: We looked at the evolution of the main roles in the movies: actor, director and producer, and look for correlations.
+  
+**Quality assesment**: We analyzed whether there is an evolution in the quality of the representation of women through different angles:
+- Actors age: To see whether the age of an actor playsing in a movie depends on their gender.
+- Characters roles: To see whether there is a predominance of roles for women and men.
+- The Bechdel Test: Tool to qualify the movies through their representation of women.
+- Popularity, box-office revenue and rating of movies: Metrics used to evaluate the success of a movie
 
-```
+**Genres**: We looked at the proportions of actors ans actresses in different genres of movies.
+
+</span>
 
 ## Team Organization ⚙️
 
@@ -139,6 +148,7 @@ In this analysis, we will use three different datasets
 |-----------------|--------------------------------------|--------------------------|
 | F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Preprocessing, Analysis, Clean the repo, README |
 | K. Tetard       | `kenji.tetard@epfl.ch`               |  NLP |
-| L. Vogel        | `lena.vogel@epfl.ch`                 | README, cleaning, team organization, Bechdel test |
+| L. Vogel        | `lena.vogel@epfl.ch`                 | README, website, HTML plots |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | Preprocessing, Wikidata scraping   |
 | A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory data Analysis   |
+```
