@@ -1084,22 +1084,25 @@ def visualize_wordcloud_job_roles(movies):
     role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
     role_women = role_women[role_women["role_cat"] == "JOB"]
     role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("Self")].index
+        role_women[role_women["role_str"].str.contains("self")].index
     )
     role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("Narrator")].index
+        role_women[role_women["role_str"].str.contains("narrator")].index
     )
     role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("voice")].index
+        role_women[role_women["role_str"].str.contains("voice")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("#")].index
     )
     role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
     role_men = role_men[role_men["role_cat"] == "JOB"]
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("Self")].index)
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("Narrator")].index)
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("voice")].index)
-
-    women_counts = role_women["role"].value_counts().head(10)
-    men_counts = role_men["role"].value_counts().head(10)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("self")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("narrator")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("voice")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("#")].index)
+    women_counts = role_women["role_str"].value_counts().head(10)
+    men_counts = role_men["role_str"].value_counts().head(10)
     # Create WordClouds for women and men
     women_wordcloud = WordCloud(
         width=800, height=400, background_color="white", colormap="Oranges"
@@ -1124,29 +1127,64 @@ def visualize_wordcloud_job_roles(movies):
     plt.show()
     return
 
-
-def visualize_wordcloud_r2j_roles(movies):
+def visualize_bar_r2j_roles_root(movies, YEAR_RANGE=[1980, 2010]):
+    movies = movies[(movies["year"] >= YEAR_RANGE[0]) & (movies["year"] <= YEAR_RANGE[1])]
+    compare_Len = 5
     role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
     role_women = role_women[role_women["role_cat"] == "ROLE_TO_JOB"]
-    role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("Self")].index
-    )
-    role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("Narrator")].index
-    )
-    role_women = role_women.drop(
-        role_women[role_women["role"].str.contains("voice")].index
-    )
-    role_women["role"] = role_women["role"].apply(lambda x: x.split("'s")[-1])
+    role_women= role_women['role_str'].apply(lambda x: x.get('root') if isinstance(x, dict) else None)
     role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
     role_men = role_men[role_men["role_cat"] == "ROLE_TO_JOB"]
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("Self")].index)
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("Narrator")].index)
-    role_men = role_men.drop(role_men[role_men["role"].str.contains("voice")].index)
-    role_men["role"] = role_men["role"].apply(lambda x: x.split("'s")[-1])
+    role_men= role_men['role_str'].apply(lambda x: x.get('root') if isinstance(x, dict) else None)
 
-    women_counts = role_women["role"].value_counts().head(10)
-    men_counts = role_men["role"].value_counts().head(10)
+    women_counts = role_women.value_counts().head(10)
+    men_counts = role_men.value_counts().head(10)
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    job_roles = list(women_counts.index)
+    counts = list(women_counts.values)
+    plt.bar(job_roles, counts, color='skyblue')
+    plt.xlabel('Job Role')
+    plt.ylabel('Count')
+    plt.title(f'Top {compare_Len} Women Supporting Role to Job characters')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+
+    plt.subplot(1, 2, 2)
+    job_roles = list(men_counts.index)
+    counts = list(men_counts.values)
+    plt.bar(job_roles, counts, color='skyblue')
+    plt.xlabel('Job Role')
+    plt.ylabel('Count')
+    plt.title(f'Top {compare_Len} Men Supporting Role to Job characters')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+    plt.show()
+
+def visualize_wordcloud_r2n_roles(movies):
+    role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
+    role_women = role_women[role_women["role_cat"] == "ROLE_TO_NAME"]
+    role_women = role_women.drop(
+        role_women[role_women["role_to_name"].str.contains("Self")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_to_name"].str.contains("Narrator")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_to_name"].str.contains("voice")].index
+    )
+    #role_women["role_to_name"] = role_women["role_to_name"].apply(lambda x: x.split("'s")[-1])
+    role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
+    role_men = role_men[role_men["role_cat"] == "ROLE_TO_NAME"]
+    role_men = role_men.drop(role_men[role_men["role_to_name"].str.contains("Self")].index)
+    role_men = role_men.drop(role_men[role_men["role_to_name"].str.contains("Narrator")].index)
+    role_men = role_men.drop(role_men[role_men["role_to_name"].str.contains("voice")].index)
+    #role_men["role"] = role_men["role"].apply(lambda x: x.split("'s")[-1])
+
+    women_counts = role_women["role_to_name"].value_counts().head(10)
+    men_counts = role_men["role_to_name"].value_counts().head(10)
+    print(women_counts)
     # Create WordClouds for women and men
     women_wordcloud = WordCloud(
         width=800, height=400, background_color="white", colormap="Oranges"
@@ -1160,16 +1198,121 @@ def visualize_wordcloud_r2j_roles(movies):
 
     plt.subplot(1, 2, 1)
     plt.imshow(women_wordcloud, interpolation="bilinear")
-    plt.title("Women Supporting Jobs as Characters", color="black", fontsize=16)
+    plt.title("Women Supporting Role as Characters", color="black", fontsize=16)
     plt.axis("off")
 
     plt.subplot(1, 2, 2)
     plt.imshow(men_wordcloud, interpolation="bilinear")
-    plt.title("Men Supporting Jobs as Characters", color="black", fontsize=16)
+    plt.title("Men Supporting Role as Characters", color="black", fontsize=16)
     plt.axis("off")
 
     plt.show()
     return
+
+def visualize_barplot_r2n_roles(movies):
+    compare_Len = 10
+    role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
+    role_women = role_women[role_women["role_cat"] == "ROLE_TO_NAME"]
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("self")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("narrator")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("voice")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"]==""].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("#")].index
+    )
+    role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
+    role_men = role_men[role_men["role_cat"] == "ROLE_TO_NAME"]
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("self")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("narrator")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("voice")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"]==""].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("#")].index)
+
+    women_counts = role_women["role_str"].value_counts().head(10)
+    men_counts = role_men["role_str"].value_counts().head(10)
+
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    roles = list(women_counts.index)[::-1]
+    counts = list(women_counts.values)[::-1]
+    plt.barh(roles, counts, color='skyblue')
+    plt.ylabel('Count')
+    plt.ylabel('Role')
+    plt.title(f'Top {compare_Len} Women\'s Roles in a relationship to a named character')
+    plt.tight_layout()
+
+    plt.subplot(1, 2, 2)
+    roles = list(men_counts.index)[::-1]
+    counts = list(men_counts.values)[::-1]
+    plt.barh(roles, counts, color='skyblue')
+    plt.xlabel('Count')
+    plt.ylabel('Role')
+    plt.title(f'Top {compare_Len} Men\'s Roles in a relationship to a named character')
+    plt.tight_layout()
+    plt.show()
+    return
+
+
+
+def visualize_bar_job_roles_bar(movies, YEAR_RANGE=[1980, 2010]):
+    compare_Len = 10
+    movies = movies[(movies["year"] >= YEAR_RANGE[0]) & (movies["year"] <= YEAR_RANGE[1])].copy(deep=True)
+    role_women = movies.loc[movies["actor_gender"] == "F"].copy(deep=True)
+    role_women = role_women[role_women["role_cat"] == "JOB"]
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("self")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("narrator")].index
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("voice")].index 
+    )
+    role_women = role_women.drop(
+        role_women[role_women["role_str"].str.contains("#")].index
+    )
+
+    role_men = movies.loc[movies["actor_gender"] == "M"].copy(deep=True)
+    role_men = role_men[role_men["role_cat"] == "JOB"]
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("self")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("narrator")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("voice")].index)
+    role_men = role_men.drop(role_men[role_men["role_str"].str.contains("#")].index)
+
+    women_counts = role_women["role_str"].value_counts().head(compare_Len)
+    men_counts = role_men["role_str"].value_counts().head(compare_Len)
+
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    job_roles = list(women_counts.index)[::-1]
+    counts = list(women_counts.values)[::-1]
+    plt.barh(job_roles, counts, color='skyblue')
+    plt.xlabel('Count')
+    plt.ylabel('Job Role')
+    plt.title(f'Top {compare_Len} Women Job Roles')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+
+    plt.subplot(1, 2, 2)
+    job_roles = list(men_counts.index)[::-1]
+    counts = list(men_counts.values)[::-1]
+    plt.barh(job_roles, counts, color='skyblue')
+    plt.xlabel('Count')
+    plt.ylabel('Job Role')
+    plt.title(f'Top {compare_Len} Men Job Roles')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+    plt.show()
 
 
 def visualize_prop_of_actor_and_bd_rating(movies):
@@ -1445,3 +1588,68 @@ def visualize_number_of_movies_HTML(yearly_bechdel, year_range=[], output_html="
     fig.update_xaxes(range=year_range)
     fig.show()
     fig.write_html(output_html)
+
+def visualize_bar_plot_role_cat(movies, YEAR_RANGE=[1980, 2010]):
+    fig, axs = plt.subplots(1, 5, figsize=(12, 2))
+    movies = movies[(movies['year']>=YEAR_RANGE[0]) & (movies['year']<=YEAR_RANGE[1])].copy(deep=True)
+    # Plot your data in each subplot
+    # All actors
+    axs[0].bar('Actors', movies.groupby('actor_gender')['actor_name'].count()['M'])
+    axs[0].bar('Actress', movies.groupby('actor_gender')['actor_name'].count()['F'])
+    axs[0].set_ylabel('Number of roles')
+    axs[0].set_title('All roles')
+    # Named characters
+    axs[1].bar('Actors', movies[movies['role_cat']=='NAME'].groupby('actor_gender')['actor_name'].count()['M'])
+    axs[1].bar('Actress', movies[movies['role_cat']=='NAME'].groupby('actor_gender')['actor_name'].count()['F'])
+    axs[1].set_ylabel('Number of roles')
+    axs[1].set_title('Named roles')
+    # Characters with jobs
+    axs[2].bar('Actors', movies[movies['role_cat']=='JOB'].groupby('actor_gender')['actor_name'].count()['M'])
+    axs[2].bar('Actress', movies[movies['role_cat']=='JOB'].groupby('actor_gender')['actor_name'].count()['F'])
+    axs[2].set_ylabel('Number of roles')
+    axs[2].set_title('Job roles')
+    # Characters in relation with a named character
+    axs[3].bar('Actors', movies[movies['role_cat']=='ROLE_TO_NAME'].groupby('actor_gender')['actor_name'].count()['M'])
+    axs[3].bar('Actress', movies[movies['role_cat']=='ROLE_TO_NAME'].groupby('actor_gender')['actor_name'].count()['F'])
+    axs[3].set_ylabel('Number of roles')
+    axs[3].set_title('Relation to named role')
+    # Characters in relation with a named character
+    axs[4].bar('Actors', movies[movies['role_cat']=='ROLE_TO_JOB'].groupby('actor_gender')['actor_name'].count()['M'])
+    axs[4].bar('Actress', movies[movies['role_cat']=='ROLE_TO_JOB'].groupby('actor_gender')['actor_name'].count()['F'])
+    axs[4].set_ylabel('Number of roles')
+    axs[4].set_title('Relation to job role')
+
+    # Adjust the spacing between subplots
+    plt.subplots_adjust(wspace=1)
+
+    # Show the plot
+    plt.show()
+
+def role_job_barplot_history(movies, job, YEAR_RANGE=[1980, 2010]):
+    movies = movies[(movies['year']>=YEAR_RANGE[0]) & (movies['year']<=YEAR_RANGE[1])].copy(deep=True)
+    if type(job) is list:
+        subset = pd.DataFrame(movies[(movies['role_cat']=="JOB") & ((movies['role_str']==job[0]) | (movies['role_str']==job[1]))].groupby([movies['year'] // 10 * 10, 'actor_gender']).count().iloc[:,0]).reset_index()
+    else:
+        subset = pd.DataFrame(movies[(movies['role_cat']=="JOB") & (movies['role_str']==job)].groupby([movies['year'] // 10 * 10, 'actor_gender']).count().iloc[:,0]).reset_index()
+    # Pivot the data to get counts by year and gender
+    pivot_df = subset.pivot_table(index='year', columns='actor_gender', values='actor_name', fill_value=0)
+    # Normalize the data to get proportions
+    pivot_df = pivot_df.div(pivot_df.sum(axis=1), axis=0)
+
+    # Create a stacked bar plot
+    pivot_df.plot(kind='bar', stacked=True, figsize=(10, 2))
+    plt.xlabel('Decade')
+    plt.ylabel('Percentage')
+    if type(job) is list:
+        plt.title(f'Gender distribution of actors credited as {job[0]}-{job[1]}, by decade')
+    else:
+        plt.title(f'Gender distribution of actors credited as {job}, by decade')
+    plt.show()
+
+def visualize_box_plot_role_avg_pay(movies, YEAR_RANGE):
+    movies = movies[(movies['year']>=YEAR_RANGE[0]) & (movies['year']<=YEAR_RANGE[1])].copy(deep=True)
+    plt.figure(figsize=(10, 6))
+    plt.title('Average pay for the job played by actors and actresses')
+    sns.boxplot(data=[movies[(movies['actor_gender']=="M") & (movies['avg_pay'].notna())]['avg_pay']/12, movies[(movies['actor_gender']=="F") & (movies['avg_pay'].notna())]['avg_pay']/12])
+    plt.xticks([0, 1], ['Actor Role', 'Actress Role']) 
+    plt.ylabel('Average monthly pay')

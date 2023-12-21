@@ -81,3 +81,25 @@ def get_roles(movies, API_TOKEN):
     movies['role_cat'] = movies['role'].apply(role2cat)
     cleandf(movies)
     return movies
+
+def job_comparison(movies, job, YEAR_RANGE=[1980, 2010]):
+    movies = movies[(movies['year'] > YEAR_RANGE[0]) & (movies['year'] < YEAR_RANGE[1])].copy(deep=True)
+    if type(job) is str:
+        subset = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job)]
+        total = subset.count().iloc[0]
+        subset_F = subset[subset['actor_gender']=="F"].count().iloc[0]
+        subset_M = subset[subset['actor_gender']=="M"].count().iloc[0]
+        subset_unkown = subset[subset['actor_gender'].isna()].count().iloc[0]
+        subset_M = round(subset_M/total, 2)
+        subset_F = round(subset_F/total, 2)
+        subset_unkown = round(subset_unkown/total, 2)
+        print(f"For the role {job}, the actors are {subset_M} men, {subset_F} women and {subset_unkown} unknown. Number of roles {total}.")
+    if type(job) is list: #needs to be masculine gender title first, then feminine
+        subset0 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[0])]
+        subset1 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[1])]
+        total0 = subset0.count().iloc[0]
+        total1 = subset1.count().iloc[0]
+        totalt = total0 + total1
+        subset_M = round(total0/totalt, 2)
+        subset_F = round(total1/totalt, 2)
+        print(f"For the role {job[0]}-{job[1]}, the actors are {subset_M} men, {subset_F} women. Number of roles {totalt}.")
