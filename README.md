@@ -142,12 +142,12 @@ We analyzed whether there is an evolution in the quality of the representation o
 
 </span>
 
-## Team Organization ⚙️
+## Team Organization for P3 ⚙️
 
 
 | Name            | Email                                | Task                     |
 |-----------------|--------------------------------------|--------------------------|
-| F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Preprocessing, Analysis, Clean the repo, README |
+| F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Bechdel Analysis, Website, Ethics assessment |
 | K. Tetard       | `kenji.tetard@epfl.ch`               |  NLP |
 | L. Vogel        | `lena.vogel@epfl.ch`                 | README, website, HTML plots |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | Preprocessing, Wikidata scraping   |
