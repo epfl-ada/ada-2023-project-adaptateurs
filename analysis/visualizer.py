@@ -1815,7 +1815,7 @@ def visualize_box_plot_role_avg_pay_HTML(movies, YEAR_RANGE, output_html="html_p
 
 def job_comparison(movies, jobs, YEAR_RANGE=[1980, 2010]): #Create comparative plot for job roles
     movies = movies[(movies['year'] > YEAR_RANGE[0]) & (movies['year'] < YEAR_RANGE[1])].copy(deep=True)
-    fig, ax = plt.subplots(figsize=(9.2, 5))
+    fig, ax = plt.subplots()
     ax.invert_yaxis()
     ax.xaxis.set_visible(False)
     ax.set_xlim(0, 1)
@@ -1834,7 +1834,7 @@ def job_comparison(movies, jobs, YEAR_RANGE=[1980, 2010]): #Create comparative p
             widths = [subset_M, subset_F, subset_unkown]
             starts = [0, subset_M, subset_M+subset_F]
             colname = labels
-            rects = ax.barh(job, widths, left=starts, height=0.5, label=colname, color=color)
+            rects = ax.barh(f"{job} \n [{total} roles]", widths, left=starts, height=0.5, label=colname, color=color)
             labels = '_nolegend_'
             ax.bar_label(rects, label_type='center',color='white')
         if type(job) is list: #needs to be masculine gender title first, then feminine
@@ -1849,7 +1849,7 @@ def job_comparison(movies, jobs, YEAR_RANGE=[1980, 2010]): #Create comparative p
             widths = [subset_M, subset_F]
             starts = [0, subset_M]
             colname = labels
-            rects = ax.barh(job_str, widths, left=starts, height=0.5, label=colname, color=color)
+            rects = ax.barh(f"{job_str} \n [{total} roles]", widths, left=starts, height=0.5, label=colname, color=color)
             labels = '_nolegend_'
             ax.bar_label(rects, label_type='center',color='white')
 
