@@ -149,6 +149,6 @@ We analyzed whether there is an evolution in the quality of the representation o
 |-----------------|--------------------------------------|--------------------------|
 | F. Dumoncel     | `francois.dumoncel-kessler@epfl.ch`  | Bechdel Analysis, Website, Ethics assessment |
 | K. Tetard       | `kenji.tetard@epfl.ch`               | NLP |
-| L. Vogel        | `lena.vogel@epfl.ch`                 | Website, HTML plots, analyisis |
+| L. Vogel        | `lena.vogel@epfl.ch`                 | Website, HTML plots, analysis, datastory |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | Preprocessing, Wikidata/TMDB scraping, role analysis   |
 | A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory data Analysis |
