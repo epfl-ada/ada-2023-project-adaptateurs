@@ -152,4 +152,3 @@ We analyzed whether there is an evolution in the quality of the representation o
 | L. Vogel        | `lena.vogel@epfl.ch`                 | README, website, HTML plots |
 | N. Dillenbourg  | `nael.dillenbourg@epfl.ch`           | Preprocessing, Wikidata scraping   |
 | A. Bacuet       | `aymeric.bacuet@epfl.ch`             | Exploratory data Analysis   |
-```
