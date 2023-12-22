@@ -1812,3 +1812,46 @@ def visualize_box_plot_role_avg_pay_HTML(movies, YEAR_RANGE, output_html="html_p
 
     fig.show()
     fig.write_html(output_html)
+
+def job_comparison(movies, jobs, YEAR_RANGE=[1980, 2010]): #Create comparative plot for job roles
+    movies = movies[(movies['year'] > YEAR_RANGE[0]) & (movies['year'] < YEAR_RANGE[1])].copy(deep=True)
+    fig, ax = plt.subplots(figsize=(9.2, 5))
+    ax.invert_yaxis()
+    ax.xaxis.set_visible(False)
+    ax.set_xlim(0, 1)
+    labels = ["Actor", "Actress", "Unknown gender"]
+    color = [color_M, color_F, color_G]
+    for job in jobs:
+        if type(job) is str:
+            subset = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job)]
+            total = subset.count().iloc[0]
+            subset_F = subset[subset['actor_gender']=="F"].count().iloc[0]
+            subset_M = subset[subset['actor_gender']=="M"].count().iloc[0]
+            subset_unkown = subset[subset['actor_gender'].isna()].count().iloc[0]
+            subset_M = round(subset_M/total, 2)
+            subset_F = round(subset_F/total, 2)
+            subset_unkown = round(subset_unkown/total, 2)
+            widths = [subset_M, subset_F, subset_unkown]
+            starts = [0, subset_M, subset_M+subset_F]
+            colname = labels
+            rects = ax.barh(job, widths, left=starts, height=0.5, label=colname, color=color)
+            labels = '_nolegend_'
+            ax.bar_label(rects, label_type='center',color='white')
+        if type(job) is list: #needs to be masculine gender title first, then feminine
+            job_str = job[0] + "-" + job[1]
+            subset0 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[0])]
+            subset1 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[1])]
+            total0 = subset0.count().iloc[0]
+            total1 = subset1.count().iloc[0]
+            totalt = total0 + total1
+            subset_M = round(total0/totalt, 2)
+            subset_F = round(total1/totalt, 2)
+            widths = [subset_M, subset_F]
+            starts = [0, subset_M]
+            colname = labels
+            rects = ax.barh(job_str, widths, left=starts, height=0.5, label=colname, color=color)
+            labels = '_nolegend_'
+            ax.bar_label(rects, label_type='center',color='white')
+
+    ax.legend(ncols=len(labels), bbox_to_anchor=(0, 1), loc='lower left', fontsize='small')
+    plt.show()
