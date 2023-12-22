@@ -1746,7 +1746,7 @@ def role_job_barplot_history_HTML(movies, job, YEAR_RANGE=[1980, 2010]):
             x=pivot_df.index,
             y=pivot_df[gender],
             name=gender,
-            text=pivot_df[gender],
+            text=pivot_df[gender].apply(lambda x: f'{x:.0%}'),
             textposition='auto',
         ))
 
