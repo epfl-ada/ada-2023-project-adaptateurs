@@ -1855,3 +1855,69 @@ def job_comparison(movies, jobs, YEAR_RANGE=[1980, 2010]): #Create comparative p
 
     ax.legend(ncols=len(labels), bbox_to_anchor=(0, 1), loc='lower left', fontsize='small')
     plt.show()
+
+def job_comparison_HTML(movies, jobs, YEAR_RANGE=[1980, 2010], output_html="html_plots/job_comparison.html"):
+    movies = movies[(movies['year'] > YEAR_RANGE[0]) & (movies['year'] < YEAR_RANGE[1])].copy(deep=True)
+    labels = ["Actor", "Actress", "Unknown gender"]
+    colors = [color_M, color_F, color_G]  # Define these color variables
+
+    fig = go.Figure()
+    showlegend = True
+    for job in jobs:
+        if isinstance(job, str):
+            subset = movies[(movies['role_cat'] == "JOB") & (movies['role_str'] == job)]
+            total = subset.count().iloc[0]
+            proportions = [
+                subset[subset['actor_gender'] == gender].count().iloc[0] / total
+                for gender in ["M", "F"]
+            ]
+            proportions.append(1 - sum(proportions))  # Calculate unknown gender
+
+            for i, prop in enumerate(proportions):
+                fig.add_trace(go.Bar(
+                    x=[prop],
+                    y=[f"{job}"],
+                    orientation='h',
+                    marker_color=colors[i],
+                    name=labels[i],
+                    text=[f"{total} roles"],
+                    hoverinfo='text',
+                    showlegend = showlegend
+                ))
+            showlegend=False
+
+        elif isinstance(job, list):  #If job is a list, then it is a combination of two jobs as it's a gendered word for the same job, no need to find gender
+            job_str = job[0] + "-" + job[1]
+            subset0 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[0])]
+            subset1 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[1])]
+            total0 = subset0.count().iloc[0]
+            total1 = subset1.count().iloc[0]
+            totalt = total0 + total1
+            proportions = [total0/totalt, total1/totalt]
+
+            for i, prop in enumerate(proportions):
+                fig.add_trace(go.Bar(
+                    x=[prop],
+                    y=[f"{job_str}"],
+                    orientation='h',
+                    marker_color=colors[i],
+                    name=labels[i],
+                    text=[f"{total} roles"],
+                    hoverinfo='text',
+                    showlegend = showlegend
+                ))
+            showlegend=False
+
+
+    # Update layout
+    fig.update_layout(
+        title="Job Role Comparison",
+        xaxis_title="Proportion",
+        yaxis_title="Job Roles",
+        barmode='stack',
+        showlegend=True,
+        legend_title="Gender",
+    )
+
+    fig.show()
+    fig.write_html(output_html)
