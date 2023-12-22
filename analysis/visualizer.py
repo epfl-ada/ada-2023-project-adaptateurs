@@ -1214,7 +1214,7 @@ def visualize_barplot_r2n_roles_HTML(movies, output_html='html_plots/r2n_roles_b
         x=women_counts.values[::-1],
         y=women_counts.index[::-1],
         orientation='h',
-        marker_color=color_F,  # Example color, replace with desired color
+        marker_color=color_F,
         name='Women'
     ), row=1, col=1)
 
@@ -1223,7 +1223,7 @@ def visualize_barplot_r2n_roles_HTML(movies, output_html='html_plots/r2n_roles_b
         x=men_counts.values[::-1],
         y=men_counts.index[::-1],
         orientation='h',
-        marker_color=color_M,  # Example color, replace with desired color
+        marker_color=color_M, 
         name='Men'
     ), row=1, col=2)
 
@@ -1233,7 +1233,7 @@ def visualize_barplot_r2n_roles_HTML(movies, output_html='html_plots/r2n_roles_b
         yaxis=dict(title='Role'),
         yaxis2=dict(title='Role'),
         xaxis=dict(title='Count'),
-        xaxis2=dict(title='Count')
+        xaxis2=dict(title='Count'),
     )
 
     fig.show()
@@ -1776,26 +1776,23 @@ def visualize_box_plot_role_avg_pay(movies, YEAR_RANGE):
     plt.ylabel('Average monthly pay')
 
 def visualize_box_plot_role_avg_pay_HTML(movies, YEAR_RANGE, output_html="html_plots/box_plot_role_avg_pay.html"):
-    # Filtering movies by year range
     movies = movies[(movies['year'] >= YEAR_RANGE[0]) & (movies['year'] <= YEAR_RANGE[1])].copy(deep=True)
 
-    # Extracting average pay data for actors and actresses
     actor_pay = movies[(movies['actor_gender'] == "M") & (movies['avg_pay'].notna())]['avg_pay'] / 12
     actress_pay = movies[(movies['actor_gender'] == "F") & (movies['avg_pay'].notna())]['avg_pay'] / 12
 
-    # Creating box plots
     fig = go.Figure()
 
     fig.add_trace(go.Box(
         y=actor_pay,
         name='Actor Role',
-        marker_color=color_M  # Example color, replace with desired color
+        marker_color=color_M 
     ))
 
     fig.add_trace(go.Box(
         y=actress_pay,
         name='Actress Role',
-        marker_color=color_F  # Example color, replace with desired color
+        marker_color=color_F 
     ))
 
     # Update layout
@@ -1859,7 +1856,7 @@ def job_comparison(movies, jobs, YEAR_RANGE=[1980, 2010]): #Create comparative p
 def job_comparison_HTML(movies, jobs, YEAR_RANGE=[1980, 2010], output_html="html_plots/job_comparison.html"):
     movies = movies[(movies['year'] > YEAR_RANGE[0]) & (movies['year'] < YEAR_RANGE[1])].copy(deep=True)
     labels = ["Actor", "Actress", "Unknown gender"]
-    colors = [color_M, color_F, color_G]  # Define these color variables
+    colors = [color_M, color_F, color_G] 
 
     fig = go.Figure()
     showlegend = True
@@ -1871,7 +1868,7 @@ def job_comparison_HTML(movies, jobs, YEAR_RANGE=[1980, 2010], output_html="html
                 subset[subset['actor_gender'] == gender].count().iloc[0] / total
                 for gender in ["M", "F"]
             ]
-            proportions.append(1 - sum(proportions))  # Calculate unknown gender
+            proportions.append(1 - sum(proportions))  # Calculate unknown gender proportion
 
             for i, prop in enumerate(proportions):
                 fig.add_trace(go.Bar(
@@ -1886,7 +1883,7 @@ def job_comparison_HTML(movies, jobs, YEAR_RANGE=[1980, 2010], output_html="html
                 ))
             showlegend=False
 
-        elif isinstance(job, list):  #If job is a list, then it is a combination of two jobs as it's a gendered word for the same job, no need to find gender
+        elif isinstance(job, list):  # If job is a list, then it is a combination of two jobs as it's a gendered word for the same job, no need to find gender
             job_str = job[0] + "-" + job[1]
             subset0 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[0])]
             subset1 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[1])]
