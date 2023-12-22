@@ -1825,15 +1825,15 @@ def job_comparison(movies, jobs, YEAR_RANGE=[1980, 2010]): #Create comparative p
             subset_F = subset[subset['actor_gender']=="F"].count().iloc[0]
             subset_M = subset[subset['actor_gender']=="M"].count().iloc[0]
             subset_unkown = subset[subset['actor_gender'].isna()].count().iloc[0]
-            subset_M = round(subset_M/total, 2)
-            subset_F = round(subset_F/total, 2)
-            subset_unkown = round(subset_unkown/total, 2)
+            subset_M = subset_M/total
+            subset_F = subset_F/total
+            subset_unkown = subset_unkown/total
             widths = [subset_M, subset_F, subset_unkown]
             starts = [0, subset_M, subset_M+subset_F]
             colname = labels
             rects = ax.barh(f"{job} \n [{total} roles]", widths, left=starts, height=0.5, label=colname, color=color)
             labels = '_nolegend_'
-            ax.bar_label(rects, label_type='center',color='white')
+            ax.bar_label(rects, fmt='%.2f%%', label_type='center',color='white')
         if type(job) is list: #needs to be masculine gender title first, then feminine
             job_str = job[0] + "-" + job[1]
             subset0 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[0])]
@@ -1862,14 +1862,27 @@ def job_comparison_HTML(movies, jobs, YEAR_RANGE=[1980, 2010], output_html="html
     showlegend = True
     for job in jobs:
         if isinstance(job, str):
+            subset = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job)]
+            total = subset.count().iloc[0]
+            subset_F = subset[subset['actor_gender']=="F"].count().iloc[0]
+            subset_M = subset[subset['actor_gender']=="M"].count().iloc[0]
+            subset_unkown = subset[subset['actor_gender'].isna()].count().iloc[0]
+            total_text = [subset_M, subset_F, subset_unkown]
+            subset_M = subset_M/total
+            subset_F = subset_F/total
+            subset_unkown = subset_unkown/total
+            """
             subset = movies[(movies['role_cat'] == "JOB") & (movies['role_str'] == job)]
             total = subset.count().iloc[0]
             proportions = [
                 subset[subset['actor_gender'] == gender].count().iloc[0] / total
                 for gender in ["M", "F"]
             ]
-            proportions.append(1 - sum(proportions))  # Calculate unknown gender proportion
-
+            
+            """
+            
+            #proportions.append(1 - sum(proportions))  # Calculate unknown gender proportion
+            proportions = [subset_M, subset_F, subset_unkown]
             for i, prop in enumerate(proportions):
                 fig.add_trace(go.Bar(
                     x=[prop],
@@ -1877,7 +1890,7 @@ def job_comparison_HTML(movies, jobs, YEAR_RANGE=[1980, 2010], output_html="html
                     orientation='h',
                     marker_color=colors[i],
                     name=labels[i],
-                    text=[f"{total} roles"],
+                    text=[f"{total_text[i]} roles"],
                     hoverinfo='text',
                     showlegend = showlegend
                 ))
@@ -1890,6 +1903,7 @@ def job_comparison_HTML(movies, jobs, YEAR_RANGE=[1980, 2010], output_html="html
             total0 = subset0.count().iloc[0]
             total1 = subset1.count().iloc[0]
             totalt = total0 + total1
+            total_text = [total0, total1]
             proportions = [total0/totalt, total1/totalt]
 
             for i, prop in enumerate(proportions):
@@ -1899,7 +1913,7 @@ def job_comparison_HTML(movies, jobs, YEAR_RANGE=[1980, 2010], output_html="html
                     orientation='h',
                     marker_color=colors[i],
                     name=labels[i],
-                    text=[f"{total} roles"],
+                    text=[f"{total_text[i]} roles"],
                     hoverinfo='text',
                     showlegend = showlegend
                 ))
