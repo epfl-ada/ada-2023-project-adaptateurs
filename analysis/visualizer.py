@@ -1214,7 +1214,7 @@ def visualize_barplot_r2n_roles_HTML(movies, output_html='html_plots/r2n_roles_b
         x=women_counts.values[::-1],
         y=women_counts.index[::-1],
         orientation='h',
-        marker_color=color_F,  # Example color, replace with desired color
+        marker_color=color_F,
         name='Women'
     ), row=1, col=1)
 
@@ -1223,7 +1223,7 @@ def visualize_barplot_r2n_roles_HTML(movies, output_html='html_plots/r2n_roles_b
         x=men_counts.values[::-1],
         y=men_counts.index[::-1],
         orientation='h',
-        marker_color=color_M,  # Example color, replace with desired color
+        marker_color=color_M, 
         name='Men'
     ), row=1, col=2)
 
@@ -1233,7 +1233,7 @@ def visualize_barplot_r2n_roles_HTML(movies, output_html='html_plots/r2n_roles_b
         yaxis=dict(title='Role'),
         yaxis2=dict(title='Role'),
         xaxis=dict(title='Count'),
-        xaxis2=dict(title='Count')
+        xaxis2=dict(title='Count'),
     )
 
     fig.show()
@@ -1746,7 +1746,7 @@ def role_job_barplot_history_HTML(movies, job, YEAR_RANGE=[1980, 2010]):
             x=pivot_df.index,
             y=pivot_df[gender],
             name=gender,
-            text=pivot_df[gender],
+            text=pivot_df[gender].apply(lambda x: f'{x:.0%}'),
             textposition='auto',
         ))
 
@@ -1776,26 +1776,23 @@ def visualize_box_plot_role_avg_pay(movies, YEAR_RANGE):
     plt.ylabel('Average monthly pay')
 
 def visualize_box_plot_role_avg_pay_HTML(movies, YEAR_RANGE, output_html="html_plots/box_plot_role_avg_pay.html"):
-    # Filtering movies by year range
     movies = movies[(movies['year'] >= YEAR_RANGE[0]) & (movies['year'] <= YEAR_RANGE[1])].copy(deep=True)
 
-    # Extracting average pay data for actors and actresses
     actor_pay = movies[(movies['actor_gender'] == "M") & (movies['avg_pay'].notna())]['avg_pay'] / 12
     actress_pay = movies[(movies['actor_gender'] == "F") & (movies['avg_pay'].notna())]['avg_pay'] / 12
 
-    # Creating box plots
     fig = go.Figure()
 
     fig.add_trace(go.Box(
         y=actor_pay,
         name='Actor Role',
-        marker_color=color_M  # Example color, replace with desired color
+        marker_color=color_M 
     ))
 
     fig.add_trace(go.Box(
         y=actress_pay,
         name='Actress Role',
-        marker_color=color_F  # Example color, replace with desired color
+        marker_color=color_F 
     ))
 
     # Update layout
@@ -1808,6 +1805,129 @@ def visualize_box_plot_role_avg_pay_HTML(movies, YEAR_RANGE, output_html="html_p
             tickvals=[0, 1],
             ticktext=['Actor Role', 'Actress Role']
         )
+    )
+
+    fig.show()
+    fig.write_html(output_html)
+
+def job_comparison(movies, jobs, YEAR_RANGE=[1980, 2010]): #Create comparative plot for job roles
+    movies = movies[(movies['year'] > YEAR_RANGE[0]) & (movies['year'] < YEAR_RANGE[1])].copy(deep=True)
+    fig, ax = plt.subplots()
+    ax.invert_yaxis()
+    ax.xaxis.set_visible(False)
+    ax.set_xlim(0, 1)
+    labels = ["Actor", "Actress", "Unknown gender"]
+    color = [color_M, color_F, color_G]
+    for job in jobs:
+        if type(job) is str:
+            subset = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job)]
+            total = subset.count().iloc[0]
+            subset_F = subset[subset['actor_gender']=="F"].count().iloc[0]
+            subset_M = subset[subset['actor_gender']=="M"].count().iloc[0]
+            subset_unkown = subset[subset['actor_gender'].isna()].count().iloc[0]
+            subset_M = subset_M/total
+            subset_F = subset_F/total
+            subset_unkown = subset_unkown/total
+            widths = [subset_M, subset_F, subset_unkown]
+            starts = [0, subset_M, subset_M+subset_F]
+            colname = labels
+            rects = ax.barh(f"{job} \n [{total} roles]", widths, left=starts, height=0.5, label=colname, color=color)
+            labels = '_nolegend_'
+            ax.bar_label(rects, fmt='%.2f%%', label_type='center',color='white')
+        if type(job) is list: #needs to be masculine gender title first, then feminine
+            job_str = job[0] + "-" + job[1]
+            subset0 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[0])]
+            subset1 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[1])]
+            total0 = subset0.count().iloc[0]
+            total1 = subset1.count().iloc[0]
+            totalt = total0 + total1
+            subset_M = round(total0/totalt, 2)
+            subset_F = round(total1/totalt, 2)
+            widths = [subset_M, subset_F]
+            starts = [0, subset_M]
+            colname = labels
+            rects = ax.barh(f"{job_str} \n [{total} roles]", widths, left=starts, height=0.5, label=colname, color=color)
+            labels = '_nolegend_'
+            ax.bar_label(rects, label_type='center',color='white')
+
+    ax.legend(ncols=len(labels), bbox_to_anchor=(0, 1), loc='lower left', fontsize='small')
+    plt.show()
+
+def job_comparison_HTML(movies, jobs, YEAR_RANGE=[1980, 2010], output_html="html_plots/job_comparison.html"):
+    movies = movies[(movies['year'] > YEAR_RANGE[0]) & (movies['year'] < YEAR_RANGE[1])].copy(deep=True)
+    labels = ["Actor", "Actress", "Unknown gender"]
+    colors = [color_M, color_F, color_G] 
+
+    fig = go.Figure()
+    showlegend = True
+    for job in jobs:
+        if isinstance(job, str):
+            subset = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job)]
+            total = subset.count().iloc[0]
+            subset_F = subset[subset['actor_gender']=="F"].count().iloc[0]
+            subset_M = subset[subset['actor_gender']=="M"].count().iloc[0]
+            subset_unkown = subset[subset['actor_gender'].isna()].count().iloc[0]
+            total_text = [subset_M, subset_F, subset_unkown]
+            subset_M = subset_M/total
+            subset_F = subset_F/total
+            subset_unkown = subset_unkown/total
+            """
+            subset = movies[(movies['role_cat'] == "JOB") & (movies['role_str'] == job)]
+            total = subset.count().iloc[0]
+            proportions = [
+                subset[subset['actor_gender'] == gender].count().iloc[0] / total
+                for gender in ["M", "F"]
+            ]
+            
+            """
+            
+            #proportions.append(1 - sum(proportions))  # Calculate unknown gender proportion
+            proportions = [subset_M, subset_F, subset_unkown]
+            for i, prop in enumerate(proportions):
+                fig.add_trace(go.Bar(
+                    x=[prop],
+                    y=[f"{job}"],
+                    orientation='h',
+                    marker_color=colors[i],
+                    name=labels[i],
+                    text=[f"{total_text[i]} roles"],
+                    hoverinfo='text',
+                    showlegend = showlegend
+                ))
+            showlegend=False
+
+        elif isinstance(job, list):  # If job is a list, then it is a combination of two jobs as it's a gendered word for the same job, no need to find gender
+            job_str = job[0] + "-" + job[1]
+            subset0 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[0])]
+            subset1 = movies[(movies['role_cat']=="JOB") & (movies['role_str']==job[1])]
+            total0 = subset0.count().iloc[0]
+            total1 = subset1.count().iloc[0]
+            totalt = total0 + total1
+            total_text = [total0, total1]
+            proportions = [total0/totalt, total1/totalt]
+
+            for i, prop in enumerate(proportions):
+                fig.add_trace(go.Bar(
+                    x=[prop],
+                    y=[f"{job_str}"],
+                    orientation='h',
+                    marker_color=colors[i],
+                    name=labels[i],
+                    text=[f"{total_text[i]} roles"],
+                    hoverinfo='text',
+                    showlegend = showlegend
+                ))
+            showlegend=False
+
+
+    # Update layout
+    fig.update_layout(
+        title="Job Role Comparison",
+        xaxis_title="Proportion",
+        yaxis_title="Job Roles",
+        barmode='stack',
+        showlegend=True,
+        legend_title="Gender",
     )
 
     fig.show()
